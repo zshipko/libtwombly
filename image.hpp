@@ -48,7 +48,7 @@ public:
     }
 
     ~Image(){
-        if (ownsdata){
+        if (ownsdata && data){
             delete[] data;
         }
     }
@@ -86,6 +86,9 @@ public:
     }
 
     Image<DataType>& operator=(Image<DataType> const &src){
+        if (src.data == data)
+            return *this;
+
         if (valid()){
             delete[] data;
         }
@@ -110,6 +113,7 @@ public:
             memcpy(dst.data + dst.offs(0, (y-r.y)), data + offs(r.x, y),
                 dst.rowstride() * dst.datasize());
         }
+        return dst;
     }
 
     bool valid(){

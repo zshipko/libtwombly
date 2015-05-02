@@ -1,30 +1,24 @@
-#include "../twombly/twombly.h"
+#include "../twombly.hpp"
 
 #include "lest.hpp"
 
 using namespace std;
 using namespace tw;
 
-image4u test_image(800, 600);
-image3u test_image3u(800, 600);
-image1u test_image1u(800, 600);
-image4s test_image4s(800, 600);
-image3s test_image3s(800, 600);
-image1s test_image1s(800, 600);
-image4f test_image4f(800, 600);
-image3f test_image3f(800, 600);
-image1f test_image1f(800, 600);
+Image<uint8_t> test_Image(800, 600, 3);
+Image<uint16_t> test_Imagew(800, 600, 4);
+Image<float> test_Imagef(800, 600, 1);
+maybe<int> test_maybe(12);
 
-auto test_drawing = draw(test_image);
-auto test_pixel = pixel4u(100, 100, 100, 100);
-std::tuple<image4u, point> test_layer;
-tw::point test_point;
+auto test_Drawing = DrawingRGB24(test_Image);
+std::tuple<Image<uint8_t>, Point> test_layer;
+Point test_Point;
+Rectangle test_Rectangle(0,0, 10, 10);
 extra::list<int> test_list;
 extra::array<int, 20> test_array;
-layers<image4u> test_layers;
-image4u test_image2(800, 600);
-auto test_drawing2 = draw(test_image2);
-auto test_pixel2 = pixel4u(90, 90, 90, 100);
+Layers<Image<uint8_t>> test_Layers;
+Image<uint8_t> test_Image2(800, 600, 3);
+auto test_Drawing2 = DrawingRGB24(test_Image);
 double double_ptr;
 
 #include "test-spec.h"

@@ -5,12 +5,12 @@
 
 namespace tw {
 template <typename LayersImageType>
-class layers {
+class Layers {
 
 public:
     typedef std::tuple<LayersImageType, Point> layer;
 
-    layers(){}
+    Layers(){}
 
     void push_back(LayersImageType &im, Point p = Point()){
         auto t = std::make_tuple(im, p);

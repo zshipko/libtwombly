@@ -7,51 +7,51 @@ except Exception, e:
     sys.exit(1)
 
 def random_color():
-    return 'color8(' + str(random.randint(0, 125)) + ", " + str(random.randint(0, 125)) + ", " + str(random.randint(0, 125)) + ", " + str(random.randint(0, 125)) + ')'
+    return 'Color(' + str(random.randint(0, 125)) + ", " + str(random.randint(0, 125)) + ", " + str(random.randint(0, 125)) + ", " + str(random.randint(0, 125)) + ')'
 
 tw = namespaces["tw"]
 fun = namespaces["extra"]
 
 tb = ccparser.TestBuilder()
 tb.template_map = {
-    "DrawingType" : "drawing4u",
+    "DrawingType" : "DrawingRGB24",
     "PixelType" : "uint8_t",
-    "PixelLength" : "4",
-    "ImageType" : "pixel4u",
-    "LayersImageType" :  "image4u",
-    "LayersImageType &" :  "image4u",
+    "PixelLength" : "3",
+    "DataType" : "uint8_t",
+    "LayersImageType" :  "Image<uint8_t>",
+    "LayersImageType &" :  "Image<uint8_t>",
 }
 
-tb.type_map["pixel<PixelType, PixelLength>"] = "test_pixel"
-tb.type_map["pixel<PixelType, PixelLength> &"] = "test_pixel",
-tb.type_map["color8"] = random_color()
-tb.type_map["ImageType"] = "test_image"
-tb.type_map["ImageType &"] = "test_image"
-tb.type_map["image<ImageType> &"] = "test_image"
-tb.type_map["PixelType"] = tb.random_int(0, 255)
-tb.type_map["drawing<DrawingType> &"] = "test_drawing"
-tb.type_map["LayersImageType &"] = "test_image"
-tb.type_map["const image<ImageType> &"] = "test_image"
-tb.type_map["pixel<PixelType, PixelLength> &"] = "test_pixel2"
-tb.type_map["tw::point"] = "tw::point(10, 10)"
+tb.type_map["Color"] = random_color()
+tb.type_map["ImageType"] = "test_Image"
+tb.type_map["ImageType &"] = "test_Image"
+tb.type_map["Image<DataType> &"] = "test_Image"
+tb.type_map["DataType"] = tb.random_int(0, 255)
+tb.type_map["Drawing<DrawingType> &"] = "test_Drawing"
+tb.type_map["LayersImageType &"] = "test_Image"
+tb.type_map["const Image<DataType> &"] = "test_Image"
+tb.type_map["tw::Point"] = "tw::Point(10, 10)"
+tb.type_map["Point"] = "Point(10, 10)"
+tb.type_map["Rectangle"] = "Rectangle(0, 0, 10, 10)"
+tb.type_map["tw::Rectangle"] = "Rectangle(0, 0, 10, 10)"
+
 
 tb.type_map["tw::line_join_style"] = "miter_join"
 tb.type_map["tw::line_cap_style"] = "round_cap"
 tb.type_map["tw::filling_rule"]  = "tw::fill_non_zero"
 tb.type_map["list<ItemType> &"] = "test_list"
 tb.type_map["list<ItemType>"]  = "test_list"
-tb.type_map["image1s &"] = "test_image1s"
-tb.type_map["image1f &"] = "test_image1f"
-tb.type_map["image3f &"] = "test_image3f"
-tb.type_map["image4u &"] = "test_image"
+tb.type_map["Image<uint16_t> &"] = "test_Imagew"
+tb.type_map["Image<float> &"] = "test_Imagef"
+tb.type_map["ImageSizeType"] = tb.random_int(0, 500)
 
-tb.expect_throws.append("test_layers.operator[]")
-tb.expect_throws.append("test_layers.image")
-tb.expect_throws.append("test_layers.point")
+tb.expect_throws.append("test_Layers.operator[]")
+tb.expect_throws.append("test_Layers.image")
+tb.expect_throws.append("test_Layers.point")
 tb.expect_throws.append("openTIFF")
 tb.expect_throws.append("imread")
 
-tb.ignore_functions.extend(["saveTIFF", "imwrite", "rewind", "invertPolygon", "getCommand", "push_back", "test_layers.operator+=", "test_maybe.check"])
+tb.ignore_functions.extend(["saveTIFF", "imwrite", "rewind", "invertPolygon", "getCommand", "push_back", "test_Layers.operator+=", "test_maybe.check", "test_list.operator+="])
 
 print tb.gen_for_ns([tw, fun])
 

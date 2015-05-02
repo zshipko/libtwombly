@@ -28,7 +28,7 @@ agg/src/agg_vpgen_clip_polyline.cpp \
 agg/src/agg_vpgen_segmentator.cpp
 tw_src=io.cpp
 agg_hdrs=agg/include/*.h agg/include/util/*.h
-tw_hdrs=image.hpp draw.hpp stb_image.h stb_image_write.h twombly.hpp
+tw_hdrs=image.hpp draw.hpp stb_image.h stb_image_write.h twombly.hpp layers.hpp io.hpp
 libs=
 incl=-I./agg/include -I./agg/font_freetype -I./twombly
 dest?=/usr/local
@@ -132,7 +132,7 @@ release:
 
 test:
 	cd tests && $(MAKE)
-	tests/run -p
+	tests/run
 
 parser:
 	git submodule init && git submodule update
