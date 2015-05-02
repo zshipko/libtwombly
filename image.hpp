@@ -271,12 +271,13 @@ public:
         agg::trans_affine transform;
         transform.rotate(angle);
 
-        for(double j = 0; j < rot.height; j++){
-            for(double i = 0; i < rot.width; i++){
+        for(double j = 0; j < height; j++){
+            for(double i = 0; i < width; i++){
                 double ii = i, jj = j;
                 transform.transform(&ii, &jj);
+                if (!rot.inBounds(ii, jj)) continue;
                 for (int c = 0; c < channels; c++){
-                    rot(i, j, c) = operator()(ii, jj, c);
+                    rot(ii, jj, c) = operator()(i, j, c);
                 }
             }
         }
