@@ -54,8 +54,8 @@ endif
 
 HAS_SDL=$(shell pkg-config --cflags sdl2 > /dev/null; echo $$?)
 ifeq ($(HAS_SDL)X$(SDL)X,0XyesX)
-	#tw_src+=twombly/window.cpp
-	#tw_hdrs+= twombly/window.h
+	tw_src+= window.cpp
+	tw_hdrs+= window.hpp
 	libs+= `pkg-config --libs $(SDL_PKG)`
 	incl+= `pkg-config --cflags $(SDL_PKG)`
 else
