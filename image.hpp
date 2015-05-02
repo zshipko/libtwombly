@@ -170,6 +170,18 @@ public:
             data[i] = im[i / channels];
         }
     }
+
+    Image<DataType> grayscale(){
+        if (channels == 1){
+            return copy();
+        }
+
+        Image<DataType> dst(width, height, 1);
+        for(size_t i = 0; i < width * height * channels; i+=channels){
+            dst[i/channels] = data[i] * 0.3 + data[i+1] * 0.59 + data[i+2] * 0.11;
+        }
+        return dst;
+    }
 };
 
 } //namespace tw

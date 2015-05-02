@@ -133,7 +133,7 @@ public:
     agg::trans_affine mtx;
     DrawingType pix;
 
-    Drawing(int32_t w, int32_t h, int32_t c, uint8_t *d) : buffer(d, w, h, w * 4), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr) {
+    Drawing(int32_t w, int32_t h, int32_t c, uint8_t *d) : buffer(d, w, h, w * c), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr) {
         alloc();
     }
 
@@ -754,27 +754,6 @@ typedef Drawing<agg::pixfmt_gray16> DrawingGray16;
 
 typedef DrawingRGBA32 twombly_t;
 
-/*template<typename DrawType>
-auto draw(DrawType &im){
-    size_t sz = im.channels * im.datasize();
-
-    switch(sz){
-    case 8:
-        return DrawingGray8(im);
-    case 24:
-        return DrawingRGB24(im);
-    case 32:
-        return DrawingRGBA32(im);
-    case 16:
-        return DrawingGray16(im);
-    case 48:
-        return DrawingRGB48(im);
-    case 64:
-        return DrawingRGBA64(im);
-    }
-
-    throw std::runtime_error("cannot draw on this image");
-}*/
 
 } // namesapce tw
 #endif // TWOMBLY_DRAW_HEADER
