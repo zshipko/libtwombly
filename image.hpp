@@ -7,6 +7,7 @@
 #include <functional>
 #include <iostream>
 
+#define clamp_(a, b, c) a < b ? b : (a > c ? c : a)
 
 namespace tw {
 using namespace extra;
