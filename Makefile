@@ -26,7 +26,7 @@ agg/src/agg_trans_double_path.cpp \
 agg/src/agg_vpgen_clip_polygon.cpp \
 agg/src/agg_vpgen_clip_polyline.cpp \
 agg/src/agg_vpgen_segmentator.cpp
-tw_src=io.cpp tiff.cpp
+tw_src=io.cpp
 agg_hdrs=agg/include/*.h agg/include/util/*.h
 tw_hdrs=image.hpp draw.hpp stb_image.h stb_image_write.h twombly.hpp
 libs=
@@ -54,8 +54,8 @@ endif
 
 HAS_SDL=$(shell pkg-config --cflags sdl2 > /dev/null; echo $$?)
 ifeq ($(HAS_SDL)X$(SDL)X,0XyesX)
-	tw_src+=twombly/window.cpp
-	tw_hdrs+= twombly/window.h
+	#tw_src+=twombly/window.cpp
+	#tw_hdrs+= twombly/window.h
 	libs+= `pkg-config --libs $(SDL_PKG)`
 	incl+= `pkg-config --cflags $(SDL_PKG)`
 else
@@ -63,7 +63,7 @@ else
 endif
 
 ifeq ($(TIFF)X,yesX)
-	#tw_src+= twombly/tiff.cpp
+	tw_src+= tiff.cpp
 	libs+= -L/usr/local/lib -ltiff
 	incl+= -I/usr/local/include
 else
@@ -95,7 +95,7 @@ tw-shared: compile
 install:
 	mkdir -p $(dest)/include/twombly/agg $(dest)/include/twombly/extra $(dest)/lib/pkgconfig $(dest)/bin
 	cp -r $(tw_hdrs) $(agg_hdrs) $(dest)/include/twombly
-	cp twombly/extra/*.hpp twombly/extra/all $(dest)/include/twombly/extra
+	cp extra/*.hpp extra/all $(dest)/include/twombly/extra
 	cp libagg.* $(dest)/lib/
 	cp libtwombly.* $(dest)/lib/
 	cp twrun $(dest)/bin/twrun

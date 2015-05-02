@@ -62,7 +62,7 @@ public:
     }
 
     inline size_t length(){
-        rowstride() * height;
+        return rowstride() * height;
     }
 
     static inline size_t datasize(){
@@ -95,6 +95,7 @@ public:
         channels = src.channels;
         data = src.data;
         ownsdata = src.ownsdata;
+        return *this;
     }
 
     Image<DataType> copy(){
