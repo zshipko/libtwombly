@@ -21,7 +21,7 @@ bool imwrite(Image<uint8_t> &im, const char *p){
     if (ext == "tiff" || ext == "tif"){
         return saveTIFF(im, p);
     } else if (ext == "png") {
-        return stbi_write_png(p, im.width, im.height, im.channels, (uint8_t*)im.data, im.width * 4) == 0;
+        return stbi_write_png(p, im.width, im.height, im.channels, (uint8_t*)im.data, im.width * im.channels) == 0;
     } else if (ext == "tga") {
         return stbi_write_tga(p, im.width, im.height, im.channels, (uint8_t*)im.data) == 0;
     } else if (ext == "bmp") {

@@ -745,14 +745,24 @@ public:
     }
 };
 
-typedef Drawing<agg::pixfmt_rgba32> DrawingRGBA32;
-typedef Drawing<agg::pixfmt_rgb24> DrawingRGB24;
-typedef Drawing<agg::pixfmt_gray8> DrawingGray8;
-typedef Drawing<agg::pixfmt_rgba64> DrawingRGBA64;
-typedef Drawing<agg::pixfmt_rgb48> DrawingRGB48;
-typedef Drawing<agg::pixfmt_gray16> DrawingGray16;
+typedef agg::pixfmt_rgba32 rgba32;
+typedef agg::pixfmt_rgb24 rgb24;
+typedef agg::pixfmt_gray8 gray8;
+typedef agg::pixfmt_rgba64 rgba64;
+typedef agg::pixfmt_rgb48 rgb48;
+typedef agg::pixfmt_gray16 gray16;
 
-typedef DrawingRGBA32 twombly_t;
+typedef Drawing<rgba32> DrawingRGBA32;
+typedef Drawing<rgb24> DrawingRGB24;
+typedef Drawing<gray8> DrawingGray8;
+typedef Drawing<rgba64> DrawingRGBA64;
+typedef Drawing<rgb48> DrawingRGB48;
+typedef Drawing<gray16> DrawingGray16;
+
+template <typename DrawingType, typename ImageType>
+Drawing<DrawingType> draw(ImageType &im){
+    return Drawing<DrawingType>(im);
+}
 
 
 } // namesapce tw

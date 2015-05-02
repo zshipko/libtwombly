@@ -5,14 +5,21 @@
 #include <stdlib.h>
 #include <string.h>
 #include <functional>
-#include <iostream>
+#include <math.h>
 
-#define clamp_(a, b, c) a < b ? b : (a > c ? c : a)
+#include "agg_trans_affine.h"
+
+#define clamp_(a, b, c) (a < b ? b : (a > c ? c : a))
+#define min_(a, b) (a < b ? a : b)
+#define max_(a, b) (a > b ? a : b)
 
 namespace tw {
 using namespace extra;
 
 typedef int64_t ImageSizeType;
+
+typedef float Pixel __attribute__ ((vector_size (16)));
+
 
 class Point {
 public:
@@ -71,19 +78,75 @@ public:
     }
 
     size_t offs(ImageSizeType x, ImageSizeType y){
-        return (y * rowstride()) + (x * channels);
+        return (y * width * channels) + (x * channels);
+    }
+
+    bool inBounds(ImageSizeType x, ImageSizeType y){
+        return (x >= 0 && x < width && y >= 0 && y < height);
     }
 
     DataType &operator[](size_t index){
         return data[index];
     }
 
-    DataType &operator()(ImageSizeType x, ImageSizeType y, ImageSizeType c){
+    DataType &operator()(ImageSizeType x, ImageSizeType y, int c){
+        if (!inBounds(x, y)) throw std::runtime_error("image: out of bounds");
         return data[offs(x, y) + c];
     }
 
     DataType *operator()(ImageSizeType x, ImageSizeType y){
+        if (!inBounds(x, y)) throw std::runtime_error("image: out of bounds");
         return data+offs(x, y);
+    }
+
+    Pixel get(ImageSizeType x, ImageSizeType y){
+        Pixel p;
+        auto ptr = data+offs(x, y);
+         if (!inBounds(x, y)) return p;
+
+        for (int c = 0; c < channels; c++){
+            p[c] = (float)ptr[c];
+        }
+
+        return p;
+    }
+
+    void set(ImageSizeType x, ImageSizeType y, Pixel p){
+        if (!inBounds(x, y)) return;
+
+        auto ptr = data+offs(x, y);
+
+        for (int c = 0; c < channels; c++){
+            ptr[c] = p[c];
+        }
+    }
+
+    void operator()(ImageSizeType x, ImageSizeType y, DataType *pixel){
+        if (!inBounds(x, y)) return;
+        memcpy(data + offs(x, y), pixel, channels * datasize());
+    }
+
+    void operator()(Rectangle r, DataType *pixels, size_t pixlen){
+        size_t pixoffs = 0;
+        for(ImageSizeType y = r.y; y < r.y + r.height; y++){
+            for(ImageSizeType x = r.x; x < r.x + r.width; x++){
+                if (!inBounds(x, y)) continue;
+                for(int c = 0; c < channels; c++){
+                    operator()(x, y, c) = pixels[pixoffs % pixlen];
+                    pixoffs += 1;
+                }
+            }
+        }
+    }
+
+    void operator()(Point pt, Image<DataType> &src){
+        auto minchan = min_(src.channels, channels);
+        for(ImageSizeType y = pt.y; y < pt.y + src.height; y++){
+            for(ImageSizeType x = pt.x; x < pt.x + src.width; x++){
+                if(!inBounds(x, y)) continue;
+                memcpy(data + offs(x, y), src(x-pt.x, y-pt.y), minchan * datasize());
+            }
+        }
     }
 
     Image<DataType>& operator=(Image<DataType> const &src){
@@ -182,6 +245,43 @@ public:
             dst[i/channels] = data[i] * 0.3 + data[i+1] * 0.59 + data[i+2] * 0.11;
         }
         return dst;
+    }
+
+    Image<DataType> scale(double x, double y){
+        Image<DataType> scaled(width * x, height * y, channels);
+        agg::trans_affine transform;
+        transform.scale(x, y);
+
+        for(double j = 0; j < scaled.height; j++){
+            for(double i = 0; i < scaled.width; i++){
+                double ii = i, jj = j;
+                transform.inverse_transform(&ii, &jj);
+                for (int c = 0; c < channels; c++){
+                    scaled(i, j, c) = operator()(ii, jj, c);
+                }
+            }
+        }
+
+        return scaled;
+    }
+
+    Image<DataType> rotate(float angle, ImageSizeType w = 0, ImageSizeType h = 0){
+        Image<DataType> rot(w ? w : width, h ? h : height, channels);
+
+        agg::trans_affine transform;
+        transform.rotate(angle);
+
+        for(double j = 0; j < rot.height; j++){
+            for(double i = 0; i < rot.width; i++){
+                double ii = i, jj = j;
+                transform.transform(&ii, &jj);
+                for (int c = 0; c < channels; c++){
+                    rot(i, j, c) = operator()(ii, jj, c);
+                }
+            }
+        }
+
+        return rot;
     }
 };
 
