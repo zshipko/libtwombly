@@ -734,6 +734,12 @@ public:
         setColor(Color(r, g, b, a));
     }
 
+    inline void setColor(Pixel p){
+        setColor(Color(p[0], p[1], p[2], p[3] ? p[3] : 255));
+    }
+
+
+
     ~Drawing(){
         if (raster){
             delete raster;
