@@ -36,8 +36,8 @@ public:
 
 template <typename DataType>
 class Image {
-    bool ownsdata;
 public:
+    bool ownsdata;
     typedef DataType data_type;
     ImageSizeType width, height;
     int channels;
@@ -149,11 +149,11 @@ public:
         }
     }
 
-    Image<DataType>& operator=(Image<DataType> const &src){
+    Image<DataType>& operator=(Image<DataType>&& src){
         if (src.data == data)
             return *this;
 
-        if (valid()){
+        if (valid() && data){
             delete[] data;
         }
 
@@ -162,6 +162,7 @@ public:
         channels = src.channels;
         data = src.data;
         ownsdata = src.ownsdata;
+        src.ownsdata = false;
         return *this;
     }
 
@@ -256,9 +257,7 @@ public:
             for(double i = 0; i < scaled.width; i++){
                 double ii = i, jj = j;
                 transform.inverse_transform(&ii, &jj);
-                for (int c = 0; c < channels; c++){
-                    scaled(i, j, c) = operator()(ii, jj, c);
-                }
+                scaled(i, j, operator()(ii, jj));
             }
         }
 
@@ -269,15 +268,17 @@ public:
         Image<DataType> rot(w ? w : width, h ? h : height, channels);
 
         agg::trans_affine transform;
+        transform.translate(-width/2, -height/2);
         transform.rotate(angle);
+        transform.translate(rot.width/2, rot.height/2);
 
-        for(double j = 0; j < height; j++){
-            for(double i = 0; i < width; i++){
+        for(double j = 0; j < rot.height; j++){
+            for(double i = 0; i < rot.width; i++){
                 double ii = i, jj = j;
                 transform.transform(&ii, &jj);
                 if (!rot.inBounds(ii, jj)) continue;
                 for (int c = 0; c < channels; c++){
-                    rot(ii, jj, c) = operator()(i, j, c);
+                    rot(i, j, c) = operator()(ii, jj, c);
                 }
             }
         }
