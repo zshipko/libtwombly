@@ -424,7 +424,6 @@ public:
             font_engine.height(height);
             font_engine.flip_y(true);
             font_engine.hinting(true);
-            printf("%d\n", font_engine.num_faces());
             while(*ptr){
                 const agg::glyph_cache* glyph = font_manager.glyph( (unsigned int)*ptr );
                 if (glyph != nullptr){
