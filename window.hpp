@@ -102,31 +102,20 @@ public:
 
     template <typename ImportImageType>
     void import(ImportImageType &im){
-        for(auto i = 0; i < width * height * channels; i+=channels){
-            for(auto j = 0; j < channels; j++){
-                data[i+j] = im[i/channels][j];
-            }
-        }
+        memcpy(data, im.data, im.width * im.height * im.channels);
     }
 
     template <typename ExportImageType>
     void image(ExportImageType &d){
         if (!d.valid()){
-            d.width = width;
-            d.height = height;
-            d.alloc();
+            d = Image<uint8_t>(width, height, channels);
         }
 
         if (d.channels != channels){
             throw std::runtime_error("channels don't match");
         }
 
-        for(auto i = 0; i < width * height; i++){
-            for(auto j = 0; j < channels; j++){
-                d[i][j] = data[(i*channels) + j];
-            }
-
-        }
+        memcpy(d.data, data, width * height * channels);
     }
 
 
