@@ -81,8 +81,16 @@ public:
         return (y * width * channels) + (x * channels);
     }
 
+    inline size_t offs(Point pt){
+        return offs(pt.x, pt.y);
+    }
+
     bool inBounds(ImageSizeType x, ImageSizeType y){
         return (x >= 0 && x < width && y >= 0 && y < height);
+    }
+
+    inline bool inBounds(Point pt){
+        return inBounds(pt.x, pt.y);
     }
 
     DataType &operator[](size_t index){
@@ -94,15 +102,24 @@ public:
         return data[offs(x, y) + c];
     }
 
+    inline DataType &operator()(Point pt, int c){
+        return this->operator()(pt.x, pt.y, c);
+    }
+
     DataType *operator()(ImageSizeType x, ImageSizeType y){
         if (!inBounds(x, y)) throw std::runtime_error("image: out of bounds");
         return data+offs(x, y);
     }
 
+    inline DataType *operator()(Point pt){
+        return this->operator()(pt.x, pt.y);
+    }
+
     Pixel get(ImageSizeType x, ImageSizeType y){
         Pixel p;
         auto ptr = data+offs(x, y);
-         if (!inBounds(x, y)) return p;
+
+        if (!inBounds(x, y)) return p;
 
         for (int c = 0; c < channels; c++){
             p[c] = (float)ptr[c];
@@ -111,19 +128,31 @@ public:
         return p;
     }
 
+    inline Pixel get(Point pt){
+        return this->get(pt.x, pt.y);
+    }
+
     void set(ImageSizeType x, ImageSizeType y, Pixel p){
         if (!inBounds(x, y)) return;
 
         auto ptr = data+offs(x, y);
 
         for (int c = 0; c < channels; c++){
-            ptr[c] = p[c];
+            ptr[c] = (DataType)p[c];
         }
+    }
+
+    inline void set(Point pt, Pixel p){
+        return this->set(pt.x, pt.y, p);
     }
 
     void operator()(ImageSizeType x, ImageSizeType y, DataType *pixel){
         if (!inBounds(x, y)) return;
         memcpy(data + offs(x, y), pixel, channels * datasize());
+    }
+
+    inline void operator()(Point pt, DataType *pixel){
+        return operator()(pt.x, pt.y, pixel);
     }
 
     void operator()(Rectangle r, DataType *pixels, size_t pixlen){
