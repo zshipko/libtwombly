@@ -38,8 +38,11 @@ UNAME=$(shell uname)
 TIFF?=yes
 FREETYPE?=yes
 FREETYPE_PKG?=freetype2
-SDL?=yes
-SDL_PKG?=sdl2
+
+HAS_COMPILER=$(shell $(CXX) -v || printf "NO";)
+ifeq ($(HAS_COMPILER)X,NOX)
+	CXX=c++
+endif
 
 HAS_FREETYPE=$(shell pkg-config --cflags $(FREETYPE_PKG) > /dev/null; echo $$?)
 ifeq ($(HAS_FREETYPE)X$(FREETYPE)X,0XyesX)
@@ -50,16 +53,6 @@ ifeq ($(HAS_FREETYPE)X$(FREETYPE)X,0XyesX)
 else
 	FREETYPE_PKG=
 	incl+= -DNO_FREETYPE
-endif
-
-HAS_SDL=$(shell pkg-config --cflags sdl2 > /dev/null; echo $$?)
-ifeq ($(HAS_SDL)X$(SDL)X,0XyesX)
-	tw_src+= window.cpp
-	tw_hdrs+= window.hpp
-	libs+= `pkg-config --libs $(SDL_PKG)`
-	incl+= `pkg-config --cflags $(SDL_PKG)`
-else
-	SDL_PKG=
 endif
 
 ifeq ($(TIFF)X,yesX)
@@ -100,7 +93,7 @@ install:
 	cp libtwombly.* $(dest)/lib/
 	cp twrun $(dest)/bin/twrun
 	printf "Name: twombly\nDescription: A 2d graphics library for C++\nVersion: $(VERSION)\nLibs: -L$(dest)/lib -ltwombly\nCflags: -std=c++11 -I$(dest)/include\n" > $(dest)/lib/pkgconfig/twombly.pc
-	echo "Requires: $(FREETYPE_PKG) $(SDL_PKG)" >> $(dest)/lib/pkgconfig/twombly.pc
+	echo "Requires: $(FREETYPE_PKG)" >> $(dest)/lib/pkgconfig/twombly.pc
 
 uninstall:
 	rm -rf $(dest)/include/twombly/
@@ -131,7 +124,7 @@ release:
 	tar czf $(RELEASE_DIR).tar.gz $(RELEASE_DIR)
 
 test:
-	cd tests && $(MAKE)
+	cd tests && CXX=$(CXX) $(MAKE)
 	tests/run
 
 parser:
