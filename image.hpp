@@ -316,6 +316,10 @@ public:
     }
 };
 
+typedef Image<uint8_t> Image8;
+typedef Image<uint16_t> Image16;
+typedef Image<float> Image32;
+
 } //namespace tw
 
 #endif //TWOMBLY_IMAGE_HEADER
