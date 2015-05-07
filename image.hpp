@@ -179,6 +179,9 @@ public:
     }
 
     Image<DataType>& operator=(Image<DataType>&& src){
+        if (!src.valid())
+            return *this;
+
         if (src.data == data)
             return *this;
 
@@ -313,6 +316,10 @@ public:
         }
 
         return rot;
+    }
+
+    Point randomPoint(){
+        return Point(arc4random_uniform(width), arc4random_uniform(height));
     }
 };
 

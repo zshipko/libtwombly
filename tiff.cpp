@@ -2,6 +2,8 @@
 #include <cstring>
 #include <cmath>
 
+#include <iostream>
+
 namespace tw {
 
 bool saveTIFF(Image<uint8_t> &im, const char *path, const char *mode){
@@ -60,11 +62,11 @@ bool saveTIFF(Image<uint16_t> &im, const char *path, const char *mode){
 
 TIFF *tiffOpen(const char *path, uint16_t *channels, uint32_t *depth){
     TIFF *tif = TIFFOpen(path, "r");
-    if (channels && tif){
+    if (channels != nullptr && tif){
         TIFFGetField(tif, TIFFTAG_SAMPLESPERPIXEL, &channels);
     }
 
-    if (depth && tif){
+    if (depth != nullptr && tif){
         TIFFGetField(tif, TIFFTAG_BITSPERSAMPLE, &depth);
 
     }
@@ -73,20 +75,31 @@ TIFF *tiffOpen(const char *path, uint16_t *channels, uint32_t *depth){
 
 Image<uint8_t> openTIFF8(TIFF *tif, double gamma){
     uint32_t width, height, row;
-    uint16_t chan;
+    uint16_t chan, depth;
 
     TIFFGetField(tif, TIFFTAG_IMAGELENGTH, &height);
     TIFFGetField(tif, TIFFTAG_IMAGEWIDTH, &width);
     TIFFGetField(tif, TIFFTAG_SAMPLESPERPIXEL, &chan);
+    TIFFGetField(tif, TIFFTAG_BITSPERSAMPLE, &depth);
 
     Image<uint8_t> im(width, height, chan);
 
-    for (row = 0; row < height; row++){
-        TIFFReadScanline(tif, im.data +  TIFFScanlineSize(tif) * row, row, 0);
-        if (gamma > 1.0){
-            for(size_t i = 0; i < im.length(); i++){
-                im.data[i] = 255 * pow(im.data[i] / 255.0, 1/gamma);
-            }
+    if (depth == 8){
+        for (row = 0; row < height; row++){
+            TIFFReadScanline(tif, im.data +  TIFFScanlineSize(tif) * row, row, 0);
+        }
+    } else if (depth == 16){
+        Image<uint16_t> tmp(width, height, chan);
+        for(row = 0; row < height; row++){
+            TIFFReadScanline(tif, tmp.data + TIFFScanlineSize(tif) * row, row, 0);
+        }
+
+        tmp.convertTo(im, [](uint16_t num){ return num >> 8; });
+    }
+
+    if (gamma > 1.0){
+        for(size_t i = 0; i < im.length(); i++){
+            im.data[i] = 255 * pow(im.data[i] / 255.0, 1/gamma);
         }
     }
 
@@ -96,24 +109,37 @@ Image<uint8_t> openTIFF8(TIFF *tif, double gamma){
 
 Image<uint16_t> openTIFF16(TIFF *tif, double gamma){
     uint32_t width, height, row;
-    uint16_t chan;
+    uint16_t chan, depth;
 
     TIFFGetField(tif, TIFFTAG_IMAGELENGTH, &height);
     TIFFGetField(tif, TIFFTAG_IMAGEWIDTH, &width);
     TIFFGetField(tif, TIFFTAG_SAMPLESPERPIXEL, &chan);
+    TIFFGetField(tif, TIFFTAG_BITSPERSAMPLE, &depth);
 
     Image<uint16_t> im(width, height, chan);
 
-    for (row = 0; row < height; row++){
-        TIFFReadScanline(tif, im.data +  TIFFScanlineSize(tif) * row, row, 0);
-        if (gamma > 1.0){
-            for(size_t i = 0; i < im.length(); i++){
-                im.data[i] = 65535 * pow(im.data[i] / 65535.0, 1/gamma);
-            }
+    if (depth == 16){
+        for (row = 0; row < height; row++){
+            TIFFReadScanline(tif, im.data +  TIFFScanlineSize(tif) * row, row, 0);
+        }
+    } else if (depth == 8){
+        Image<uint8_t> tmp(width, height, chan);
+        for(row = 0; row < height; row++){
+            TIFFReadScanline(tif, tmp.data + TIFFScanlineSize(tif) * row, row, 0);
+        }
+
+        tmp.convertTo(im, [](uint8_t num){ return num << 8; });
+    }
+
+    if (gamma > 1.0){
+        for(size_t i = 0; i < im.length(); i++){
+            im.data[i] = 65535.0 * pow(im.data[i] / 65535.0, 1/gamma);
         }
     }
 
     return im;
 }
+
+
 
 } // namespace tw
