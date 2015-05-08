@@ -6,7 +6,7 @@ libtwombly is a basic 2d graphics library, however it is still in the beginning 
 
 It it based on a lightly modified version of the [Anti-Grain Geometry](http://www.antigrain.com/) library (version 2.4) and is meant to be superfically similar to cairo or the HTML5 canvas api -- with the low level components available when needed.
 
-libtwombly supports 8 and 16 bit, gray, rgb and rgba images.
+libtwombly supports 8 and 16 bit and 32bit gray, rgb and rgba images.
 
 Only tested on OSX, Linux, FreeBSD and OpenBSD
 
@@ -14,8 +14,8 @@ Only tested on OSX, Linux, FreeBSD and OpenBSD
 
 - [libtiff](http://www.remotesensing.org/libtiff/) (optional)
 - [freetype](http://www.freetype.org/) (optional)
-- [SDL2](https://www.libsdl.org/) (optional)
-- C++11 compiler
+- [opencv](https://www.opencv.org/) (optional)
+- C++11 compiler (g++/clang++)
 
 ## Building
 GNU Make is required
@@ -33,11 +33,13 @@ To disable libtiff
 
     make TIFF=no
 
-To disable SDL2:
+To enable opencv:
 
-    make SDL=no
+    make OPENCV=yes
 
-This will build both `libtwombly` and `libagg` libraries.
+or define `USE_OPENCV` before including any twombly headers
+
+Building will compile both `libtwombly` and `libagg` libraries.
 
 To run the tests you will need llvm and libclang bindings for python as well as [ccparser](https://github.com/zshipko/ccparser)
 
