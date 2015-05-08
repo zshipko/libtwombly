@@ -38,11 +38,19 @@ UNAME=$(shell uname)
 TIFF?=yes
 FREETYPE?=yes
 FREETYPE_PKG?=freetype2
+OPENCV?=no
 
 HAS_COMPILER=$(shell $(CXX) -v || printf "NO";)
 ifeq ($(HAS_COMPILER)X,NOX)
 	CXX=c++
 endif
+
+HAS_OPENCV=$(shell pkg-config --cflags opencv > /dev/null; echo $$?)
+ifeq ($(HAS_OPENCV)X$(FREETYPE)X,0XyesX)
+	libs+= `pkg-config --libs opencv`
+	incl+= -DUSE_OPENCV `pkg-config --cflags opencv`
+endif
+
 
 HAS_FREETYPE=$(shell pkg-config --cflags $(FREETYPE_PKG) > /dev/null; echo $$?)
 ifeq ($(HAS_FREETYPE)X$(FREETYPE)X,0XyesX)
@@ -86,8 +94,9 @@ tw-shared: compile
 
 .PHONY: install
 install:
-	mkdir -p $(dest)/include/twombly/agg $(dest)/include/twombly/extra $(dest)/lib/pkgconfig $(dest)/bin
+	mkdir -p $(dest)/include/twombly/agg $(dest)/include/agg $(dest)/include/twombly/extra $(dest)/lib/pkgconfig $(dest)/bin
 	cp -r $(tw_hdrs) $(agg_hdrs) $(dest)/include/twombly
+	cp -r $(agg_hdrs) $(dest)/include/agg
 	cp extra/*.hpp extra/all $(dest)/include/twombly/extra
 	cp libagg.* $(dest)/lib/
 	cp libtwombly.* $(dest)/lib/
@@ -97,6 +106,7 @@ install:
 
 uninstall:
 	rm -rf $(dest)/include/twombly/
+	rm -rf $(dest)/include/agg/
 	rm -f $(dest)/lib/twombly.*
 	rm -f $(dest)/lib/libagg.*
 	rm -f $(dest)/bin/twrun
@@ -124,7 +134,7 @@ release:
 	tar czf $(RELEASE_DIR).tar.gz $(RELEASE_DIR)
 
 test:
-	cd tests && CXX=$(CXX) $(MAKE)
+	cd tests && CXX=$(CXX) OPENCV=$(OPENCV) FREETYPE=$(FREETYPE) $(MAKE)
 	tests/run
 
 parser:

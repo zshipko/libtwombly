@@ -13,20 +13,31 @@
 #define min_(a, b) (a < b ? a : b)
 #define max_(a, b) (a > b ? a : b)
 
+#ifdef USE_OPENCV
+#include <opencv2/opencv.hpp>
+#endif
+
 namespace tw {
+
+#ifdef USE_OPENCV
+using namespace cv;
+#endif
+
+
 using namespace extra;
 
 typedef int64_t ImageSizeType;
 
 typedef float Pixel __attribute__ ((vector_size (16)));
 
-
+#ifndef USE_OPENCV
 class Point {
 public:
     ImageSizeType x, y;
     Point(ImageSizeType _x, ImageSizeType _y) : x(_x), y(_y){}
     Point() : x(0), y(0) {}
 };
+#endif // USE_OPENCV
 
 class Rectangle {
 public:
@@ -118,13 +129,9 @@ public:
     Pixel get(ImageSizeType x, ImageSizeType y){
         Pixel p;
         auto ptr = data+offs(x, y);
-
-        if (!inBounds(x, y)) return p;
-
         for (int c = 0; c < channels; c++){
             p[c] = (float)ptr[c];
         }
-
         return p;
     }
 

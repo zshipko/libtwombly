@@ -113,6 +113,10 @@ public:
         return dst;
     }
 
+    size_t length(){
+        return arr.size();
+    }
+
 private:
     list<layer> arr;
 };

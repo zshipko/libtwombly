@@ -1,5 +1,6 @@
 #ifndef TWOMBLY_DRAW_HEADER
 #define TWOMBLY_DRAW_HEADER
+
 #include "image.hpp"
 
 #include "agg_basics.h"
@@ -144,6 +145,32 @@ public:
     Drawing(Image<uint16_t> &im) : buffer((uint8_t*)im.data, im.width, im.height, im.width * im.channels * 2), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr) {
         alloc();
     }
+
+#ifdef USE_OPENCV
+        Drawing(Mat1b& im) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols),pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr) {
+        alloc();
+    }
+
+    Drawing(Mat3b& im) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels()),pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr) {
+        alloc();
+    }
+
+    Drawing(Mat4b& im) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels()), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr) {
+        alloc();
+    }
+
+    Drawing(Mat1w& im) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * 2),pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr) {
+        alloc();
+    }
+
+    Drawing(Mat3w& im) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels() * 2),pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr) {
+        alloc();
+    }
+
+    Drawing(Mat4w& im) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels() * 2), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr) {
+        alloc();
+    }
+#endif // USE_OPENCV
 
     void alloc(){
         _miterlimit = 1;
@@ -752,9 +779,13 @@ public:
 
 typedef agg::pixfmt_rgba32 rgba32;
 typedef agg::pixfmt_rgb24 rgb24;
+typedef agg::pixfmt_bgra32 bgra32;
+typedef agg::pixfmt_bgr24 bgr24;
 typedef agg::pixfmt_gray8 gray8;
 typedef agg::pixfmt_rgba64 rgba64;
 typedef agg::pixfmt_rgb48 rgb48;
+typedef agg::pixfmt_rgba64 bgra64;
+typedef agg::pixfmt_rgb48 bgr48;
 typedef agg::pixfmt_gray16 gray16;
 
 typedef Drawing<rgba32> DrawingRGBA32;
@@ -763,12 +794,36 @@ typedef Drawing<gray8> DrawingGray8;
 typedef Drawing<rgba64> DrawingRGBA64;
 typedef Drawing<rgb48> DrawingRGB48;
 typedef Drawing<gray16> DrawingGray16;
+typedef Drawing<bgra32> DrawingBGRA32;
+typedef Drawing<bgr24> DrawingBGR24;
+typedef Drawing<bgra64> DrawingBGRA64;
+typedef Drawing<bgr48> DrawingBGR48;
 
-template <typename DrawingType, typename ImageType>
-Drawing<DrawingType> draw(ImageType &im){
-    return Drawing<DrawingType>(im);
+#ifdef USE_OPENCV
+Drawing<bgra32> draw(Mat4b& im){
+    return Drawing<bgra32>(im);
 }
 
+Drawing<bgr24>draw(Mat3b& im){
+    return Drawing<bgr24>(im);
+}
+
+Drawing<gray8> draw(Mat1b& im){
+    return Drawing<gray8>(im);
+}
+
+Drawing<bgra64> draw(Mat4w& im){
+    return Drawing<bgra64>(im);
+}
+
+Drawing<bgr48> draw(Mat3w& im){
+    return Drawing<bgr48>(im);
+}
+
+Drawing<gray16> draw(Mat1w& im){
+    return Drawing<gray16>(im);
+}
+#endif // USE_OPENCV
 
 } // namesapce tw
 #endif // TWOMBLY_DRAW_HEADER
