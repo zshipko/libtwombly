@@ -111,6 +111,7 @@ public:
                 memcpy((void*)(dst.data + dst.offs(pt.x, y)), im.at(0, y - pt.y), sizeof(im.data[0]) * im.width);
             }
         }
+
         return dst;
     }
 

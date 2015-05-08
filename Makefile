@@ -45,11 +45,11 @@ ifeq ($(HAS_COMPILER)X,NOX)
 	CXX=c++
 endif
 
-HAS_OPENCV=$(shell pkg-config --cflags opencv > /dev/null; echo $$?)
-ifeq ($(HAS_OPENCV)X$(FREETYPE)X,0XyesX)
-	libs+= `pkg-config --libs opencv`
-	incl+= -DUSE_OPENCV `pkg-config --cflags opencv`
-endif
+#HAS_OPENCV=$(shell pkg-config --cflags opencv > /dev/null; echo $$?)
+#ifeq ($(HAS_OPENCV)X$(FREETYPE)X,0XyesX)
+#	libs+= `pkg-config --libs opencv`
+#	incl+= -DUSE_OPENCV `pkg-config --cflags opencv`
+#endif
 
 
 HAS_FREETYPE=$(shell pkg-config --cflags $(FREETYPE_PKG) > /dev/null; echo $$?)
