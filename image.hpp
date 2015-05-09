@@ -335,6 +335,7 @@ typedef Image<uint16_t> Image16;
 typedef Image<float> Image32;
 
 #ifdef USE_OPENCV
+
 Image8 toImage(Mat1b &im){
     return Image8(im.cols, im.rows, 1, (uint8_t*)im.data);
 }
@@ -399,6 +400,16 @@ Mat toMat(Image32 &im){
     } else if (im.channels == 4){
         return Mat(im.height, im.width, CV_32FC4, im.data);
     }
+}
+
+template<typename ImageType, typename MatType>
+ImageType toImage(MatType &m){
+    return toImage(m);
+}
+
+template<typename MatType, typename ImageType>
+MatType toMat(ImageType &im){
+    return toMat(im);
 }
 
 #endif
