@@ -17,6 +17,6 @@ int main(int argc, char *argv[]){
         d.fill();
     });
 
-    imwrite(im, "circles.tiff");
+    imwrite("circles.tiff", im);
     return 0;
 }

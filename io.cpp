@@ -6,9 +6,10 @@
 
 namespace tw {
 
-bool imread(const char *path, Image<uint8_t> &im){
+Image<uint8_t> imread(const char *path){
     int x,y,n;
     uint8_t *data = stbi_load(path, &x, &y, &n, 0);
+    Image<uint8_t> im;
     if (!data){
 #ifndef NO_TIFF
         uint16_t channels = 0;
@@ -17,17 +18,17 @@ bool imread(const char *path, Image<uint8_t> &im){
             throw std::runtime_error("cannot load image");
         }
         im = openTIFF8(t);
-        return im.valid();
 #else // NO_TIFF
         throw std::runtime_error("cannot load image");
 #endif // NO_TIFF
 
+    } else {
+        im = Image<uint8_t>(x, y, n, data);
     }
-    im = Image<uint8_t>(x, y, n, data);
-    return im.valid();
+    return im;
 }
 
-bool imwrite(Image<uint8_t> &im, const char *p){
+bool imwrite(const char *p, Image<uint8_t> &im){
     std::string pth(p);
     std::string ext = pth.substr(pth.find_last_of(".") + 1);
     std::transform(ext.begin(), ext.end(), ext.begin(), tolower);
@@ -46,7 +47,7 @@ bool imwrite(Image<uint8_t> &im, const char *p){
 }
 
 #ifndef NO_TIFF
-bool imwrite(Image<uint16_t> &im, const char *p){
+bool imwrite(const char *p, Image<uint16_t> &im){
     std::string pth(p);
     std::string ext = pth.substr(pth.find_last_of(".") + 1);
     std::transform(ext.begin(), ext.end(), ext.begin(), tolower);

@@ -19,6 +19,6 @@ int main(int argc, char *argv[]){
     ctx.arcTo(70, 50, 10, 10, 0.3);
     ctx.stroke();
 
-    imwrite(im, "rect_arc.tiff");
+    imwrite("rect_arc.tiff", im);
     return 0;
 }

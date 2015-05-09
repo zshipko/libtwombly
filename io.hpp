@@ -18,11 +18,11 @@ Image<uint8_t> openTIFF8(TIFF *tif, double gamma = 0);
 Image<uint16_t> openTIFF16(TIFF *tif, double gamma = 0);
 #endif
 
-bool imread(const char *path, Image<uint16_t> &im);
-bool imread(const char *path, Image<uint8_t> &im);
+// bool imread(const char *path, Image<uint16_t> &im);
+Image<uint8_t> imread(const char *path);
 
-bool imwrite(Image<uint8_t> &, const char *);
-bool imwrite(Image<uint16_t> &, const char *);
+bool imwrite(const char *, Image<uint8_t> &);
+bool imwrite(const char *, Image<uint16> &);
 
 } // namespace tw
 
