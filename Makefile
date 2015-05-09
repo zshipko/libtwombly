@@ -38,18 +38,19 @@ UNAME=$(shell uname)
 TIFF?=yes
 FREETYPE?=yes
 FREETYPE_PKG?=freetype2
-OPENCV?=no
+OPENCV?=yes
 
 HAS_COMPILER=$(shell $(CXX) -v || printf "NO";)
 ifeq ($(HAS_COMPILER)X,NOX)
 	CXX=c++
 endif
 
-#HAS_OPENCV=$(shell pkg-config --cflags opencv > /dev/null; echo $$?)
-#ifeq ($(HAS_OPENCV)X$(FREETYPE)X,0XyesX)
-#	libs+= `pkg-config --libs opencv`
-#	incl+= -DUSE_OPENCV `pkg-config --cflags opencv`
-#endif
+HAS_OPENCV=$(shell pkg-config --cflags opencv > /dev/null; echo $$?)
+ifeq ($(HAS_OPENCV)X$(FREETYPE)X,0XyesX)
+	libs+= -lopencv_core -lopencv_highgui -lopencv_imgproc
+	incl+= -DUSE_OPENCV
+	tw_src+= compat.cpp
+endif
 
 
 HAS_FREETYPE=$(shell pkg-config --cflags $(FREETYPE_PKG) > /dev/null; echo $$?)
