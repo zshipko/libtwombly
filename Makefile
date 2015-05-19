@@ -75,8 +75,6 @@ endif
 agg_obj=$(agg_src:.cpp=.o)
 tw_obj=$(tw_src:.cpp=.o)
 
-$(shell git submodule init && git submodule update)
-
 all: agg-static agg-shared tw-static tw-shared
 
 compile: $(agg_obj) $(tw_obj)

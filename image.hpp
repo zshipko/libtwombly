@@ -186,6 +186,24 @@ public:
         }
     }
 
+    Image<DataType>& operator=(Image<DataType>&& src){
+        if (this->data == src.data)
+            return *this;
+
+        if (this->data && this->ownsdata){
+            delete this->data;
+        }
+
+        this->width = src.width;
+        this->height = src.height;
+        this->channels = src.channels;
+        this->data = src.data;
+        this->ownsdata = src.ownsdata;
+        src.ownsdata = false;
+
+        return *this;
+    }
+
     Image<DataType> copy(){
         Image<DataType> dst(width, height, channels);
         memcpy(dst.data, data, size());
@@ -308,6 +326,25 @@ public:
 
     Point randomPoint(){
         return Point(arc4random_uniform(width), arc4random_uniform(height));
+    }
+
+    std::bitset<64> hash(){
+        std::bitset<64> h;
+        auto tmp = this->scale(8.0/this->width, 8.0/this->height).grayscale();
+
+        float avg = 0;
+
+        for(auto i : tmp){
+            avg += i;
+        }
+        avg /= 64.0;
+
+        size_t bitno = 0;
+        for (auto i : tmp){
+            h.set(bitno++, i < avg);
+        }
+
+        return h;
     }
 };
 
