@@ -50,6 +50,7 @@ namespace tw {
 // The Color type is used when dealing with
 // colors withing the drawing context
 typedef agg::rgba8 Color;
+typedef agg::rgba16 Color16;
 
 inline Color rgba(uint8_t r, uint8_t g, uint8_t b, uint8_t a){
     return Color(r, g, b, a);
@@ -61,6 +62,18 @@ inline Color rgb(uint8_t r, uint8_t g, uint8_t b){
 
 inline Color rgba(Pixel p){
     return Color(p[0], p[1], p[2], p[3]);
+}
+
+inline Color16 rgba_16(uint8_t r, uint8_t g, uint8_t b, uint8_t a){
+    return Color16(r, g, b, a);
+}
+
+inline Color16 rgb_16(uint8_t r, uint8_t g, uint8_t b){
+    return Color16(r, g, b, 255);
+}
+
+inline Color16 rgba_16(Pixel p){
+    return Color16(p[0], p[1], p[2], p[3]);
 }
 
 template <typename ColorType>
@@ -162,19 +175,12 @@ public:
 
     // Creates a drawing context from standard OpenCV Mat types
 #ifdef USE_OPENCV
-        Drawing(Mat1b& im) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols),pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr) {
-        alloc();
-    }
 
     Drawing(Mat3b& im) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels()),pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr) {
         alloc();
     }
 
     Drawing(Mat4b& im) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels()), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr) {
-        alloc();
-    }
-
-    Drawing(Mat1w& im) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * 2),pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr) {
         alloc();
     }
 
@@ -276,8 +282,7 @@ public:
         return pathid;
     }
 
-    // Rewind pathid
-    void rewind(unsigned pid){
+    /*void rewind(unsigned pid){
         rewind(pid);
         pathid = pid;
     }
@@ -285,7 +290,7 @@ public:
     void rewind(){
         rewind(0);
         pathid = 0;
-    }
+    }*/
 
 
     // Set rotation
@@ -402,11 +407,6 @@ public:
     }
 
 
-    // Add a vertex to the rasterizer
-    inline void addVertex(double x, double y, int cmd = agg::path_cmd_line_to){
-        raster->add_vertex(x, y, cmd);
-    }
-
     // Get previous position
     inline Point lastPosition(){
         return Point(lastX(), lastY());
@@ -474,8 +474,9 @@ public:
         arc_rel(rx, ry, angle, large, sweep, x, y);
     }
 
+    template <typename ColorType>
     inline void blur(double a){
-        agg::recursive_blur<Color, agg::recursive_blur_calc_rgb<> > sb;
+        agg::recursive_blur<ColorType, agg::recursive_blur_calc_rgb<> > sb;
         sb.blur(pix, a);
     }
 
@@ -635,30 +636,30 @@ public:
         paint(m);
     }
 
-    template<typename S>
-    void fillGradient(Color b, Color m, Color e, int s, int x){
+    template<typename S, typename ColorType>
+    void fillGradient(ColorType b, ColorType m, ColorType e, int s, int x){
         agg::pod_auto_array<Color, 256> color_array;
         fill_color_array_3_stop(color_array, b, m, e);
         fillGradient<S>(color_array, s, x );
     }
 
-    template<typename S>
-    void strokeGradient(Color b, Color m, Color e, int s, int x){
+    template<typename S, typename ColorType>
+    void strokeGradient(ColorType b, ColorType m, ColorType e, int s, int x){
         agg::pod_auto_array<Color, 256> color_array;
         fill_color_array_3_stop(color_array, b, m, e);
         strokeGradient<S>(color_array, s, x);
     }
 
-    template<typename S>
-    void fillGradient(agg::pod_auto_array<Color, 256> color_array, int s, int x){
+    template<typename S, typename ColorType>
+    void fillGradient(agg::pod_auto_array<ColorType, 256> color_array, int s, int x){
         agg::conv_curve<agg::path_storage> p(*this);
 
         typedef agg::renderer_base<DrawingType> renderer_base_type;
-        typedef agg::pod_auto_array<Color, 256> color_array_type;
+        typedef agg::pod_auto_array<ColorType, 256> color_array_type;
         typedef S gradient_func_type;
         typedef agg::span_interpolator_linear<> interpolator_type;
-        typedef agg::span_allocator<Color> span_allocator_type;
-        typedef agg::span_gradient<Color,
+        typedef agg::span_allocator<ColorType> span_allocator_type;
+        typedef agg::span_gradient<ColorType,
                                    interpolator_type,
                                    gradient_func_type,
                                    color_array_type> span_gradient_type;
@@ -682,8 +683,8 @@ public:
         agg::render_scanlines(*raster, *sl, ren_gradient);
     }
 
-    template<typename S>
-    void strokeGradient(agg::pod_auto_array<Color, 256> color_array, int s, int x){
+    template<typename S, typename ColorType>
+    void strokeGradient(agg::pod_auto_array<ColorType, 256> color_array, int s, int x){
         agg::conv_curve<agg::path_storage> p(*this);
         agg::conv_stroke<agg::conv_curve<agg::path_storage>> q(p);
         q.width(_width);
@@ -693,11 +694,11 @@ public:
 
 
         typedef agg::renderer_base<DrawingType> renderer_base_type;
-        typedef agg::pod_auto_array<Color, 256> color_array_type;
+        typedef agg::pod_auto_array<ColorType, 256> color_array_type;
         typedef S gradient_func_type;
         typedef agg::span_interpolator_linear<> interpolator_type;
-        typedef agg::span_allocator<Color> span_allocator_type;
-        typedef agg::span_gradient<Color,
+        typedef agg::span_allocator<ColorType> span_allocator_type;
+        typedef agg::span_gradient<ColorType,
                                    interpolator_type,
                                    gradient_func_type,
                                    color_array_type> span_gradient_type;
@@ -721,27 +722,33 @@ public:
         agg::render_scanlines(*raster, *sl, ren_gradient);
     }
 
-    void fillLinearGradientH(Color b, Color m, Color e, int s, int x){
+    template <typename ColorType>
+    void fillLinearGradientH(ColorType b, ColorType m, ColorType e, int s, int x){
         fillGradient<agg::gradient_x>(b, m, e, s, x);
     }
 
-    void fillLinearGradientV(Color b, Color m, Color e, int s, int x){
+    template <typename ColorType>
+    void fillLinearGradientV(ColorType b, ColorType m, ColorType e, int s, int x){
         fillGradient<agg::gradient_y>(b, m, e, s, x);
     }
 
-    void fillRadialGradient(Color b, Color m, Color e, int s, int x){
+    template <typename ColorType>
+    void fillRadialGradient(ColorType b, ColorType m, ColorType e, int s, int x){
         fillGradient<agg::gradient_radial>(b, m, e, s, x);
     }
 
-    void strokeLinearGradientH(Color b, Color m, Color e, int s, int x){
+    template <typename ColorType>
+    void strokeLinearGradientH(ColorType b, ColorType m, ColorType e, int s, int x){
         strokeGradient<agg::gradient_x>(b, m, e, s, x);
     }
 
-    void strokeLinearGradientV(Color b, Color m, Color e, int s, int x){
+    template <typename ColorType>
+    void strokeLinearGradientV(ColorType b, ColorType m, ColorType e, int s, int x){
         strokeGradient<agg::gradient_y>(b, m, e, s, x);
     }
 
-    void strokeRadialGradient(Color b, Color m, Color e, int s, int x){
+    template <typename ColorType>
+    void strokeRadialGradient(ColorType b, ColorType m, ColorType e, int s, int x){
         strokeGradient<agg::gradient_radial>(b, m, e, s, x);
     }
 
@@ -775,8 +782,6 @@ public:
         return raster->hit_test(x, y);
     }
 
-
-    // Rasterizer vertices
     inline unsigned getVertex(unsigned idx, double *x, double *y){
         if (idx > totalVertices()){
             return 0;
@@ -825,7 +830,6 @@ public:
         return total_vertices();
     }
 
-
 };
 
 typedef agg::pixfmt_rgba32 rgba32;
@@ -841,10 +845,8 @@ typedef agg::pixfmt_gray16 gray16;
 
 typedef Drawing<rgba32> DrawingRGBA32;
 typedef Drawing<rgb24> DrawingRGB24;
-typedef Drawing<gray8> DrawingGray8;
 typedef Drawing<rgba64> DrawingRGBA64;
 typedef Drawing<rgb48> DrawingRGB48;
-typedef Drawing<gray16> DrawingGray16;
 typedef Drawing<bgra32> DrawingBGRA32;
 typedef Drawing<bgr24> DrawingBGR24;
 typedef Drawing<bgra64> DrawingBGRA64;
@@ -859,10 +861,6 @@ Drawing<bgr24>draw(Mat3b& im){
     return Drawing<bgr24>(im);
 }
 
-Drawing<gray8> draw(Mat1b& im){
-    return Drawing<gray8>(im);
-}
-
 Drawing<bgra64> draw(Mat4w& im){
     return Drawing<bgra64>(im);
 }
@@ -871,9 +869,6 @@ Drawing<bgr48> draw(Mat3w& im){
     return Drawing<bgr48>(im);
 }
 
-Drawing<gray16> draw(Mat1w& im){
-    return Drawing<gray16>(im);
-}
 #endif // USE_OPENCV
 
 } // namesapce tw

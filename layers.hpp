@@ -106,7 +106,6 @@ public:
         for(auto &i : arr){
             auto &im = std::get<0>(i);
             auto &pt = std::get<1>(i);
-            // TODO: get this working with OpenCV images too
             for(int32_t y = pt.y; y < pt.y + im.height; y++){
                 memcpy((void*)(dst.data + dst.offs(pt.x, y)), im.at(0, y - pt.y), sizeof(im.data[0]) * im.width);
             }

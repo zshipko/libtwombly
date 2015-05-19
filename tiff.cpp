@@ -106,7 +106,6 @@ Image<uint8_t> openTIFF8(TIFF *tif, double gamma){
     return im;
 }
 
-
 Image<uint16_t> openTIFF16(TIFF *tif, double gamma){
     uint32_t width, height, row;
     uint16_t chan, depth;
@@ -139,7 +138,5 @@ Image<uint16_t> openTIFF16(TIFF *tif, double gamma){
 
     return im;
 }
-
-
 
 } // namespace tw
