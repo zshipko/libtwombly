@@ -60,7 +60,7 @@ public:
             data = d;
             ownsdata = false;
         } else {
-            data = new DataType[w * h * c];
+            data = new DataType[w * h * c]();
             ownsdata = true;
         }
     }
@@ -188,7 +188,7 @@ public:
 
     Image<DataType>& operator=(Image<DataType>&& src){
         if (this->data == src.data)
-            return *this;
+            return src;
 
         if (this->data && this->ownsdata){
             delete this->data;
@@ -287,7 +287,7 @@ public:
     }
 
     Image<DataType> scale(double x, double y){
-        Image<DataType> scaled(width * x, height * y, channels);
+        Image<DataType> scaled((double)width * x, (double)height * y, channels);
         agg::trans_affine transform;
         transform.scale(x, y);
 
@@ -326,6 +326,25 @@ public:
 
     Point randomPoint(){
         return Point(arc4random_uniform(width), arc4random_uniform(height));
+    }
+
+    std::bitset<64> hash(){
+        std::bitset<64> h = 0;
+        auto tmp = this->grayscale().scale(8.0/this->width, 8.0/this->height);
+
+        float avg = 0;
+        for(auto i : tmp){
+            avg += i;
+        }
+        avg /= 64;
+
+        size_t bitno = 0;
+        for (auto i : tmp){
+            h.set(bitno, i > avg);
+            bitno++;
+        }
+
+        return h;
     }
 };
 
