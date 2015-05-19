@@ -54,7 +54,6 @@ public:
     int channels;
     DataType *data;
     Image() : width(0), height(0), channels(0), data(nullptr), ownsdata(false){}
-    Image(Image const &im) : width(im.width), height(im.height), channels(im.channels), ownsdata(false), data(im.data){}
     Image(ImageSizeType w, ImageSizeType h, int c=3, DataType *d=nullptr) :
         width(w), height(h), channels(c) {
         if (d){
@@ -65,6 +64,8 @@ public:
             ownsdata = true;
         }
     }
+    Image(Image const &im) : width(im.width), height(im.height), channels(im.channels), ownsdata(false), data(im.data){}
+
 
     ~Image(){
         if (ownsdata && data){
@@ -183,26 +184,6 @@ public:
                 memcpy(data + offs(x, y), src(x-pt.x, y-pt.y), minchan * datasize());
             }
         }
-    }
-
-    Image<DataType>& operator=(Image<DataType>&& src){
-        if (!src.valid())
-            return *this;
-
-        if (src.data == data)
-            return *this;
-
-        if (valid() && data){
-            delete[] data;
-        }
-
-        width = src.width;
-        height = src.height;
-        channels = src.channels;
-        data = src.data;
-        ownsdata = src.ownsdata;
-        src.ownsdata = false;
-        return *this;
     }
 
     Image<DataType> copy(){
