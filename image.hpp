@@ -7,6 +7,8 @@
 #include <functional>
 #include <math.h>
 
+#include <iostream>
+
 #include "agg_trans_affine.h"
 
 #define clamp_(a, b, c) (a < b ? b : (a > c ? c : a))
@@ -329,19 +331,19 @@ public:
     }
 
     std::bitset<64> hash(){
-        std::bitset<64> h;
-        auto tmp = this->scale(8.0/this->width, 8.0/this->height).grayscale();
+        std::bitset<64> h = 0;
+        auto tmp = this->grayscale().scale(8.0/this->width, 8.0/this->height);
 
         float avg = 0;
-
         for(auto i : tmp){
             avg += i;
         }
-        avg /= 64.0;
+        avg /= 64;
 
         size_t bitno = 0;
         for (auto i : tmp){
-            h.set(bitno++, i < avg);
+            h.set(bitno, i > avg);
+            bitno++;
         }
 
         return h;
