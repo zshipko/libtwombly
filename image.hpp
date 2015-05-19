@@ -7,8 +7,6 @@
 #include <functional>
 #include <math.h>
 
-#include <iostream>
-
 #include "agg_trans_affine.h"
 
 #define clamp_(a, b, c) (a < b ? b : (a > c ? c : a))
