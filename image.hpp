@@ -1,10 +1,10 @@
 #ifndef TWOMBLY_IMAGE_HEADER
 #define TWOMBLY_IMAGE_HEADER
 #include "extra/all"
+#include <bitset>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-#include <functional>
 #include <math.h>
 
 #include "agg_trans_affine.h"
@@ -23,11 +23,9 @@ namespace tw {
 using namespace cv;
 #endif
 
-
 using namespace extra;
 
 typedef int64_t ImageSizeType;
-
 typedef float Pixel __attribute__ ((vector_size (16)));
 
 #ifndef USE_OPENCV
@@ -53,7 +51,11 @@ public:
     ImageSizeType width, height;
     int channels;
     DataType *data;
+
+    // Creates an empty image
     Image() : width(0), height(0), channels(0), data(nullptr), ownsdata(false){}
+
+    // Creates a new image from width/height/channels and optional data
     Image(ImageSizeType w, ImageSizeType h, int c=3, DataType *d=nullptr) :
         width(w), height(h), channels(c) {
         if (d){
@@ -64,6 +66,8 @@ public:
             ownsdata = true;
         }
     }
+
+    // Creates a new handle for an existing image
     Image(Image const &im) : width(im.width), height(im.height), channels(im.channels), ownsdata(false), data(im.data){}
 
 
@@ -73,22 +77,27 @@ public:
         }
     }
 
+    // Returns length of a row of data
     inline size_t rowstride(){
         return width * channels;
     }
 
+    // Returns the size of all pixel data
     inline size_t size(){
-        return rowstride() * height * sizeof(DataType);
+        return rowstride() * height * datasize();
     }
 
+    // Returns the length of all pixel data
     inline size_t length(){
         return rowstride() * height;
     }
 
+    // Returns sizeof data type
     static inline size_t datasize(){
         return sizeof(DataType);
     }
 
+    // Returns data offset at point (x, y)
     size_t offs(ImageSizeType x, ImageSizeType y){
         return (y * width * channels) + (x * channels);
     }
@@ -97,6 +106,8 @@ public:
         return offs(pt.x, pt.y);
     }
 
+    // Returns true if point (x, y) is within the image bounds
+    // otherwise, returns false
     bool inBounds(ImageSizeType x, ImageSizeType y){
         return (x >= 0 && x < width && y >= 0 && y < height);
     }
@@ -105,10 +116,12 @@ public:
         return inBounds(pt.x, pt.y);
     }
 
+    // Get image data at index
     DataType &operator[](size_t index){
         return data[index];
     }
 
+    // Get image data att offs(x, y) +  c
     DataType &operator()(ImageSizeType x, ImageSizeType y, int c){
         if (!inBounds(x, y)) throw std::runtime_error("image: out of bounds");
         return data[offs(x, y) + c];
@@ -118,6 +131,7 @@ public:
         return this->operator()(pt.x, pt.y, c);
     }
 
+    // Get pointer to pixel at offs(x, y)
     DataType *operator()(ImageSizeType x, ImageSizeType y){
         if (!inBounds(x, y)) throw std::runtime_error("image: out of bounds");
         return data+offs(x, y);
@@ -127,6 +141,7 @@ public:
         return this->operator()(pt.x, pt.y);
     }
 
+    // Get float-pixel at offs(x, y)
     Pixel get(ImageSizeType x, ImageSizeType y){
         Pixel p;
         auto ptr = data+offs(x, y);
@@ -140,6 +155,7 @@ public:
         return this->get(pt.x, pt.y);
     }
 
+    // Set float-pixel at offs(x, y)
     void set(ImageSizeType x, ImageSizeType y, Pixel p){
         if (!inBounds(x, y)) return;
 
@@ -154,6 +170,7 @@ public:
         return this->set(pt.x, pt.y, p);
     }
 
+    // Set image data with c-style array of pixel data
     void operator()(ImageSizeType x, ImageSizeType y, DataType *pixel){
         if (!inBounds(x, y)) return;
         memcpy(data + offs(x, y), pixel, channels * datasize());
@@ -163,6 +180,7 @@ public:
         return operator()(pt.x, pt.y, pixel);
     }
 
+    // Set rectangle ith c-style array of pixel data
     void operator()(Rectangle r, DataType *pixels, size_t pixlen){
         size_t pixoffs = 0;
         for(ImageSizeType y = r.y; y < r.y + r.height; y++){
@@ -172,6 +190,17 @@ public:
                     operator()(x, y, c) = pixels[pixoffs % pixlen];
                     pixoffs += 1;
                 }
+            }
+        }
+    }
+
+    // Place image src at point pint (i, j)
+    void operator()(ImageSizeType i, ImageSizeType j, Image<DataType> &src){
+        auto minchan = min_(src.channels, channels);
+        for(ImageSizeType y = i; y < i + src.height; y++){
+            for(ImageSizeType x = j; x < j + src.width; x++){
+                if(!inBounds(x, y)) continue;
+                memcpy(data + offs(x, y), src(x-i, y-j), minchan * datasize());
             }
         }
     }
@@ -186,6 +215,7 @@ public:
         }
     }
 
+    // Assignment
     Image<DataType>& operator=(Image<DataType>&& src){
         if (this->data == src.data)
             return src;
@@ -204,12 +234,15 @@ public:
         return *this;
     }
 
+
+    // Creates copy of an existing image
     Image<DataType> copy(){
         Image<DataType> dst(width, height, channels);
         memcpy(dst.data, data, size());
         return dst;
     }
 
+    // Crops an image
     Image<DataType> crop(Rectangle r){
         Image<DataType> dst(r.width, r.height, channels);
         for(ImageSizeType y = r.y; y < r.y + r.height; y++){
@@ -219,8 +252,14 @@ public:
         return dst;
     }
 
+
+    inline Image<DataType> crop(ImageSizeType x, ImageSizeType y, ImageSizeType w, ImageSizeType h){
+        return this->crop(Rectangle(x, y, w, h));
+    }
+
+    // Checks if image is valid
     bool valid(){
-        return data != nullptr;
+        return channels > 0 && channels <= 4 && width > 0 && height > 0 && data != nullptr;
     }
 
     DataType *begin(){
@@ -231,6 +270,7 @@ public:
         return data + (width * height * channels);
     }
 
+    // Converts to a different image type using a conversion function for each pixel
     template <typename OutputImage>
     void convertTo(OutputImage &im, std::function<typename OutputImage::data_type(DataType)> fn){
         if (im.width != width || im.height != height){
@@ -242,6 +282,7 @@ public:
         }
     }
 
+    // Converts to a different image type using min, max and scale
     template <typename OutputImage>
     void convertTo(OutputImage &im, typename OutputImage::data_type mn = 0, typename OutputImage::data_type mx = 0, float scale = 1.0){
         if (im.width != width || im.height != height){
@@ -260,20 +301,34 @@ public:
         }
     }
 
+    // Get a single channel image from a multi-channel image,
+    // throws an error if the component requested is less than the
+    // number of channels in the image
     Image<DataType> component(int c){
+        if (channels <= c){
+            throw std::runtime_error("image.component: bad value");
+        }
+
         Image<DataType> dst(width, height, 1);
         for(size_t i = c; i < width * height * channels; i+=channels){
             dst[i/channels] = data[i];
         }
+
         return dst;
     }
 
     void component(int c, Image<DataType> &im){
+        if (channels <= c){
+            throw std::runtime_error("image.component: bad value");
+        }
+
         for(size_t i = c; i < width * height * channels; i+=channels){
             data[i] = im[i / channels];
         }
     }
 
+    // Convert the image to grayscle using R=0.3, G=0.59, B=0.11,
+    // Image must be in RGB order
     Image<DataType> grayscale(){
         if (channels == 1){
             return copy();
@@ -286,6 +341,7 @@ public:
         return dst;
     }
 
+    // Scale image to size (width*x, height*y)
     Image<DataType> scale(double x, double y){
         Image<DataType> scaled((double)width * x, (double)height * y, channels);
         agg::trans_affine transform;
@@ -302,6 +358,8 @@ public:
         return scaled;
     }
 
+
+    // Rotate an image around the center, angle is in radians
     Image<DataType> rotate(float angle, ImageSizeType w = 0, ImageSizeType h = 0){
         Image<DataType> rot(w ? w : width, h ? h : height, channels);
 
@@ -324,10 +382,12 @@ public:
         return rot;
     }
 
+    // Select a random point from the image
     Point randomPoint(){
         return Point(arc4random_uniform(width), arc4random_uniform(height));
     }
 
+    // Generate a simple content-based hash
     std::bitset<64> hash(){
         std::bitset<64> h = 0;
         auto tmp = this->grayscale().scale(8.0/this->width, 8.0/this->height);

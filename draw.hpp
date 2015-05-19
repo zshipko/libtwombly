@@ -47,6 +47,8 @@
 
 namespace tw {
 
+// The Color type is used when dealing with
+// colors withing the drawing context
 typedef agg::rgba8 Color;
 
 inline Color rgba(uint8_t r, uint8_t g, uint8_t b, uint8_t a){
@@ -55,6 +57,10 @@ inline Color rgba(uint8_t r, uint8_t g, uint8_t b, uint8_t a){
 
 inline Color rgb(uint8_t r, uint8_t g, uint8_t b){
     return Color(r, g, b, 255);
+}
+
+inline Color rgba(Pixel p){
+    return Color(p[0], p[1], p[2], p[3]);
 }
 
 template <typename ColorType>
@@ -86,8 +92,7 @@ enum line_cap_style {
     round_cap
 };
 
-enum line_join_style
-{
+enum line_join_style {
     miter_join         = 0,
     miter_join_revert  = 1,
     round_join         = 2,
@@ -95,12 +100,13 @@ enum line_join_style
     miter_join_round   = 4
 };
 
-enum filling_rule
-{
+enum filling_rule {
     fill_non_zero,
     fill_even_odd
 };
 
+
+// Used for simple 3 stop gradients
 template<class FillArray>
 void fill_color_array_3_stop(FillArray& array,
                       Color begin,
@@ -116,16 +122,22 @@ void fill_color_array_3_stop(FillArray& array,
     }
 }
 
+// Drawing type
 template <typename DrawingType>
 class Drawing : public agg::path_storage {
+
+    // render settings
     bool _antialias;
     double _width, _miterlimit;
     line_cap_style _linecap;
     line_join_style _linejoin;
+
+    // rendering
     agg::renderer_scanline_aa_solid<agg::renderer_base<DrawingType> > render_aa;
     agg::renderer_scanline_bin_solid<agg::renderer_base<DrawingType> > render_bin;
     agg::renderer_base<DrawingType> base;
-    unsigned pathid;
+
+    unsigned pathid; // stores current path
 
 public:
     agg::rendering_buffer buffer;
@@ -134,10 +146,12 @@ public:
     agg::trans_affine mtx;
     DrawingType pix;
 
+    // Creates a drawing context from width, height, channels and data
     Drawing(int32_t w, int32_t h, int32_t c, uint8_t *d) : buffer(d, w, h, w * c), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr) {
         alloc();
     }
 
+    // Creates a drawing context from standard Image types
     Drawing(Image<uint8_t> &im) : buffer((uint8_t*)im.data, im.width, im.height, im.width * im.channels), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr) {
         alloc();
     }
@@ -146,6 +160,7 @@ public:
         alloc();
     }
 
+    // Creates a drawing context from standard OpenCV Mat types
 #ifdef USE_OPENCV
         Drawing(Mat1b& im) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols),pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr) {
         alloc();
@@ -172,6 +187,18 @@ public:
     }
 #endif // USE_OPENCV
 
+    ~Drawing(){
+        if (raster){
+            delete raster;
+        }
+
+        if (sl){
+            delete sl;
+        }
+    }
+
+    // Actually create the image,
+    // this function will overwrite the current context if it already exists
     void alloc(){
         _miterlimit = 1;
         base = agg::renderer_base<DrawingType>(pix);
@@ -189,6 +216,8 @@ public:
         sl = new agg::scanline_p8();
     }
 
+
+    // Render getter/setters
     bool antialias(){
         return _antialias;
     }
@@ -225,24 +254,29 @@ public:
         _linecap = lc;
     }
 
-    void activePath(unsigned p){
-        pathid = p;
-    }
-
-    unsigned activePath(){
-        return pathid;
-    }
-
     line_cap_style lineCap(){
         return _linecap;
     }
 
+    // Set the current pathid
+    void activePath(unsigned p){
+        pathid = p;
+    }
+
+    // Get the current pathid;
+    unsigned activePath(){
+        return pathid;
+    }
+
+
+    // Start new path, returns new pathid
     unsigned newPath(){
         raster->reset();
         pathid = start_new_path();
         return pathid;
     }
 
+    // Rewind pathid
     void rewind(unsigned pid){
         rewind(pid);
         pathid = pid;
@@ -253,14 +287,18 @@ public:
         pathid = 0;
     }
 
+
+    // Set rotation
     inline void rotate(double rad){
         mtx *= agg::trans_affine_rotation(rad);
     }
 
+    // Set translation
     inline void translate(double x, double y){
         mtx *= agg::trans_affine_translation(x, y);
     }
 
+    // Set scale
     inline void scale(double n){
         mtx *= agg::trans_affine_scaling(n);
     }
@@ -269,19 +307,23 @@ public:
         mtx *= agg::trans_affine_scaling(n, m);
     }
 
+    // Set skew
     void skew(double x, double y){
         mtx *= agg::trans_affine_skewing(x, y);
     }
 
+    // Clear all transformations
     inline void clearTransforms(){
         mtx.reset();
     }
 
+    // joinPath inserts an object into the current path
     template<typename S>
     void joinPath(S &s){
         join_path(s, pathid);
     }
 
+    // concatPath appends a path to the current one
     template<typename S>
     void concatPath(S &s){
         concat_path(s, pathid);
@@ -309,6 +351,7 @@ public:
         join_poly(data,  n ? n : TW_POLY_SIZE(data), closed);
     }
 
+    // Reset everything
     void reset(){
         _width = 1;
         _miterlimit = 1;
@@ -318,6 +361,7 @@ public:
         removePaths();
     }
 
+    // Clear drawing context with specific rgba color
     inline void clear(uint8_t r, uint8_t g, uint8_t b, uint8_t a){
         base.clear(Color(r, g, b, a));
     }
@@ -326,10 +370,15 @@ public:
         base.clear(Color(r, g, b));
     }
 
+    inline void clear(Pixel px){
+        return base.clear(rgba(px));
+    }
+
     inline void removePaths(){
         remove_all();
     }
 
+    // Create shape objects
     void ellipse(double x, double y, double rx, double ry, int n = 100){
         agg::ellipse ell(x, y, rx, ry, n);
         joinPath<agg::ellipse>(ell);
@@ -352,8 +401,15 @@ public:
         raster->filling_rule((agg::filling_rule_e)fr);
     }
 
+
+    // Add a vertex to the rasterizer
     inline void addVertex(double x, double y, int cmd = agg::path_cmd_line_to){
         raster->add_vertex(x, y, cmd);
+    }
+
+    // Get previous position
+    inline Point lastPosition(){
+        return Point(lastX(), lastY());
     }
 
     inline double lastX(){
@@ -364,10 +420,12 @@ public:
         return last_y();
     }
 
+    // Convert relative coordinates to absolute positions
     inline void relToAbs(double *x, double *y){
         rel_to_abs(x, y);
     }
 
+    // Move current cursor to point
     inline void moveTo(double x, double y){
         move_to(x, y);
     }
@@ -421,6 +479,7 @@ public:
         sb.blur(pix, a);
     }
 
+    // Draw text without freetype
     double putTextSimple(double x, double y, const char *txt, int size=50, double width=2.0, const char *font=nullptr, bool flip_y = true){
         agg::gsv_text text;
         agg::gsv_text_outline<agg::trans_affine> outline(text, mtx);
@@ -469,21 +528,26 @@ public:
     }
 #endif // NO_FREETYPE
 
-    double textLengthSimple(const char *txt, int size=50, double width=2.0, void *font=nullptr, bool flip_y = true){
-        agg::gsv_text text;
-        agg::trans_affine mt;
-        agg::gsv_text_outline<agg::trans_affine> outline(text, mt);
-        text.text(txt);
-        text.flip(flip_y);
-        text.size(size);
-        outline.width(width);
-        if (font){
-            text.font(font);
-        }
-        return text.text_width();
+    // Copy from another drawing of the same type
+    void copyFrom(Drawing<DrawingType> &d){
+        buffer.copy_from(d.buffer);
     }
 
+    // Set the current rendering color
+    inline void setColor(Color c){
+        render_aa.color(c);
+        render_bin.color(c);
+    }
 
+    inline void setColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a=255){
+        setColor(Color(r, g, b, a));
+    }
+
+    inline void setColor(Pixel p){
+        setColor(Color(p[0], p[1], p[2], p[3]));
+    }
+
+    // Fill/stroke path with another Image
     template <typename Q>
     void fillPattern (Q &im) {
         agg::conv_curve<agg::path_storage> p(*this);
@@ -537,12 +601,15 @@ public:
         agg::render_scanlines_aa( *raster, *sl, base, sa, sg);
     }
 
+
+    // Fills and paints
     void fill(){
         agg::conv_curve<agg::path_storage> pth(*this);
         agg::conv_transform<agg::conv_curve<agg::path_storage>> m(pth, mtx);
         paint(m);
     }
 
+    // Strokes and paints
     void stroke(){
         agg::conv_curve<agg::path_storage> p(*this);
         agg::conv_stroke<agg::conv_curve<agg::path_storage>> pth(p);
@@ -554,6 +621,7 @@ public:
         paint(m);
     }
 
+    // Converts stroke to dash and paints
     void dash(double a, double b){
         agg::conv_curve<agg::path_storage> curve(*this);
         agg::conv_dash<agg::conv_curve<agg::path_storage>> p(curve);
@@ -565,76 +633,6 @@ public:
         pth.miter_limit(_miterlimit);
         agg::conv_transform<agg::conv_stroke<agg::conv_dash<agg::conv_curve<agg::path_storage>>>> m(pth, mtx);
         paint(m);
-    }
-
-
-    void paint(){
-        agg::path_storage g = *this;
-        raster->add_path(g, pathid);
-        if (_antialias){
-            agg::render_scanlines(*raster, *sl, render_aa);
-        } else {
-            agg::render_scanlines(*raster, *sl, render_bin);
-        }
-    }
-
-    template <typename S>
-    void paint(S &pth){
-        raster->add_path(pth, pathid);
-        if (_antialias){
-            agg::render_scanlines(*raster, *sl, render_aa);
-        } else {
-            agg::render_scanlines(*raster, *sl, render_bin);
-        }
-    }
-
-    inline void autoClose(bool c){
-        raster->auto_close(c);
-    }
-
-    inline bool inPath(double x, double y){
-        return raster->hit_test(x, y);
-    }
-
-    inline unsigned getVertex(unsigned idx, double *x, double *y){
-        if (idx > totalVertices()){
-            return 0;
-        }
-        return vertex(idx, x, y);
-    }
-
-    inline unsigned getVertex(double *x, double *y){
-        return vertex(x, y);
-    }
-
-    inline unsigned getCommand(unsigned idx){
-        return command(idx);
-    }
-
-    inline unsigned lastVertex(double *x, double *y){
-        return last_vertex(x, y);
-    }
-
-    inline unsigned prevVertex(double *x, double *y){
-        return prev_vertex(x, y);
-    }
-
-    inline void modifyVertex(unsigned idx, double x, double y){
-        if (idx > totalVertices()){
-            return;
-        }
-        modify_vertex(idx, x, y);
-    }
-
-    inline void modifyVertex(unsigned idx, double x, double y, unsigned cmd){
-        if (idx > totalVertices()){
-            return;
-        }
-        modify_vertex(idx, x, y, cmd);
-    }
-
-    inline unsigned totalVertices(){
-        return total_vertices();
     }
 
     template<typename S>
@@ -747,34 +745,87 @@ public:
         strokeGradient<agg::gradient_radial>(b, m, e, s, x);
     }
 
-    void copyFrom(Drawing<DrawingType> &d){
-        buffer.copy_from(d.buffer);
-    }
-
-    inline void setColor(Color c){
-        render_aa.color(c);
-        render_bin.color(c);
-    }
-
-    inline void setColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a=255){
-        setColor(Color(r, g, b, a));
-    }
-
-    inline void setColor(Pixel p){
-        setColor(Color(p[0], p[1], p[2], p[3] ? p[3] : 255));
-    }
-
-
-
-    ~Drawing(){
-        if (raster){
-            delete raster;
-        }
-
-        if (sl){
-            delete sl;
+    // Adds current path and actually draws everything
+    void paint(){
+        agg::path_storage g = *this;
+        raster->add_path(g, pathid);
+        if (_antialias){
+            agg::render_scanlines(*raster, *sl, render_aa);
+        } else {
+            agg::render_scanlines(*raster, *sl, render_bin);
         }
     }
+
+    template <typename S>
+    void paint(S &pth){
+        raster->add_path(pth, pathid);
+        if (_antialias){
+            agg::render_scanlines(*raster, *sl, render_aa);
+        } else {
+            agg::render_scanlines(*raster, *sl, render_bin);
+        }
+    }
+
+    inline void autoClose(bool c){
+        raster->auto_close(c);
+    }
+
+    // Check if current point is in rasterizer
+    inline bool inPath(double x, double y){
+        return raster->hit_test(x, y);
+    }
+
+
+    // Rasterizer vertices
+    inline unsigned getVertex(unsigned idx, double *x, double *y){
+        if (idx > totalVertices()){
+            return 0;
+        }
+        return vertex(idx, x, y);
+    }
+
+    inline unsigned getVertex(double *x, double *y){
+        return vertex(x, y);
+    }
+
+
+    // Get command for vertex index
+    inline unsigned getCommand(unsigned idx){
+        return command(idx);
+    }
+
+    // Get last vertex
+    inline unsigned lastVertex(double *x, double *y){
+        return last_vertex(x, y);
+    }
+
+    // Get previous vertex
+    inline unsigned prevVertex(double *x, double *y){
+        return prev_vertex(x, y);
+    }
+
+    // Change vertex index to new point
+    inline void modifyVertex(unsigned idx, double x, double y){
+        if (idx > totalVertices()){
+            return;
+        }
+        modify_vertex(idx, x, y);
+    }
+
+    // Change vertex index to new point and set new command
+    inline void modifyVertex(unsigned idx, double x, double y, unsigned cmd){
+        if (idx > totalVertices()){
+            return;
+        }
+        modify_vertex(idx, x, y, cmd);
+    }
+
+    // Count vertices
+    inline unsigned totalVertices(){
+        return total_vertices();
+    }
+
+
 };
 
 typedef agg::pixfmt_rgba32 rgba32;

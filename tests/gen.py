@@ -50,6 +50,7 @@ tb.expect_throws.append("test_Layers.image")
 tb.expect_throws.append("test_Layers.point")
 tb.expect_throws.append("openTIFF")
 tb.expect_throws.append("imread")
+tb.expect_throws.append("test_Image.component")
 
 tb.ignore_functions.extend(["saveTIFF", "imwrite", "rewind", "invertPolygon", "getCommand", "push_back", "test_Layers.operator+=", "test_maybe.check", "test_list.operator+=", "test_Image.scale"])
 
