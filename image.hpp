@@ -327,25 +327,6 @@ public:
     Point randomPoint(){
         return Point(arc4random_uniform(width), arc4random_uniform(height));
     }
-
-    std::bitset<64> hash(){
-        std::bitset<64> h = 0;
-        auto tmp = this->grayscale().scale(8.0/this->width, 8.0/this->height);
-
-        float avg = 0;
-        for(auto i : tmp){
-            avg += i;
-        }
-        avg /= 64;
-
-        size_t bitno = 0;
-        for (auto i : tmp){
-            h.set(bitno, i > avg);
-            bitno++;
-        }
-
-        return h;
-    }
 };
 
 typedef Image<uint8_t> Image8;
