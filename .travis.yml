@@ -5,6 +5,8 @@ compiler:
 
 script: make
 
+sudo: required
+
 os:
   - linux
   - osx
