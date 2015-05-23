@@ -79,10 +79,14 @@ const lest::test drawing_test[] = {
         d.activePath(pathid);
         d.stroke();
 
-        namedWindow("Path test");
-        imshow("Path test", im);
-        waitKey(0);
-        destroyAllWindows();
+        try{
+            namedWindow("Path test");
+            imshow("Path test", im);
+            waitKey(0);
+            destroyAllWindows();
+        } catch(std::exception &exc){
+
+        }
     },
 
     CASE ( "Curve" ) {
@@ -95,9 +99,13 @@ const lest::test drawing_test[] = {
         d.curveTo(400, 400, 100, 320);
         d.stroke();
 
-        namedWindow("Curve test");
-        imshow("Curve test", im2);
-        waitKey(0);
+        try {
+            namedWindow("Curve test");
+            imshow("Curve test", im2);
+            waitKey(0);
+        } catch (std::exception &exc){
+
+        }
 
         d.newPath();
         d.clear(255, 255, 255);
@@ -105,9 +113,14 @@ const lest::test drawing_test[] = {
         d.moveTo(100, 100);
         d.curveTo(400, 400, 150, 320);
         d.stroke();
-        imshow("Curve test", im2);
-        waitKey(0);
-        destroyAllWindows();
+
+        try{
+            imshow("Curve test", im2);
+            waitKey(0);
+            destroyAllWindows();
+        } catch(std::exception &exc){
+
+        }
     }
 
 };
