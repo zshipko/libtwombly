@@ -26,32 +26,22 @@ agg/src/agg_trans_double_path.cpp \
 agg/src/agg_vpgen_clip_polygon.cpp \
 agg/src/agg_vpgen_clip_polyline.cpp \
 agg/src/agg_vpgen_segmentator.cpp
-tw_src=image.cpp draw.cpp io.cpp layers.cpp
+tw_src=image.cpp draw.cpp
 agg_hdrs=agg/include/*.h agg/include/util/*.h
-tw_hdrs=image.hpp draw.hpp stb_image.h stb_image_write.h twombly.hpp layers.hpp io.hpp
-libs=
+tw_hdrs=image.hpp draw.hpp twombly.hpp
+libs=-lopencv_core -lopencv_highgui -lopencv_imgproc
 incl=-I./agg/include -I./agg/font_freetype -I./twombly
 dest?=/usr/local
 VERSION=0.1
 RELEASE_DIR=./libtwombly-$(VERSION)-`uname`_`uname -m`
 UNAME=$(shell uname)
-TIFF?=yes
 FREETYPE?=yes
 FREETYPE_PKG?=freetype2
-OPENCV?=yes
 
 HAS_COMPILER=$(shell $(CXX) -v || printf "NO";)
 ifeq ($(HAS_COMPILER)X,NOX)
 	CXX=c++
 endif
-
-HAS_OPENCV=$(shell pkg-config --cflags opencv > /dev/null; echo $$?)
-ifeq ($(HAS_OPENCV)X$(FREETYPE)X,0XyesX)
-	libs+= -lopencv_core -lopencv_highgui -lopencv_imgproc
-	incl+= -DUSE_OPENCV
-	tw_src+= compat.cpp
-endif
-
 
 HAS_FREETYPE=$(shell pkg-config --cflags $(FREETYPE_PKG) > /dev/null; echo $$?)
 ifeq ($(HAS_FREETYPE)X$(FREETYPE)X,0XyesX)
@@ -62,14 +52,6 @@ ifeq ($(HAS_FREETYPE)X$(FREETYPE)X,0XyesX)
 else
 	FREETYPE_PKG=
 	incl+= -DNO_FREETYPE
-endif
-
-ifeq ($(TIFF)X,yesX)
-	tw_src+= tiff.cpp
-	libs+= -L/usr/local/lib -ltiff
-	incl+= -I/usr/local/include
-else
-	incl+= -DNO_TIFF
 endif
 
 agg_obj=$(agg_src:.cpp=.o)
@@ -100,7 +82,7 @@ install:
 	cp libagg.* $(dest)/lib/
 	cp libtwombly.* $(dest)/lib/
 	cp twrun $(dest)/bin/twrun
-	printf "Name: twombly\nDescription: A 2d graphics library for C++\nVersion: $(VERSION)\nLibs: -L$(dest)/lib -ltwombly\nCflags: -std=c++11 -I$(dest)/include\n" > $(dest)/lib/pkgconfig/twombly.pc
+	printf "Name: twombly\nDescription: A 2d graphics library for C++\nVersion: $(VERSION)\nLibs: -L$(dest)/lib -ltwombly $(libs)\nCflags: -std=c++11 -I$(dest)/include\n" > $(dest)/lib/pkgconfig/twombly.pc
 	echo "Requires: $(FREETYPE_PKG)" >> $(dest)/lib/pkgconfig/twombly.pc
 
 uninstall:
@@ -133,7 +115,7 @@ release:
 	tar czf $(RELEASE_DIR).tar.gz $(RELEASE_DIR)
 
 test:
-	cd tests && CXX=$(CXX) OPENCV=$(OPENCV) FREETYPE=$(FREETYPE) $(MAKE)
+	cd tests && CXX=$(CXX) FREETYPE=$(FREETYPE) $(MAKE)
 	tests/run
 
 parser:

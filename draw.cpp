@@ -9,7 +9,6 @@ template class Drawing<rgb48>;
 template class Drawing<bgra32>;
 template class Drawing<bgr24>;
 
-#ifdef USE_OPENCV
 Drawing<bgra32> draw(Mat4b& im){
     return Drawing<bgra32>(im);
 }
@@ -25,7 +24,5 @@ Drawing<bgra64> draw(Mat4w& im){
 Drawing<bgr48> draw(Mat3w& im){
     return Drawing<bgr48>(im);
 }
-
-#endif // USE_OPENCV
 
 }

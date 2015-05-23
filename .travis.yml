@@ -11,20 +11,16 @@ os:
 
 matrix:
   include:
-    - env: SDL=yes
-    - env: SDL=no FREETYPE=yes
-    - env: SDL=no FREETYPE=no TIFF=no
+    - env: FREETYPE=yes
+    - env: FREETYPE=no
 
 before_install:
   - if [ `uname` = "Darwin"]; then
-        brew install gcc48 sdl2;
+        brew install gcc48;
     else
         sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test;
         sudo apt-get update -qq;
-        sudo apt-get install -y sudo gcc-4.8 g++-4.8 libfreetype6-dev;
+        sudo apt-get install -y sudo gcc-4.8 g++-4.8 libfreetype6-dev libopencv-dev;
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 40 --slave /usr/bin/g++ g++ /usr/bin/g++-4.8;
-        curl -O https://www.libsdl.org/release/SDL2-2.0.3.tar.gz;
-        tar -xzf SDL2-2.0.3.tar.gz;
-        cd SDL2-2.0.3 && ./configure && make && sudo make install;
     fi
 

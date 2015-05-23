@@ -3,7 +3,7 @@
 using namespace tw;
 
 int main(int argc, char *argv[]){
-    Image<uint8_t> im(400, 400, 3);
+    Mat3b im(400, 400);
 
     auto ctx = DrawingRGB24(im);
 

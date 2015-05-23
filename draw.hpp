@@ -164,34 +164,26 @@ public:
         alloc();
     }
 
-    // Creates a drawing context from standard Image types
-    Drawing(Image<uint8_t> &im) : buffer((uint8_t*)im.data, im.width, im.height, im.width * im.channels), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr) {
-        alloc();
-    }
-
-    Drawing(Image<uint16_t> &im) : buffer((uint8_t*)im.data, im.width, im.height, im.width * im.channels * 2), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr) {
-        alloc();
-    }
-
     // Creates a drawing context from standard OpenCV Mat types
-#ifdef USE_OPENCV
-
-    Drawing(Mat3b& im) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels()),pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr) {
+    Drawing(Mat3b &im) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels()),pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr) {
         alloc();
     }
 
-    Drawing(Mat4b& im) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels()), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr) {
+    Drawing(Mat4b &im) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels()), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr) {
         alloc();
     }
 
-    Drawing(Mat3w& im) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels() * 2),pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr) {
+    Drawing(Mat3w &im) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels() * 2),pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr) {
         alloc();
     }
 
-    Drawing(Mat4w& im) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels() * 2), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr) {
+    Drawing(Mat4w &im) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels() * 2), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr) {
         alloc();
     }
-#endif // USE_OPENCV
+
+    Drawing(Mat &im) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels() * sizeof(im.data[0])), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr){
+        alloc();
+    }
 
     ~Drawing(){
         if (raster){
@@ -274,24 +266,12 @@ public:
         return pathid;
     }
 
-
     // Start new path, returns new pathid
     unsigned newPath(){
         raster->reset();
         pathid = start_new_path();
         return pathid;
     }
-
-    /*void rewind(unsigned pid){
-        rewind(pid);
-        pathid = pid;
-    }
-
-    void rewind(){
-        rewind(0);
-        pathid = 0;
-    }*/
-
 
     // Set rotation
     inline void rotate(double rad){
@@ -852,12 +832,10 @@ typedef Drawing<bgr24> DrawingBGR24;
 typedef Drawing<bgra64> DrawingBGRA64;
 typedef Drawing<bgr48> DrawingBGR48;
 
-#ifdef USE_OPENCV
 Drawing<bgra32> draw(Mat4b& im);
 Drawing<bgr24>draw(Mat3b& im);
 Drawing<bgra64> draw(Mat4w& im);
 Drawing<bgr48> draw(Mat3w& im);
-#endif // USE_OPENCV
 
 } // namesapce tw
 #endif // TWOMBLY_DRAW_HEADER
