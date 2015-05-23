@@ -30,7 +30,7 @@ tw_src=image.cpp draw.cpp
 agg_hdrs=agg/include/*.h agg/include/util/*.h
 tw_hdrs=image.hpp draw.hpp twombly.hpp
 libs=-L/usr/local/lib -lopencv_core -lopencv_highgui -lopencv_imgproc
-incl=-I./agg/include -I./agg/font_freetype -I./twombly
+incl=-I./agg/include -I./agg/font_freetype -I./twombly -I/usr/local/include
 dest?=/usr/local
 VERSION=0.1
 RELEASE_DIR=./libtwombly-$(VERSION)-`uname`_`uname -m`
@@ -81,7 +81,7 @@ install:
 	cp libagg.* $(dest)/lib/
 	cp libtwombly.* $(dest)/lib/
 	cp twrun $(dest)/bin/twrun
-	printf "Name: twombly\nDescription: A 2d graphics library for C++\nVersion: $(VERSION)\nLibs: -L$(dest)/lib -ltwombly $(libs)\nCflags: -std=c++11 -I$(dest)/include\n" > $(dest)/lib/pkgconfig/twombly.pc
+	printf "Name: twombly\nDescription: A 2d graphics library for C++\nVersion: $(VERSION)\nLibs: -L$(dest)/lib -ltwombly $(libs)\nCflags: -std=c++11 -I/usr/local/include -I$(dest)/include\n" > $(dest)/lib/pkgconfig/twombly.pc
 	echo "Requires: $(FREETYPE_PKG)" >> $(dest)/lib/pkgconfig/twombly.pc
 
 uninstall:
