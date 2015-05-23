@@ -14,6 +14,15 @@ namespace tw {
 using namespace cv;
 
 typedef float Pixel __attribute__ ((vector_size (16)));
+
+enum {
+    BLUE,
+    GREEN,
+    RED,
+    ALPHA
+} COLOR_INDEX;
+
+// simple content based hash
 std::bitset<64> hash(Mat &&im);
 
 } //namespace tw

@@ -819,8 +819,8 @@ typedef agg::pixfmt_bgr24 bgr24;
 typedef agg::pixfmt_gray8 gray8;
 typedef agg::pixfmt_rgba64 rgba64;
 typedef agg::pixfmt_rgb48 rgb48;
-typedef agg::pixfmt_rgba64 bgra64;
-typedef agg::pixfmt_rgb48 bgr48;
+typedef agg::pixfmt_bgra64 bgra64;
+typedef agg::pixfmt_bgr48 bgr48;
 typedef agg::pixfmt_gray16 gray16;
 
 typedef Drawing<rgba32> DrawingRGBA32;
