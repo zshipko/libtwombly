@@ -11,18 +11,25 @@ namespace tw {
 #ifndef NO_TIFF
 #include <tiff.h>
 #include <tiffio.h>
-bool saveTIFF(Image<uint8_t> &im, const char *path, const char *mode = "w");
-bool saveTIFF(Image<uint16_t> &im, const char *path, const char *mode = "w");
-TIFF *tiffOpen(const char *path, uint16_t *channels = nullptr, uint32_t *depth = nullptr);
-Image<uint8_t> openTIFF8(TIFF *tif, double gamma = 0);
-Image<uint16_t> openTIFF16(TIFF *tif, double gamma = 0);
+TIFF *tiffOpen(const char *path, const char *mode = "r");
+void tiffClose(TIFF *tif);
+
+bool writeTIFF(TIFF *tif, Image<uint8_t> const &im);
+bool writeTIFF(TIFF *tif, Image<uint16_t> const &im);
+bool writeTIFF(const char *path, Image<uint8_t> const &im);
+bool writeTIFF(const char *path, Image<uint16_t> const &im);
+
+Image<uint8_t> readTIFF(TIFF *tif);
+Image<uint16_t> readTIFF16(TIFF *tif);
+Image<uint8_t> readTIFF(const char *path);
+Image<uint16_t> readTIFF16(const char *path);
 #endif
 
 // bool imread(const char *path, Image<uint16_t> &im);
 Image<uint8_t> imread(const char *path);
 
-bool imwrite(const char *, Image<uint8_t> &);
-bool imwrite(const char *, Image<uint16> &);
+bool imwrite(const char *, Image<uint8_t> const &);
+bool imwrite(const char *, Image<uint16> const &);
 
 } // namespace tw
 

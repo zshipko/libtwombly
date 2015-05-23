@@ -6,8 +6,34 @@
 
 namespace tw {
 
-bool saveTIFF(Image<uint8_t> &im, const char *path, const char *mode){
-    TIFF *tif = TIFFOpen(path, mode);
+class AutoTIFF {
+public:
+    TIFF *handle;
+
+    AutoTIFF(const char *path, const char *mode = "r") : handle(nullptr) {
+        handle = tiffOpen(path, mode);
+    }
+
+    ~AutoTIFF(){
+        tiffClose(handle);
+    }
+
+    bool ok(){
+        return handle != nullptr;
+    }
+};
+
+TIFF *tiffOpen(const char *path, const char *mode){
+    return TIFFOpen(path, mode);
+}
+
+void tiffClose(TIFF *tif){
+    if (tif)
+        TIFFClose(tif);
+}
+
+
+bool writeTIFF(TIFF *tif, Image<uint8_t> const &im){
     if (!tif){
         return false;
     }
@@ -28,13 +54,19 @@ bool saveTIFF(Image<uint8_t> &im, const char *path, const char *mode){
         TIFFWriteScanline(tif, scanline, row, 0);
     }
 
-    TIFFClose(tif);
-
     return true;
 }
 
-bool saveTIFF(Image<uint16_t> &im, const char *path, const char *mode){
-    TIFF *tif = TIFFOpen(path, mode);
+bool writeTIFF(const char *path, Image<uint8_t> const &im){
+    AutoTIFF tif(path, "w");
+
+    if (!tif.ok())
+        return false;
+
+    return writeTIFF(tif.handle, im);
+}
+
+bool writeTIFF(TIFF *tif, Image<uint16_t> const &im){
     if (!tif){
         return false;
     }
@@ -55,25 +87,19 @@ bool saveTIFF(Image<uint16_t> &im, const char *path, const char *mode){
         TIFFWriteScanline(tif, scanline, row, 0);
     }
 
-    TIFFClose(tif);
-
     return true;
 }
 
-TIFF *tiffOpen(const char *path, uint16_t *channels, uint32_t *depth){
-    TIFF *tif = TIFFOpen(path, "r");
-    if (channels != nullptr && tif){
-        TIFFGetField(tif, TIFFTAG_SAMPLESPERPIXEL, &channels);
-    }
+bool writeTIFF(const char *path, Image<uint16_t> const &im){
+    AutoTIFF tif(path, "w");
 
-    if (depth != nullptr && tif){
-        TIFFGetField(tif, TIFFTAG_BITSPERSAMPLE, &depth);
+    if (!tif.ok())
+        return false;
 
-    }
-    return tif;
+    return writeTIFF(tif.handle, im);
 }
 
-Image<uint8_t> openTIFF8(TIFF *tif, double gamma){
+Image<uint8_t> readTIFF(TIFF *tif){
     uint32_t width, height, row;
     uint16_t chan, depth;
 
@@ -91,22 +117,21 @@ Image<uint8_t> openTIFF8(TIFF *tif, double gamma){
     } else if (depth == 16){
         Image<uint16_t> tmp(width, height, chan);
         for(row = 0; row < height; row++){
-            TIFFReadScanline(tif, tmp.data + TIFFScanlineSize(tif) * row, row, 0);
+            TIFFReadScanline(tif, tmp.data + tmp.rowstride() * row, row, 0);
         }
 
         tmp.convertTo(im, [](uint16_t num){ return num >> 8; });
     }
 
-    if (gamma > 1.0){
-        for(size_t i = 0; i < im.length(); i++){
-            im.data[i] = 255 * pow(im.data[i] / 255.0, 1/gamma);
-        }
-    }
-
     return im;
 }
 
-Image<uint16_t> openTIFF16(TIFF *tif, double gamma){
+Image<uint8_t> readTIFF(const char *path){
+    AutoTIFF tif(path);
+    return readTIFF(tif.handle);
+}
+
+Image<uint16_t> readTIFF16(TIFF *tif){
     uint32_t width, height, row;
     uint16_t chan, depth;
 
@@ -124,19 +149,18 @@ Image<uint16_t> openTIFF16(TIFF *tif, double gamma){
     } else if (depth == 8){
         Image<uint8_t> tmp(width, height, chan);
         for(row = 0; row < height; row++){
-            TIFFReadScanline(tif, tmp.data + TIFFScanlineSize(tif) * row, row, 0);
+            TIFFReadScanline(tif, tmp.data + tmp.rowstride() * row, row, 0);
         }
 
         tmp.convertTo(im, [](uint8_t num){ return num << 8; });
     }
 
-    if (gamma > 1.0){
-        for(size_t i = 0; i < im.length(); i++){
-            im.data[i] = 65535.0 * pow(im.data[i] / 65535.0, 1/gamma);
-        }
-    }
-
     return im;
+}
+
+Image<uint16_t> readTIFF16(const char *path){
+    AutoTIFF tif(path);
+    return readTIFF16(tif.handle);
 }
 
 } // namespace tw

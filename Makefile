@@ -26,7 +26,7 @@ agg/src/agg_trans_double_path.cpp \
 agg/src/agg_vpgen_clip_polygon.cpp \
 agg/src/agg_vpgen_clip_polyline.cpp \
 agg/src/agg_vpgen_segmentator.cpp
-tw_src=image.cpp draw.cpp io.cpp
+tw_src=image.cpp draw.cpp io.cpp layers.cpp
 agg_hdrs=agg/include/*.h agg/include/util/*.h
 tw_hdrs=image.hpp draw.hpp stb_image.h stb_image_write.h twombly.hpp layers.hpp io.hpp
 libs=

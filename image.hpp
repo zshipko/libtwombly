@@ -50,26 +50,69 @@ public:
     typedef DataType data_type;
     ImageSizeType width, height;
     int channels;
+    Point origin;
     DataType *data;
 
     // Creates an empty image
     Image() : width(0), height(0), channels(0), data(nullptr), ownsdata(false){}
 
     // Creates a new image from width/height/channels and optional data
-    Image(ImageSizeType w, ImageSizeType h, int c=3, DataType *d=nullptr) :
+    Image(ImageSizeType w, ImageSizeType h, int c=3, DataType *d=nullptr, bool owner = false) :
         width(w), height(h), channels(c) {
         if (d){
             data = d;
-            ownsdata = false;
+            ownsdata = owner;
         } else {
             data = new DataType[w * h * c]();
             ownsdata = true;
         }
     }
 
-    // Creates a new handle for an existing image
-    Image(Image const &im) : width(im.width), height(im.height), channels(im.channels), ownsdata(false), data(im.data){}
+    Image(Image<DataType> const &im) : width(im.width), height(im.height), channels(im.channels), ownsdata(false), data(im.data){}
 
+    Image(Image<DataType> &&im) : width(im.width), height(im.height), channels(im.channels), ownsdata(im.ownsdata), data(im.data){
+        im.ownsdata = false;
+    }
+
+    Image<DataType>& operator=(Image<DataType>&& src){
+        if (this == &src)
+            return *this;
+
+        if (this->data && this->ownsdata){
+            delete[] this->data;
+        }
+
+        this->width = src.width;
+        this->height = src.height;
+        this->channels = src.channels;
+        this->origin = src.origin;
+
+        this->data = src.data;
+        this->ownsdata = src.ownsdata;
+        src.ownsdata = false;
+
+        return *this;
+    }
+
+    Image<DataType>& operator=(Image<DataType> const &src){
+        if (this->data == src.data)
+            return *this;
+
+        if (this->data && this->ownsdata){
+            delete[] this->data;
+        }
+
+        this->width = src.width;
+        this->height = src.height;
+        this->channels = src.channels;
+        this->origin = src.origin;
+
+        this->data = new DataType[width * height * channels];
+        std::copy(src.data, src.data + this->size(), this->data);
+        this->ownsdata = true;
+
+        return *this;
+    }
 
     ~Image(){
         if (ownsdata && data){
@@ -78,41 +121,41 @@ public:
     }
 
     // Returns length of a row of data
-    inline size_t rowstride(){
+    inline const size_t rowstride(){
         return width * channels;
     }
 
     // Returns the size of all pixel data
-    inline size_t size(){
+    inline const size_t size(){
         return rowstride() * height * datasize();
     }
 
     // Returns the length of all pixel data
-    inline size_t length(){
+    inline const size_t length(){
         return rowstride() * height;
     }
 
     // Returns sizeof data type
-    static inline size_t datasize(){
+    static inline const size_t datasize(){
         return sizeof(DataType);
     }
 
     // Returns data offset at point (x, y)
-    size_t offs(ImageSizeType x, ImageSizeType y){
+    size_t const offs(ImageSizeType x, ImageSizeType y){
         return (y * width * channels) + (x * channels);
     }
 
-    inline size_t offs(Point pt){
+    inline const size_t offs(Point pt){
         return offs(pt.x, pt.y);
     }
 
     // Returns true if point (x, y) is within the image bounds
     // otherwise, returns false
-    bool inBounds(ImageSizeType x, ImageSizeType y){
+    bool const inBounds(ImageSizeType x, ImageSizeType y){
         return (x >= 0 && x < width && y >= 0 && y < height);
     }
 
-    inline bool inBounds(Point pt){
+    inline const bool inBounds(Point pt){
         return inBounds(pt.x, pt.y);
     }
 
@@ -142,7 +185,7 @@ public:
     }
 
     // Get float-pixel at offs(x, y)
-    Pixel get(ImageSizeType x, ImageSizeType y){
+   const Pixel get(ImageSizeType x, ImageSizeType y){
         Pixel p;
         auto ptr = data+offs(x, y);
         for (int c = 0; c < channels; c++){
@@ -151,7 +194,7 @@ public:
         return p;
     }
 
-    inline Pixel get(Point pt){
+    inline const Pixel get(Point pt){
         return this->get(pt.x, pt.y);
     }
 
@@ -206,44 +249,19 @@ public:
     }
 
     void operator()(Point pt, Image<DataType> &src){
-        auto minchan = min_(src.channels, channels);
-        for(ImageSizeType y = pt.y; y < pt.y + src.height; y++){
-            for(ImageSizeType x = pt.x; x < pt.x + src.width; x++){
-                if(!inBounds(x, y)) continue;
-                memcpy(data + offs(x, y), src(x-pt.x, y-pt.y), minchan * datasize());
-            }
-        }
-    }
-
-    // Assignment
-    Image<DataType>& operator=(Image<DataType>&& src){
-        if (this->data == src.data)
-            return src;
-
-        if (this->data && this->ownsdata){
-            delete this->data;
-        }
-
-        this->width = src.width;
-        this->height = src.height;
-        this->channels = src.channels;
-        this->data = src.data;
-        this->ownsdata = src.ownsdata;
-        src.ownsdata = false;
-
-        return *this;
+        return this->operator()(pt.x, pt.y);
     }
 
 
     // Creates copy of an existing image
-    Image<DataType> copy(){
+    const Image<DataType> copy(){
         Image<DataType> dst(width, height, channels);
-        memcpy(dst.data, data, size());
+        std::copy(data, data + size(), dst.data);
         return dst;
     }
 
     // Crops an image
-    Image<DataType> crop(Rectangle r){
+    const Image<DataType> crop(Rectangle r){
         Image<DataType> dst(r.width, r.height, channels);
         for(ImageSizeType y = r.y; y < r.y + r.height; y++){
             memcpy(dst.data + dst.offs(0, (y-r.y)), data + offs(r.x, y),
@@ -253,12 +271,12 @@ public:
     }
 
 
-    inline Image<DataType> crop(ImageSizeType x, ImageSizeType y, ImageSizeType w, ImageSizeType h){
+    inline const Image<DataType> crop(ImageSizeType x, ImageSizeType y, ImageSizeType w, ImageSizeType h){
         return this->crop(Rectangle(x, y, w, h));
     }
 
     // Checks if image is valid
-    bool valid(){
+    bool const valid(){
         return channels > 0 && channels <= 4 && width > 0 && height > 0 && data != nullptr;
     }
 
@@ -272,7 +290,7 @@ public:
 
     // Converts to a different image type using a conversion function for each pixel
     template <typename OutputImage>
-    void convertTo(OutputImage &im, std::function<typename OutputImage::data_type(DataType)> fn){
+    const void convertTo(OutputImage &im, std::function<typename OutputImage::data_type(DataType)> fn){
         if (im.width != width || im.height != height){
             return;
         }
@@ -284,7 +302,7 @@ public:
 
     // Converts to a different image type using min, max and scale
     template <typename OutputImage>
-    void convertTo(OutputImage &im, typename OutputImage::data_type mn = 0, typename OutputImage::data_type mx = 0, float scale = 1.0){
+    const void convertTo(OutputImage &im, typename OutputImage::data_type mn = 0, typename OutputImage::data_type mx = 0, float scale = 1.0){
         if (im.width != width || im.height != height){
             return;
         }
@@ -304,7 +322,7 @@ public:
     // Get a single channel image from a multi-channel image,
     // throws an error if the component requested is less than the
     // number of channels in the image
-    Image<DataType> component(int c){
+    const Image<DataType> component(int c){
         if (channels <= c){
             throw std::runtime_error("image.component: bad value");
         }
@@ -335,14 +353,28 @@ public:
         }
 
         Image<DataType> dst(width, height, 1);
-        for(size_t i = 0; i < width * height * channels; i+=channels){
+        for(size_t i = 0; i < length(); i+=channels){
             dst[i/channels] = data[i] * 0.3 + data[i+1] * 0.59 + data[i+2] * 0.11;
         }
         return dst;
     }
 
+    Image<DataType> &gamma(float g, float max_num = 255.0){
+        if (datasize() == 2)
+            max_num = 65535.0;
+        else if (datasize() == 32)
+            max_num = 1.0;
+
+        for(size_t i = 0; i < length(); i++){
+            //data[i] = (DataType)(max_num * pow(data[i] / max_num, 1/g));
+
+        }
+
+        return *this;
+    }
+
     // Scale image to size (width*x, height*y)
-    Image<DataType> scale(double x, double y){
+    const Image<DataType> scale(double x, double y){
         Image<DataType> scaled((double)width * x, (double)height * y, channels);
         agg::trans_affine transform;
         transform.scale(x, y);
@@ -360,7 +392,7 @@ public:
 
 
     // Rotate an image around the center, angle is in radians
-    Image<DataType> rotate(float angle, ImageSizeType w = 0, ImageSizeType h = 0){
+    const Image<DataType> rotate(float angle, ImageSizeType w = 0, ImageSizeType h = 0){
         Image<DataType> rot(w ? w : width, h ? h : height, channels);
 
         agg::trans_affine transform;
@@ -383,7 +415,7 @@ public:
     }
 
     // Select a random point from the image
-    Point randomPoint(){
+    const Point randomPoint(){
         return Point(arc4random_uniform(width), arc4random_uniform(height));
     }
 

@@ -853,22 +853,10 @@ typedef Drawing<bgra64> DrawingBGRA64;
 typedef Drawing<bgr48> DrawingBGR48;
 
 #ifdef USE_OPENCV
-Drawing<bgra32> draw(Mat4b& im){
-    return Drawing<bgra32>(im);
-}
-
-Drawing<bgr24>draw(Mat3b& im){
-    return Drawing<bgr24>(im);
-}
-
-Drawing<bgra64> draw(Mat4w& im){
-    return Drawing<bgra64>(im);
-}
-
-Drawing<bgr48> draw(Mat3w& im){
-    return Drawing<bgr48>(im);
-}
-
+Drawing<bgra32> draw(Mat4b& im);
+Drawing<bgr24>draw(Mat3b& im);
+Drawing<bgra64> draw(Mat4w& im);
+Drawing<bgr48> draw(Mat3w& im);
 #endif // USE_OPENCV
 
 } // namesapce tw
