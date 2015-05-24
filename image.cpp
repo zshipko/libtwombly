@@ -2,7 +2,7 @@
 
 namespace tw {
 
-std::bitset<64> hash(Mat &&im){
+std::bitset<64> hash(Mat const &im){
     std::bitset<64> h = 0;
 
     Mat sized(8, 8, im.depth()), gray;
@@ -21,11 +21,11 @@ std::bitset<64> hash(Mat &&im){
     for(size_t i = 0; i < sized.total(); i++){
         avg += sized.data[i];
     }
-    avg /= 64;
+    avg /= 64.0;
 
     size_t bitno = 0;
     for(size_t i = 0; i < sized.total(); i++){
-        h.set(bitno, i > avg);
+        h.set(bitno, sized.data[i] > avg);
         bitno++;
     }
 

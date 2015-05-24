@@ -23,7 +23,7 @@ enum {
 } COLOR_INDEX;
 
 // simple content based hash
-std::bitset<64> hash(Mat &&im);
+std::bitset<64> hash(Mat const &im);
 
 } //namespace tw
 
