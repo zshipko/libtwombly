@@ -29,7 +29,12 @@ agg/src/agg_vpgen_segmentator.cpp
 tw_src=image.cpp draw.cpp
 agg_hdrs=agg/include/*.h agg/include/util/*.h
 tw_hdrs=image.hpp draw.hpp twombly.hpp
-libs=-L/usr/local/lib -lopencv_core -lopencv_highgui -lopencv_imgproc
+opencv?=yes
+ifeq ($(opencv)X,noX)
+	libs = -L/usr/local/lib
+else
+	libs=-L/usr/local/lib -lopencv_core -lopencv_highgui -lopencv_imgproc
+endif
 incl=-I./agg/include -I./agg/font_freetype -I./twombly -I/usr/local/include
 dest?=/usr/local
 VERSION=0.1
