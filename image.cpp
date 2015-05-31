@@ -2,6 +2,7 @@
 
 namespace tw {
 
+#ifndef NO_OPENCV
 std::bitset<64> hash(Mat const &im){
     std::bitset<64> h = 0;
 
@@ -31,5 +32,6 @@ std::bitset<64> hash(Mat const &im){
 
     return h;
 }
+#endif
 
 }; // namespace tw

@@ -52,29 +52,16 @@ namespace tw {
 typedef agg::rgba8 Color;
 typedef agg::rgba16 Color16;
 
-inline Color rgba(uint8_t r, uint8_t g, uint8_t b, uint8_t a){
-    return Color(r, g, b, a);
-}
-
-inline Color rgb(uint8_t r, uint8_t g, uint8_t b){
-    return Color(r, g, b, 255);
-}
-
-inline Color rgba(Pixel p){
-    return Color(p[0], p[1], p[2], p[3]);
-}
-
-inline Color16 rgba_16(uint8_t r, uint8_t g, uint8_t b, uint8_t a){
-    return Color16(r, g, b, a);
-}
-
-inline Color16 rgb_16(uint8_t r, uint8_t g, uint8_t b){
-    return Color16(r, g, b, 255);
-}
-
-inline Color16 rgba_16(Pixel p){
-    return Color16(p[0], p[1], p[2], p[3]);
-}
+inline Color rgba(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+#ifndef NO_OPENCV
+inline Color rgba(Scalar s);
+inline Color16 rgba_16(Scalar s);
+#endif
+inline Color rgb(uint8_t r, uint8_t g, uint8_t b);
+inline Color rgba(Pixel p);
+inline Color16 rgba_16(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+inline Color16 rgb_16(uint8_t r, uint8_t g, uint8_t b);
+inline Color16 rgba_16(Pixel p);
 
 template <typename ColorType>
 inline Color rgb(ColorType t){
@@ -164,6 +151,7 @@ public:
         alloc();
     }
 
+#ifndef NO_OPECV
     // Creates a drawing context from standard OpenCV Mat types
     Drawing(Mat3b &im) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels()),pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr) {
         alloc();
@@ -184,6 +172,7 @@ public:
     Drawing(Mat &im) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels() * sizeof(im.data[0])), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr){
         alloc();
     }
+#endif
 
     ~Drawing(){
         if (raster){
@@ -832,10 +821,12 @@ typedef Drawing<bgr24> DrawingBGR24;
 typedef Drawing<bgra64> DrawingBGRA64;
 typedef Drawing<bgr48> DrawingBGR48;
 
+#ifndef NO_OPECV
 Drawing<bgra32> draw(Mat4b& im);
 Drawing<bgr24>draw(Mat3b& im);
 Drawing<bgra64> draw(Mat4w& im);
 Drawing<bgr48> draw(Mat3w& im);
+#endif
 
 } // namesapce tw
 #endif // TWOMBLY_DRAW_HEADER

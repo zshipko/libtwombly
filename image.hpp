@@ -7,7 +7,9 @@
 #include <iostream>
 #include <math.h>
 
+#ifndef NO_OPENCV
 #include <opencv2/opencv.hpp>
+#endif
 
 namespace tw {
 
@@ -15,15 +17,17 @@ using namespace cv;
 
 typedef float Pixel __attribute__ ((vector_size (16)));
 
-enum {
-    BLUE,
-    GREEN,
-    RED,
-    ALPHA
-} COLOR_INDEX;
-
+#ifndef NO_OPENCV
 // simple content based hash
 std::bitset<64> hash(Mat const &im);
+#else
+class Point {
+    double x, y;
+};
+class Rectangle {
+    double x, y, width, height;
+};
+#endif
 
 } //namespace tw
 
