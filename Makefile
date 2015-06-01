@@ -40,7 +40,7 @@ dest?=/usr/local
 VERSION=0.1
 RELEASE_DIR=./libtwombly-$(VERSION)-`uname`_`uname -m`
 UNAME=$(shell uname)
-FREETYPE?=yes
+freetype?=yes
 FREETYPE_PKG?=freetype2
 
 HAS_COMPILER=$(shell $(CXX) -v || printf "NO";)
@@ -49,7 +49,7 @@ ifeq ($(HAS_COMPILER)X,NOX)
 endif
 
 HAS_FREETYPE=$(shell pkg-config --cflags $(FREETYPE_PKG) > /dev/null; echo $$?)
-ifeq ($(HAS_FREETYPE)X$(FREETYPE)X,0XyesX)
+ifeq ($(HAS_FREETYPE)X$(freetype)X,0XyesX)
 	agg_src+= ./agg/font_freetype/agg_font_freetype.cpp
 	agg_hdrs+= ./agg/font_freetype/agg_font_freetype.h
 	libs+= `pkg-config --libs $(FREETYPE_PKG)`
@@ -118,7 +118,7 @@ release:
 	tar czf $(RELEASE_DIR).tar.gz $(RELEASE_DIR)
 
 test:
-	cd tests && CXX=$(CXX) FREETYPE=$(FREETYPE) $(MAKE)
+	cd tests && CXX=$(CXX) freetype=$(freetype) $(MAKE)
 	tests/run
 
 parser:

@@ -6,6 +6,11 @@
 
 using namespace tw;
 
+#define RED 2
+#define GREEN 1
+#define BLUE 0
+#define ALPHA 3
+
 const lest::test drawing_test[] = {
     CASE ( "Mat3b drawing" ) {
         Mat3b im(100, 100);
