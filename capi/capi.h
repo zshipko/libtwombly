@@ -81,6 +81,18 @@ unsigned int draw_prevVertex(drawing, double *, double *);
 void draw_modifyVertex(drawing, unsigned int, double, double, unsigned int);
 unsigned int draw_totalVertices(drawing);
 
+void draw_join(drawing, drawing);
+void draw_concat(drawing, drawing);
+
+// TODO
+/*void draw_blur(drawing, double a);
+void draw_fillLinerGradientH(Pixel b, Pixel m, Pixel e, int s, int x);
+void draw_fillLinerGradientV(Pixel b, Pixel m, Pixel e, int s, int x);
+void draw_fillRadialGradient(Pixel b, Pixel m, Pixel e, int s, int x);
+void draw_strokeLinerGradientH(Pixel b, Pixel m, Pixel e, int s, int x);
+void draw_strokeLinerGradientV(Pixel b, Pixel m, Pixel e, int s, int x);
+void draw_strokeRadialGradient(Pixel b, Pixel m, Pixel e, int s, int x);*/
+
 #ifdef __cplusplus
 }
 #endif

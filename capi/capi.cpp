@@ -4,7 +4,7 @@
 using namespace tw;
 #endif
 
-#define DRAWING(d, fn, ...) switch(d.channels){ \
+#define DRAWING(d, fn, ...) do { switch(d.channels){ \
     case 1: \
         if (d.bits_per_channel == 8) return ((Drawing<gray8>*)d.handle)-> fn (__VA_ARGS__); \
         else if(d.bits_per_channel == 16) return ((Drawing<gray16>*)d.handle)-> fn (__VA_ARGS__); \
@@ -18,7 +18,28 @@ using namespace tw;
         else if(d.bits_per_channel == 16) return ((Drawing<rgba64>*)d.handle)-> fn (__VA_ARGS__); \
         break; \
     }\
-    throw std::runtime_error("bad drawing")
+    throw std::runtime_error("bad drawing"); } while(0)
+
+#ifdef __cplusplus
+static agg::path_storage _get_path(drawing d){
+    switch(d.channels){
+    case 1:
+        if (d.bits_per_channel == 8) return (agg::path_storage)(*((Drawing<gray8>*)d.handle));
+        else if(d.bits_per_channel == 16) return (agg::path_storage)(*((Drawing<gray16>*)d.handle));
+        break;
+    case 3:
+        if (d.bits_per_channel == 8) return (agg::path_storage)(*((Drawing<rgb24>*)d.handle));
+        else if(d.bits_per_channel == 16) return (agg::path_storage)(*((Drawing<rgb48>*)d.handle));
+        break;
+    case 4:
+        if (d.bits_per_channel == 8) return (agg::path_storage)(*((Drawing<rgba32>*)d.handle));
+        else if(d.bits_per_channel == 16) return (agg::path_storage)(*((Drawing<rgba64>*)d.handle));
+        break;
+    }
+
+    throw std::runtime_error("bad drawing");
+}
+#endif
 
 drawing draw_create(int64_t width, int64_t height, int channels, uint8_t *data){
     drawing d;
@@ -317,3 +338,20 @@ void draw_modifyVertex(drawing d, unsigned int idx, double x, double y, unsigned
 unsigned int draw_totalVertices(drawing d){
     DRAWING(d, totalVertices);
 }
+
+void draw_join(drawing a, drawing b){
+    agg::path_storage pth = _get_path(b);
+    DRAWING(a, joinPath, pth);
+}
+
+void draw_concat(drawing a, drawing b){
+    agg::path_storage pth = _get_path(b);
+    DRAWING(a, concatPath, pth);
+}
+
+/*void draw_fillLinerGradientH(Pixel b, Pixel m, Pixel e, int s, int x);
+void draw_fillLinerGradientV(Pixel b, Pixel m, Pixel e, int s, int x);
+void draw_fillRadialGradient(Pixel b, Pixel m, Pixel e, int s, int x);
+void draw_strokeLinerGradientH(Pixel b, Pixel m, Pixel e, int s, int x);
+void draw_strokeLinerGradientV(Pixel b, Pixel m, Pixel e, int s, int x);
+void draw_strokeRadialGradient(Pixel b, Pixel m, Pixel e, int s, int x);*/
