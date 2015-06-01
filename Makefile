@@ -28,7 +28,7 @@ agg/src/agg_vpgen_clip_polyline.cpp \
 agg/src/agg_vpgen_segmentator.cpp
 tw_src=image.cpp draw.cpp capi/capi.cpp
 agg_hdrs=agg/include/*.h agg/include/util/*.h
-tw_hdrs=image.hpp draw.hpp twombly.hpp capi/capi.h
+tw_hdrs=image.hpp draw.hpp twombly.hpp capi/draw_c.h
 opencv?=yes
 ifeq ($(opencv)X,noX)
 	libs = -L/usr/local/lib

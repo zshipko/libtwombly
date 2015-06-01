@@ -1,4 +1,4 @@
-#include "capi.h"
+#include "draw_c.h"
 
 #ifdef __cplusplus
 using namespace tw;
@@ -283,9 +283,11 @@ double draw_putTextSimple(drawing d, double x, double y, const char *str, int si
     DRAWING(d, putTextSimple, x, y, str, size, width, font);
 }
 
+#ifndef NO_FREETYPE
 double draw_putText(drawing d, double x, double y, const char *str, const char * font, double w, double h){
     DRAWING(d, putText, x, y, str, font, w, h);
 }
+#endif
 
 void draw_setColor(drawing d, uint8_t r, uint8_t g, uint8_t b, uint8_t a){
     DRAWING(d, setColor, r, g, b, a);

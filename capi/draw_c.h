@@ -17,8 +17,11 @@ using namespace tw;
 extern "C" {
 #endif
 
+#define draw_frombimage(im) (im.depth == u16 ? draw_create(im.width, im.height, im.channels, im.u8) : draw_create(im.width, im.height, im.channels, im.u8))
+
 drawing draw_create(int64_t width, int64_t height, int channels, uint8_t *data);
 drawing draw_create16(int64_t width, int64_t height, int channels, uint8_t *data);
+
 void draw_free(drawing d);
 
 bool draw_getAntialias(drawing);
@@ -66,7 +69,9 @@ void draw_curveRel6(drawing, double, double, double, double, double, double);
 void draw_arcTo(drawing, double, double, double, double, double, bool, bool);
 void draw_arcRel(drawing, double, double, double, double, double, bool, bool);
 double draw_putTextSimple(drawing, double, double, const char *, int, double, const char *, bool);
+#ifndef NO_FREETYPE
 double draw_putText(drawing, double, double, const char *, const char *, double, double);
+#endif
 void draw_setColor(drawing, uint8_t, uint8_t, uint8_t, uint8_t);
 void draw_fill(drawing);
 void draw_stroke(drawing);
