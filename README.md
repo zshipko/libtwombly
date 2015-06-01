@@ -12,6 +12,7 @@ Tested on OSX, Linux, FreeBSD and OpenBSD
 
 - C++11 compiler (g++/clang++)
 - [opencv](https://www.opencv.org/) (optional)
+- [bimage](https://github.com/zshipko/bimage) (optional)
 - [freetype](http://www.freetype.org/) (optional)
 
 ## Building
