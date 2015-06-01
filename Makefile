@@ -26,9 +26,9 @@ agg/src/agg_trans_double_path.cpp \
 agg/src/agg_vpgen_clip_polygon.cpp \
 agg/src/agg_vpgen_clip_polyline.cpp \
 agg/src/agg_vpgen_segmentator.cpp
-tw_src=image.cpp draw.cpp
+tw_src=image.cpp draw.cpp capi/capi.cpp
 agg_hdrs=agg/include/*.h agg/include/util/*.h
-tw_hdrs=image.hpp draw.hpp twombly.hpp
+tw_hdrs=image.hpp draw.hpp twombly.hpp capi/capi.h
 opencv?=yes
 ifeq ($(opencv)X,noX)
 	libs = -L/usr/local/lib
@@ -81,11 +81,11 @@ tw-shared: compile
 .PHONY: install
 install:
 	mkdir -p $(dest)/include/twombly/agg $(dest)/include/agg $(dest)/lib/pkgconfig $(dest)/bin
-	cp -r $(tw_hdrs) $(agg_hdrs) $(dest)/include/twombly
-	cp -r $(agg_hdrs) $(dest)/include/agg
+	cp -r $(tw_hdrs) $(dest)/include/twombly
+	cp $(agg_hdrs) $(dest)/include/twombly/agg
+	cp $(agg_hdrs) $(dest)/include/agg
 	cp libagg.* $(dest)/lib/
 	cp libtwombly.* $(dest)/lib/
-	cp twrun $(dest)/bin/twrun
 	printf "Name: twombly\nDescription: A 2d graphics library for C++\nVersion: $(VERSION)\nLibs: -L$(dest)/lib -ltwombly $(libs)\nCflags: -std=c++11 -I/usr/local/include -I$(dest)/include\n" > $(dest)/lib/pkgconfig/twombly.pc
 	echo "Requires: $(FREETYPE_PKG)" >> $(dest)/lib/pkgconfig/twombly.pc
 
@@ -94,7 +94,6 @@ uninstall:
 	rm -rf $(dest)/include/agg/
 	rm -f $(dest)/lib/twombly.*
 	rm -f $(dest)/lib/libagg.*
-	rm -f $(dest)/bin/twrun
 	rm -f $(dest)/lib/pkgconfig/twombly.pc
 
 clean:
@@ -104,7 +103,7 @@ clean-libs:
 	rm -f libtwombly.so libtwombly.a libagg.so libagg.a
 
 %.o: %.cpp
-	$(CXX) -O3 -std=c++11 -c -fPIC $*.cpp $(incl) -o $@
+	$(CXX) -O3 -std=c++11 -c -fPIC $*.cpp -I. $(incl) -o $@
 
 %.o: %.c
 	$(CC) -O3 -c -fPIC $*.c $(incl) -o $@

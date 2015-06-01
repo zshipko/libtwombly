@@ -29,20 +29,12 @@ inline Color rgb(uint8_t r, uint8_t g, uint8_t b){
     return Color(r, g, b, 255);
 }
 
-inline Color rgba(Pixel p){
-    return Color(p[0], p[1], p[2], p[3]);
-}
-
 inline Color16 rgba_16(uint8_t r, uint8_t g, uint8_t b, uint8_t a){
     return Color16(r, g, b, a);
 }
 
 inline Color16 rgb_16(uint8_t r, uint8_t g, uint8_t b){
     return Color16(r, g, b, 255);
-}
-
-inline Color16 rgba_16(Pixel p){
-    return Color16(p[0], p[1], p[2], p[3]);
 }
 
 #ifndef NO_OPENCV

@@ -15,8 +15,6 @@ namespace tw {
 
 using namespace cv;
 
-typedef float Pixel __attribute__ ((vector_size (16)));
-
 #ifndef NO_OPENCV
 // simple content based hash
 std::bitset<64> hash(Mat const &im);
@@ -27,6 +25,10 @@ class Point {
 class Rectangle {
     double x, y, width, height;
 };
+#endif
+
+#ifdef bimage_header_file
+std::bitset<64> hash(bimage im);
 #endif
 
 } //namespace tw

@@ -1,6 +1,8 @@
 #ifndef TWOMBLY_DRAW_HEADER
 #define TWOMBLY_DRAW_HEADER
 
+#ifdef __cplusplus
+
 #include "image.hpp"
 
 #include "agg_basics.h"
@@ -58,10 +60,8 @@ inline Color rgba(Scalar s);
 inline Color16 rgba_16(Scalar s);
 #endif
 inline Color rgb(uint8_t r, uint8_t g, uint8_t b);
-inline Color rgba(Pixel p);
 inline Color16 rgba_16(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 inline Color16 rgb_16(uint8_t r, uint8_t g, uint8_t b);
-inline Color16 rgba_16(Pixel p);
 
 template <typename ColorType>
 inline Color rgb(ColorType t){
@@ -170,6 +170,12 @@ public:
     }
 
     Drawing(Mat &im) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels() * sizeof(im.data[0])), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr){
+        alloc();
+    }
+#endif
+
+#ifdef bimage_header_file
+    Drawing (bimage im) : buffer((uint8_t*)im.ptr, im.width, im.height, im.width * im.channels * (im.depth == u16 ? 2 : 1)), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr){
         alloc();
     }
 #endif
@@ -344,10 +350,6 @@ public:
         base.clear(Color(r, g, b));
     }
 
-    inline void clear(Pixel px){
-        return base.clear(rgba(px));
-    }
-
     inline void removePaths(){
         remove_all();
     }
@@ -513,10 +515,6 @@ public:
         setColor(Color(r, g, b, a));
     }
 
-    inline void setColor(Pixel p){
-        setColor(Color(p[0], p[1], p[2], p[3]));
-    }
-
     // Fill/stroke path with another Image
     template <typename Q>
     void fillPattern (Q &im) {
@@ -529,7 +527,7 @@ public:
 
         agg::span_allocator<Color> sa;
 
-        auto d = draw(im);
+        auto d = Drawing<DrawingType>(im);
 
         DrawingType img_pixf (d.buffer);
         img_source_type img_src (img_pixf);
@@ -554,7 +552,7 @@ public:
 
         agg::span_allocator<Color> sa;
 
-        auto d = draw(im);
+        auto d = Drawing<DrawingType>(im);
 
         DrawingType img_pixf (d.buffer);
         img_source_type img_src (img_pixf);
@@ -828,6 +826,51 @@ Drawing<bgra64> draw(Mat4w& im);
 Drawing<bgr48> draw(Mat3w& im);
 #endif
 
+#else // cplusplus
+
+enum line_cap_style {
+    butt_cap,
+    square_cap,
+    round_cap
+};
+typedef enum line_cap_style line_cap_style;
+
+enum line_join_style {
+    miter_join         = 0,
+    miter_join_revert  = 1,
+    round_join         = 2,
+    bevel_join         = 3,
+    miter_join_round   = 4
+};
+typedef enum line_join_style line_join_style;
+
+
+enum filling_rule {
+    fill_non_zero,
+    fill_even_odd
+};
+typedef enum filling_rule filling_rule;
+
+typedef struct Point {
+    double x, y;
+} Point;
+
+typedef struct Rectangle {
+    double x, y, width, height;
+} Rectangle;
+
+struct drawing {
+    void *handle;
+    int channels;
+    int bits_per_channel;
+};
+typedef struct drawing drawing;
+
+#endif // cplusplus
+
+#ifdef __cplusplus
 } // namesapce tw
+#endif
+
 #endif // TWOMBLY_DRAW_HEADER
 
