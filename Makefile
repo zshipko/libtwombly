@@ -80,9 +80,8 @@ tw-shared: compile
 
 .PHONY: install
 install:
-	mkdir -p $(dest)/include/twombly/agg $(dest)/include/agg $(dest)/lib/pkgconfig $(dest)/bin
-	cp -r $(tw_hdrs) $(dest)/include/twombly
-	cp $(agg_hdrs) $(dest)/include/twombly/agg
+	mkdir -p $(dest)/include/twombly $(dest)/include/agg $(dest)/lib/pkgconfig $(dest)/bin
+	cp -r $(tw_hdrs) $(agg_hdrs) $(dest)/include/twombly
 	cp $(agg_hdrs) $(dest)/include/agg
 	cp libagg.* $(dest)/lib/
 	cp libtwombly.* $(dest)/lib/
