@@ -175,7 +175,7 @@ public:
 #endif
 
 #ifdef bimage_header_file
-    Drawing (bimage im) : buffer((uint8_t*)im.ptr, im.width, im.height, im.width * im.channels * (im.depth == u16 ? 2 : 1)), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr){
+    Drawing (bimage *im) : buffer((uint8_t*)im->ptr, im->width, im->height, im->width * im->channels * (im->depth == u16 ? 2 : 1)), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr){
         alloc();
     }
 #endif
