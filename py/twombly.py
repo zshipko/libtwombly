@@ -133,8 +133,11 @@ class Drawing(object):
         self.array = arr
         if arr.dtype == 'uint8':
             self._drawing = _methods["create"](arr.shape[0], arr.shape[1], arr.shape[2], arr.ravel().ctypes.data)
-        else:
+        elif arr.dtype == 'uint16':
             self._drawing = _methods["create16"](arr.shape[0], arr.shape[1], arr.shape[2], arr.ravel().ctypes.data)
+        else:
+            raise ValueError("bad image type")
+
         self._as_parameter_ = self._drawing
         self._free = _methods["free"]
 
@@ -165,4 +168,7 @@ class Drawing(object):
 
     def __del__(self):
         self._free(self._drawing)
+
+def draw(arr):
+    return Drawing(arr)
 
