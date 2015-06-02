@@ -17,7 +17,9 @@ using namespace tw;
 extern "C" {
 #endif
 
-#define draw_frombimage(im) (im.depth == u16 ? draw_create(im.width, im.height, im.channels, im.u8) : draw_create(im.width, im.height, im.channels, im.u8))
+#define draw_frombimage(im) (im.depth == u16 ? draw_create(im.width, im.height, im.channels, im.u16) : draw_create(im.width, im.height, im.channels, im.u8))
+
+typedef float Pixel __attribute__ ((vector_size (16)));
 
 drawing draw_create(int64_t width, int64_t height, int channels, uint8_t *data);
 drawing draw_create16(int64_t width, int64_t height, int channels, uint8_t *data);
@@ -30,10 +32,10 @@ void draw_setLineWidth(drawing, double);
 double draw_getLineWidth(drawing);
 void draw_setMiterLimit(drawing, double);
 double draw_getMiterLimit(drawing);
-void draw_setlineJoin(drawing, line_join_style);
+void draw_setLineJoin(drawing, line_join_style);
 line_join_style draw_getLineJoin(drawing);
-void draw_getLineCap(drawing, line_cap_style);
-line_cap_style draw_setLineCap(drawing);
+void draw_setLineCap(drawing, line_cap_style);
+line_cap_style draw_getLineCap(drawing);
 void draw_setActivePath(drawing, unsigned int);
 unsigned int draw_getActivePath(drawing);
 unsigned int draw_newPath(drawing);
@@ -88,15 +90,17 @@ unsigned int draw_totalVertices(drawing);
 
 void draw_join(drawing, drawing);
 void draw_concat(drawing, drawing);
+void draw_fillPattern (drawing d, int64_t width, int64_t height, int channels, uint8_t *data);
+void draw_strokePattern (drawing d, int64_t width, int64_t height, int channels, uint8_t *data);
 
-// TODO
-/*void draw_blur(drawing, double a);
-void draw_fillLinerGradientH(Pixel b, Pixel m, Pixel e, int s, int x);
+/*void draw_fillLinerGradientH(Pixel b, Pixel m, Pixel e, int s, int x);
 void draw_fillLinerGradientV(Pixel b, Pixel m, Pixel e, int s, int x);
 void draw_fillRadialGradient(Pixel b, Pixel m, Pixel e, int s, int x);
 void draw_strokeLinerGradientH(Pixel b, Pixel m, Pixel e, int s, int x);
 void draw_strokeLinerGradientV(Pixel b, Pixel m, Pixel e, int s, int x);
 void draw_strokeRadialGradient(Pixel b, Pixel m, Pixel e, int s, int x);*/
+// void draw_blur(drawing, double a);
+
 
 #ifdef __cplusplus
 }

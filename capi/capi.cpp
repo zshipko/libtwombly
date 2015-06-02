@@ -351,9 +351,26 @@ void draw_concat(drawing a, drawing b){
     DRAWING(a, concatPath, pth);
 }
 
-/*void draw_fillLinerGradientH(Pixel b, Pixel m, Pixel e, int s, int x);
-void draw_fillLinerGradientV(Pixel b, Pixel m, Pixel e, int s, int x);
-void draw_fillRadialGradient(Pixel b, Pixel m, Pixel e, int s, int x);
-void draw_strokeLinerGradientH(Pixel b, Pixel m, Pixel e, int s, int x);
-void draw_strokeLinerGradientV(Pixel b, Pixel m, Pixel e, int s, int x);
-void draw_strokeRadialGradient(Pixel b, Pixel m, Pixel e, int s, int x);*/
+// NOTE: fill/stroke pattern only implemented for rgb8 type drawings
+void draw_fillPattern (drawing d, int64_t width, int64_t height, int channels, uint8_t *data){
+    switch(d.channels){
+    case 3:
+        if (d.bits_per_channel == 8) return ((Drawing<rgb24>*)d.handle)->fillPattern<Color>(width, height, channels, data);
+        break;
+    case 4:
+        if (d.bits_per_channel == 8) return ((Drawing<rgba32>*)d.handle)->fillPattern<Color>(width, height, channels, data);
+        break;
+    }
+}
+
+void draw_strokePattern (drawing d, int64_t width, int64_t height, int channels, uint8_t *data){
+    switch(d.channels){
+    case 3:
+        if (d.bits_per_channel == 8) return ((Drawing<rgb24>*)d.handle)->strokePattern<Color>(width, height, channels, data);
+        break;
+    case 4:
+        if (d.bits_per_channel == 8) return ((Drawing<rgba32>*)d.handle)->strokePattern<Color>(width, height, channels, data);
+        break;
+    }
+}
+

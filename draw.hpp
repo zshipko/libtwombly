@@ -519,9 +519,9 @@ public:
         setColor(Color(r, g, b, a));
     }
 
-    // Fill/stroke path with another Image
-    template <typename Q>
-    void fillPattern (Q &im) {
+    // Fill/stroke path with image data
+    template<typename ColorType>
+    void fillPattern (int64_t width, int64_t height, int channels, uint8_t *data) {
         agg::conv_curve<agg::path_storage> p(*this);
         typedef agg::wrap_mode_repeat wrap_x_type;
         typedef agg::wrap_mode_repeat wrap_y_type;
@@ -529,13 +529,13 @@ public:
         typedef agg::image_accessor_wrap<DrawingType, wrap_x_type, wrap_y_type> img_source_type;
         typedef agg::span_pattern_rgb<img_source_type> span_gen_type;
 
-        agg::span_allocator<Color> sa;
+        agg::span_allocator<ColorType> sa;
 
-        auto d = Drawing<DrawingType>(im);
+        auto d = Drawing<DrawingType>(width, height, channels, data);
 
         DrawingType img_pixf (d.buffer);
         img_source_type img_src (img_pixf);
-        span_gen_type sg ( img_src, im.width, im.height);
+        span_gen_type sg ( img_src, width, height);
 
         // apply transforms
         agg::conv_transform<agg::conv_curve<agg::path_storage>> m(p, mtx);
@@ -543,8 +543,8 @@ public:
         agg::render_scanlines_aa( *raster, *sl, base, sa, sg);
     }
 
-    template <typename Q>
-    void strokePattern (Q &im) {
+    template <typename ColorType>
+    void strokePattern (int64_t width, int64_t height, int channels, uint8_t *data) {
         agg::conv_curve<agg::path_storage> p(*this);
         agg::conv_stroke<agg::conv_curve<agg::path_storage>> pth(p);
 
@@ -554,13 +554,13 @@ public:
         typedef agg::image_accessor_wrap<DrawingType, wrap_x_type, wrap_y_type> img_source_type;
         typedef agg::span_pattern_rgb<img_source_type> span_gen_type;
 
-        agg::span_allocator<Color> sa;
+        agg::span_allocator<ColorType> sa;
 
-        auto d = Drawing<DrawingType>(im);
+        auto d = Drawing<DrawingType>(width, height, channels, data);
 
         DrawingType img_pixf (d.buffer);
         img_source_type img_src (img_pixf);
-        span_gen_type sg ( img_src, im.width, im.height);
+        span_gen_type sg ( img_src, width, height);
 
         pth.width(_width);
         pth.line_cap((agg::line_cap_e)_linecap);
