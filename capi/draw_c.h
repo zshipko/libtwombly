@@ -49,7 +49,7 @@ void draw_invertPolygon(drawing);
 void draw_reset(drawing);
 void draw_clear(drawing, uint8_t, uint8_t, uint8_t, uint8_t);
 void draw_removePaths(drawing);
-void draw_ellipse(drawing, double, double, double, double, int);
+void draw_ellipse(drawing, double, double, double, double);
 void draw_rect(drawing, double, double, double, double, double);
 void draw_clip(drawing, double, double, double, double);
 void draw_resetClip(drawing);

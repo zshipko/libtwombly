@@ -203,8 +203,8 @@ void draw_removePaths(drawing d){
     DRAWING(d, removePaths);
 }
 
-void draw_ellipse(drawing d, double a, double b, double c, double e, int f){
-    DRAWING(d, ellipse, a, b, c, e, f);
+void draw_ellipse(drawing d, double a, double b, double c, double e){
+    DRAWING(d, ellipse, a, b, c, e);
 }
 
 void draw_rect(drawing d, double x, double y , double w, double h, double c){
