@@ -146,6 +146,9 @@ class Drawing(object):
     def clear(self, r, g, b, a=255):
         _methods["clear"](self._drawing, chr(r), chr(g), chr(b), chr(a))
 
+    def set_color(self, r, g, b, a=255):
+        _methods["set_color"](self._drawing, chr(r), chr(g), chr(b), chr(a))
+
     def curve_to(self, a, b, c=None, d=None, e=None, f=None):
         if c is None or d is None:
             return self.curve_to2(a, b)
