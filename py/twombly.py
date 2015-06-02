@@ -1,7 +1,4 @@
 from ctypes import *
-from numpy import zeros
-
-from skimage.io import imsave
 
 twombly = cdll.LoadLibrary("libtwombly.so")
 
@@ -69,7 +66,8 @@ _methods = dict(
     reset_clip = fn(twombly.draw_resetClip),
     last_x = fn(twombly.draw_lastX, c_double),
     last_y = fn(twombly.draw_lastY, c_double),
-    # skipping rel_to_abs
+    rel_to_abs = fn(twombly.draw_relToAbs,
+            args = [DrawingType, POINTER(c_double), POINTER(c_double)]),
     move_to = fn(twombly.draw_moveTo,
             args = [DrawingType, c_double, c_double]),
     move_rel = fn(twombly.draw_moveRel,
@@ -85,7 +83,49 @@ _methods = dict(
     curve_to4 = fn(twombly.draw_curveTo4,
             args= [DrawingType, c_double, c_double, c_double, c_double]),
     curve_rel4 = fn(twombly.draw_curveRel4,
-            args= [DrawingType, c_double, c_double, c_double, c_double])
+            args= [DrawingType, c_double, c_double, c_double, c_double]),
+    curve_to6 = fn(twombly.draw_curveTo6,
+            args= [DrawingType, c_double, c_double, c_double, c_double, c_double, c_double]),
+    curve_rel6 = fn(twombly.draw_curveRel6,
+            args= [DrawingType, c_double, c_double, c_double, c_double, c_double, c_double]),
+    arc_to = fn(twombly.draw_arcTo,
+            args= [DrawingType, c_double, c_double, c_double, c_double, c_double]),
+    arc_rel = fn(twombly.draw_arcRel,
+            args = [DrawingType, c_double, c_double, c_double, c_double, c_double]),
+    put_text_simple = fn(twombly.draw_putTextSimple, c_double,
+            args= [DrawingType, c_double, c_double, c_char_p, c_int, c_double, c_char_p]),
+    put_text = fn(twombly.draw_putText, c_double,
+            args= [DrawingType, c_double, c_double, c_char_p, c_char_p, c_double, c_double]),
+    set_color = fn(twombly.draw_setColor,
+            args = [DrawingType, c_char, c_char, c_char, c_char]),
+    fill = fn(twombly.draw_fill),
+    stroke = fn(twombly.draw_stroke),
+    paint = fn(twombly.draw_paint),
+    auto_close = fn(twombly.draw_autoClose,
+            args = [c_bool]),
+    in_path = fn(twombly.draw_inPath, c_bool,
+            args=[c_double, c_double]),
+    get_vertex = fn(twombly.draw_getVertex, c_uint,
+            args= [DrawingType, c_uint, POINTER(c_double), POINTER(c_double)]),
+    next_vertex = fn(twombly.draw_nextVertex, c_uint,
+            args = [DrawingType, POINTER(c_double), POINTER(c_double)]),
+    get_command = fn(twombly.draw_getCommand, c_uint,
+            args = [DrawingType, c_uint]),
+    last_vertex = fn(twombly.draw_lastVertex, c_uint,
+            args = [DrawingType, POINTER(c_double), POINTER(c_double)]),
+    prev_vertex = fn(twombly.draw_prevVertex, c_uint,
+            args = [DrawingType, POINTER(c_double), POINTER(c_double)]),
+    modify_vertex = fn(twombly.draw_modifyVertex,
+            args = [DrawingType, c_uint, POINTER(c_double), POINTER(c_double), c_uint]),
+    total_vertices = fn(twombly.draw_totalVertices, c_uint),
+    join = fn(twombly.draw_join,
+            args=[DrawingType, DrawingType]),
+    concat = fn(twombly.draw_concat,
+            args=[DrawingType, DrawingType]),
+    fill_pattern = fn(twombly.draw_fillPattern,
+            args = [DrawingType, c_long, c_long, c_int, c_char_p]),
+    stroke_pattern = fn(twombly.draw_fillPattern,
+            args = [DrawingType, c_long, c_long, c_int, c_char_p]),
 )
 
 class Drawing(object):
@@ -106,13 +146,20 @@ class Drawing(object):
     def clear(self, r, g, b, a=255):
         _methods["clear"](self._drawing, chr(r), chr(g), chr(b), chr(a))
 
+    def curve_to(self, a, b, c=None, d=None, e=None, f=None):
+        if c is None or d is None:
+            return self.curve_to2(a, b)
+        elif e is None or f is None:
+            return self.curve_to4(a, b, c, d)
+        return self.curve_to6(a, b, c, d, e, f)
+
+    def curve_rel(self, a, b, c=None, d=None, e=None, f=None):
+        if c is None or d is None:
+            return self.curve_rel2(a, b)
+        elif e is None or f is None:
+            return self.curve_rel4(a, b, c, d)
+        return self.curve_rel6(a, b, c, d, e, f)
+
     def __del__(self):
         self._free(self._drawing)
-
-a = zeros((500, 500, 3), 'uint8')
-d = Drawing(a)
-d.clear(255, 0, 0)
-print d.get_line_width()
-
-imsave("test.png", a)
 

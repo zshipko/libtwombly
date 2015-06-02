@@ -68,9 +68,9 @@ void draw_curveTo4(drawing, double, double, double, double);
 void draw_curveRel4(drawing, double, double, double, double);
 void draw_curveTo6(drawing, double, double, double, double, double, double);
 void draw_curveRel6(drawing, double, double, double, double, double, double);
-void draw_arcTo(drawing, double, double, double, double, double, bool, bool);
-void draw_arcRel(drawing, double, double, double, double, double, bool, bool);
-double draw_putTextSimple(drawing, double, double, const char *, int, double, const char *, bool);
+void draw_arcTo(drawing, double, double, double, double, double);
+void draw_arcRel(drawing, double, double, double, double, double);
+double draw_putTextSimple(drawing, double, double, const char *, int, double, const char *);
 #ifndef NO_FREETYPE
 double draw_putText(drawing, double, double, const char *, const char *, double, double);
 #endif
@@ -82,6 +82,7 @@ void draw_paint(drawing);
 void draw_autoClose(drawing, bool);
 bool draw_inPath(drawing, double, double);
 unsigned int draw_getVertex(drawing, unsigned int, double *, double *);
+unsigned int draw_nextVertex(drawing, double *, double *);
 unsigned int draw_getCommand(drawing, unsigned int);
 unsigned int draw_lastVertex(drawing, double *, double *);
 unsigned int draw_prevVertex(drawing, double *, double *);

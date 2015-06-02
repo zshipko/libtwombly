@@ -318,6 +318,10 @@ bool draw_inPath(drawing d, double x, double y){
 }
 
 unsigned int draw_getVertex(drawing d, unsigned int idx, double *x, double *y){
+    DRAWING(d, getVertex, idx, x, y);
+}
+
+unsigned int draw_nextVertex(drawing d, double *x, double *y){
     DRAWING(d, getVertex, x, y);
 }
 
