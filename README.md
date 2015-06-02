@@ -33,6 +33,11 @@ To disable OpenCV:
 
 Building will compile both `libtwombly` and `libagg` libraries.
 
+To install the python ctypes wrapper:
+
+    cd py
+    python setup.py install
+
 ## Usage
 
 See the [examples/](https://github.com/zshipko/libtwombly/tree/master/examples) folder for now.
