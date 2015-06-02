@@ -86,7 +86,7 @@ install:
 	cp $(agg_hdrs) $(dest)/include/agg
 	cp libagg.* $(dest)/lib/
 	cp libtwombly.* $(dest)/lib/
-	printf "Name: twombly\nDescription: A 2d graphics library for C++\nVersion: $(VERSION)\nLibs: -L$(dest)/lib -ltwombly $(libs)\nCflags: -std=c++11 -I/usr/local/include -I$(dest)/include\n" > $(dest)/lib/pkgconfig/twombly.pc
+	printf "Name: twombly\nDescription: A 2d graphics library for C++\nVersion: $(VERSION)\nLibs: -L$(dest)/lib -ltwombly $(libs)\nCflags: -I/usr/local/include -I$(dest)/include\n" > $(dest)/lib/pkgconfig/twombly.pc
 	echo "Requires: $(FREETYPE_PKG)" >> $(dest)/lib/pkgconfig/twombly.pc
 
 uninstall:
