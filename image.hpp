@@ -1,5 +1,6 @@
 #ifndef TWOMBLY_IMAGE_HEADER
 #define TWOMBLY_IMAGE_HEADER
+
 #include <bitset>
 #include <stdint.h>
 #include <stdlib.h>
@@ -25,10 +26,6 @@ class Point {
 class Rectangle {
     double x, y, width, height;
 };
-#endif
-
-#ifdef bimage_header_file
-std::bitset<64> hash(bimage im);
 #endif
 
 } //namespace tw

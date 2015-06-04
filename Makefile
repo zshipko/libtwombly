@@ -41,6 +41,7 @@ VERSION=0.1
 RELEASE_DIR=./libtwombly-$(VERSION)-`uname`_`uname -m`
 UNAME=$(shell uname)
 freetype?=yes
+bimage?=no
 FREETYPE_PKG?=freetype2
 
 HAS_COMPILER=$(shell $(CXX) -v || printf "NO";)
