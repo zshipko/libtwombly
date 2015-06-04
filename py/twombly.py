@@ -20,6 +20,10 @@ _methods = dict(
         DrawingType, [c_long, c_long, c_long, c_void_p]),
     create16 = fn(twombly.draw_create16,
         DrawingType, [c_long, c_long, c_long, c_void_p]),
+    create_bgr = fn(twombly.draw_create_bgr,
+        DrawingType, [c_long, c_long, c_long, c_void_p]),
+    create16_bgr = fn(twombly.draw_create16_bgr,
+        DrawingType, [c_long, c_long, c_long, c_void_p]),
     free = fn(twombly.draw_free),
     get_antialias = fn(twombly.draw_getAntialias, c_bool),
     set_antialias = fn(twombly.draw_getAntialias,
@@ -129,12 +133,22 @@ _methods = dict(
 )
 
 class Drawing(object):
-    def __init__(self, arr):
+    def __init__(self, arr, bgr=False, width=None, height=None):
         self.array = arr
+        bgr_str = ""
+        if bgr:
+            bgr_str = "_bgr"
+
+        if not width:
+            width = arr.shape[1]
+
+        if not height:
+            height = arr.shape[0]
+
         if arr.dtype == 'uint8':
-            self._drawing = _methods["create"](arr.shape[0], arr.shape[1], arr.shape[2], arr.ravel().ctypes.data)
+            self._drawing = _methods["create" + bgr_str](width, height, arr.shape[2], arr.ravel().ctypes.data)
         elif arr.dtype == 'uint16':
-            self._drawing = _methods["create16"](arr.shape[0], arr.shape[1], arr.shape[2], arr.ravel().ctypes.data)
+            self._drawing = _methods["create16" + bgr_str](width, height, arr.shape[2], arr.ravel().ctypes.data)
         else:
             raise ValueError("bad image type")
 

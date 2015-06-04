@@ -62,6 +62,27 @@ drawing draw_create(int64_t width, int64_t height, int channels, uint8_t *data){
     return d;
 }
 
+drawing draw_create_bgr(int64_t width, int64_t height, int channels, uint8_t *data){
+    drawing d;
+    d.handle = NULL;
+
+    if (channels == 1){
+        d.handle = (new Drawing<gray8>(width, height, channels, data));
+        d.channels = 3;
+        d.bits_per_channel = 8;
+    } else if (channels == 3){
+        d.handle = (new Drawing<bgr24>(width, height, channels, data));
+        d.channels = 3;
+        d.bits_per_channel = 8;
+    } else if (channels == 4) {
+        d.handle = (new Drawing<bgra32>(width, height, channels, data));
+        d.channels = 4;
+        d.bits_per_channel = 8;
+    }
+
+    return d;
+}
+
 drawing draw_create16(int64_t width, int64_t height, int channels, uint8_t *data){
     drawing d;
     d.handle = NULL;
@@ -76,6 +97,27 @@ drawing draw_create16(int64_t width, int64_t height, int channels, uint8_t *data
         d.bits_per_channel = 16;
     } else if (channels == 4) {
         d.handle = (new Drawing<rgba64>(width, height, channels, data));
+        d.channels = 4;
+        d.bits_per_channel = 16;
+    }
+
+    return d;
+}
+
+drawing draw_create16_bgr(int64_t width, int64_t height, int channels, uint8_t *data){
+    drawing d;
+    d.handle = NULL;
+
+    if (channels == 1){
+        d.handle = (new Drawing<gray16>(width, height, channels, data));
+        d.channels = 3;
+        d.bits_per_channel = 16;
+    } else if (channels == 3){
+        d.handle = (new Drawing<bgr48>(width, height, channels, data));
+        d.channels = 3;
+        d.bits_per_channel = 16;
+    } else if (channels == 4) {
+        d.handle = (new Drawing<bgra64>(width, height, channels, data));
         d.channels = 4;
         d.bits_per_channel = 16;
     }
