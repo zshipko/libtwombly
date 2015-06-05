@@ -119,6 +119,7 @@ void draw_free(drawing d){
     if (!d.handle){
         return;
     }
+
     switch(d.channels){
     case 1:
         if (d.bits_per_channel == 8) delete (Drawing<gray8>*)d.handle;
