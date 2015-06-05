@@ -4,46 +4,33 @@
 using namespace tw;
 #endif
 
+
 #define DRAWING(d, fn, ...) do { switch(d.channels){ \
     case 1: \
         if (d.bits_per_channel == 8) return ((Drawing<gray8>*)d.handle)-> fn (__VA_ARGS__); \
         else if(d.bits_per_channel == 16) return ((Drawing<gray16>*)d.handle)-> fn (__VA_ARGS__); \
         break; \
     case 3: \
-        if (d.bits_per_channel == 8) return ((Drawing<rgb24>*)d.handle)-> fn (__VA_ARGS__); \
-        else if(d.bits_per_channel == 16) return ((Drawing<rgb48>*)d.handle)-> fn (__VA_ARGS__); \
+        if (d.bits_per_channel == 8) return d.is_bgr ? ((Drawing<bgr24>*)d.handle)-> fn (__VA_ARGS__) : ((Drawing<rgb24>*)d.handle)-> fn (__VA_ARGS__); \
+        else if(d.bits_per_channel == 16) return d.is_bgr ? ((Drawing<bgr48>*)d.handle)-> fn (__VA_ARGS__) : ((Drawing<rgb48>*)d.handle)-> fn (__VA_ARGS__); \
         break; \
     case 4: \
-        if (d.bits_per_channel == 8) return ((Drawing<rgba32>*)d.handle)-> fn (__VA_ARGS__); \
-        else if(d.bits_per_channel == 16) return ((Drawing<rgba64>*)d.handle)-> fn (__VA_ARGS__); \
+        if (d.bits_per_channel == 8) return d.is_bgr ? ((Drawing<bgra32>*)d.handle)-> fn (__VA_ARGS__) : ((Drawing<rgba32>*)d.handle)-> fn (__VA_ARGS__); \
+        else if(d.bits_per_channel == 16) return d.is_bgr ? ((Drawing<bgra64>*)d.handle)-> fn (__VA_ARGS__) : ((Drawing<rgba64>*)d.handle)-> fn (__VA_ARGS__); \
         break; \
     }\
     throw std::runtime_error("bad drawing"); } while(0)
 
 #ifdef __cplusplus
 static agg::path_storage _get_path(drawing d){
-    switch(d.channels){
-    case 1:
-        if (d.bits_per_channel == 8) return (agg::path_storage)(*((Drawing<gray8>*)d.handle));
-        else if(d.bits_per_channel == 16) return (agg::path_storage)(*((Drawing<gray16>*)d.handle));
-        break;
-    case 3:
-        if (d.bits_per_channel == 8) return (agg::path_storage)(*((Drawing<rgb24>*)d.handle));
-        else if(d.bits_per_channel == 16) return (agg::path_storage)(*((Drawing<rgb48>*)d.handle));
-        break;
-    case 4:
-        if (d.bits_per_channel == 8) return (agg::path_storage)(*((Drawing<rgba32>*)d.handle));
-        else if(d.bits_per_channel == 16) return (agg::path_storage)(*((Drawing<rgba64>*)d.handle));
-        break;
-    }
-
-    throw std::runtime_error("bad drawing");
+    return *(agg::path_storage*)d.handle;
 }
 #endif
 
 drawing draw_create(int64_t width, int64_t height, int channels, uint8_t *data){
     drawing d;
     d.handle = NULL;
+    d.is_bgr = false;
 
     if (channels == 1){
         d.handle = (new Drawing<gray8>(width, height, channels, data));
@@ -65,6 +52,7 @@ drawing draw_create(int64_t width, int64_t height, int channels, uint8_t *data){
 drawing draw_create_bgr(int64_t width, int64_t height, int channels, uint8_t *data){
     drawing d;
     d.handle = NULL;
+    d.is_bgr = true;
 
     if (channels == 1){
         d.handle = (new Drawing<gray8>(width, height, channels, data));
@@ -86,6 +74,7 @@ drawing draw_create_bgr(int64_t width, int64_t height, int channels, uint8_t *da
 drawing draw_create16(int64_t width, int64_t height, int channels, uint8_t *data){
     drawing d;
     d.handle = NULL;
+    d.is_bgr = false;
 
     if (channels == 1){
         d.handle = (new Drawing<gray16>(width, height, channels, data));
@@ -107,6 +96,7 @@ drawing draw_create16(int64_t width, int64_t height, int channels, uint8_t *data
 drawing draw_create16_bgr(int64_t width, int64_t height, int channels, uint8_t *data){
     drawing d;
     d.handle = NULL;
+    d.is_bgr = true;
 
     if (channels == 1){
         d.handle = (new Drawing<gray16>(width, height, channels, data));
@@ -401,10 +391,13 @@ void draw_concat(drawing a, drawing b){
 void draw_fillPattern (drawing d, int64_t width, int64_t height, int channels, uint8_t *data){
     switch(d.channels){
     case 3:
-        if (d.bits_per_channel == 8) return ((Drawing<rgb24>*)d.handle)->fillPattern<Color>(width, height, channels, data);
+        if (d.bits_per_channel == 8 && !d.is_bgr) ((Drawing<rgb24>*)d.handle)->fillPattern<Color>(width, height, channels, data);
+        else if (d.bits_per_channel == 8 && d.is_bgr) ((Drawing<bgr24>*)d.handle)->fillPattern<Color>(width, height, channels, data);
+
         break;
     case 4:
-        if (d.bits_per_channel == 8) return ((Drawing<rgba32>*)d.handle)->fillPattern<Color>(width, height, channels, data);
+        if (d.bits_per_channel == 8 && !d.is_bgr) ((Drawing<rgba32>*)d.handle)->fillPattern<Color>(width, height, channels, data);
+        else if (d.bits_per_channel == 8 && d.is_bgr) ((Drawing<bgra32>*)d.handle)->fillPattern<Color>(width, height, channels, data);
         break;
     }
 }
@@ -412,10 +405,12 @@ void draw_fillPattern (drawing d, int64_t width, int64_t height, int channels, u
 void draw_strokePattern (drawing d, int64_t width, int64_t height, int channels, uint8_t *data){
     switch(d.channels){
     case 3:
-        if (d.bits_per_channel == 8) return ((Drawing<rgb24>*)d.handle)->strokePattern<Color>(width, height, channels, data);
+        if (d.bits_per_channel == 8 && !d.is_bgr) ((Drawing<rgb24>*)d.handle)->strokePattern<Color>(width, height, channels, data);
+        else if (d.bits_per_channel == 8 && d.is_bgr) ((Drawing<bgr24>*)d.handle)->strokePattern<Color>(width, height, channels, data);
         break;
     case 4:
-        if (d.bits_per_channel == 8) return ((Drawing<rgba32>*)d.handle)->strokePattern<Color>(width, height, channels, data);
+        if (d.bits_per_channel == 8 && !d.is_bgr) ((Drawing<rgba32>*)d.handle)->strokePattern<Color>(width, height, channels, data);
+        else if (d.bits_per_channel == 8 && d.is_bgr) ((Drawing<bgra32>*)d.handle)->strokePattern<Color>(width, height, channels, data);
         break;
     }
 }

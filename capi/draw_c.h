@@ -10,6 +10,7 @@ struct drawing {
     void *handle;
     int channels;
     int bits_per_channel;
+    bool is_bgr;
 };
 typedef struct drawing drawing;
 

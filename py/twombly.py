@@ -6,7 +6,8 @@ class DrawingType(Structure):
     _fields_ = [
             ("handle", c_void_p),
             ("channels", c_int),
-            ("bits_per_channel", c_int)
+            ("bits_per_channel", c_int),
+            ("is_bgr", c_bool)
     ]
 
 def fn(c_fn, res=None, args=[DrawingType]):
@@ -134,6 +135,8 @@ _methods = dict(
 
 class Drawing(object):
     def __init__(self, arr, bgr=False, width=None, height=None):
+        self._free = _methods["free"]
+
         self.array = arr
         bgr_str = ""
         if bgr:
@@ -153,7 +156,7 @@ class Drawing(object):
             raise ValueError("bad image type")
 
         self._as_parameter_ = self._drawing
-        self._free = _methods["free"]
+
 
     def __getattr__(self, key):
         def wrapper(*args):
