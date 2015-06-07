@@ -1,5 +1,5 @@
 from ctypes import *
-from numpy import zeros, arange
+from numpy import zeros, arange, ndarray
 from twombly_colors import _colors
 
 twombly = cdll.LoadLibrary("libtwombly.so")
@@ -145,6 +145,26 @@ try:
 except ImportError as e:
     pass
 
+def as_chr(arr):
+    return [chr(int(i)) for i in arr]
+
+class Color(ndarray):
+    def __new__(self, r, g=None, b=None, a = 255):
+        return ndarray.__new__(self, 4)
+
+    def __init__(self, r, g= None, b= None, a= 255):
+        if type(r) == str:
+            r, g, b, a = _colors.get(r.lower().replace(' ', ''), [0, 0, 0, 255])
+        elif g is None or b is None:
+            g = b = r
+        self[0] = r
+        self[1] = g
+        self[2] = b
+        self[3] = a
+
+    def as_chr(self):
+        return as_chr(self)
+
 class Drawing(object):
     def __init__(self, arr, bgr=False, width=None, height=None):
         self._free = _methods["free"]
@@ -176,15 +196,11 @@ class Drawing(object):
             return _methods[key](self._drawing, *args)
         return wrapper
 
-    def clear(self, r, g, b, a=255):
-        _methods["clear"](self._drawing, chr(r), chr(g), chr(b), chr(a))
+    def clear(self, r, g=None, b=None, a=255):
+        _methods["clear"](self._drawing, *Color(r, g, b, a).as_chr())
 
     def set_color(self, r, g=None, b=None, a=255):
-        if type(r) == str:
-            r, g, b, a = _colors.get(r.lower().replace(' ', ''), [0, 0, 0, 255])
-        elif g is None or b is None:
-            g = b = r
-        _methods["set_color"](self._drawing, chr(r), chr(g), chr(b), chr(a))
+        _methods["set_color"](self._drawing, *Color(r, g, b, a).as_chr())
 
     def curve_to(self, a, b, c=None, d=None, e=None, f=None):
         if c is None or d is None:
@@ -241,9 +257,9 @@ class Drawing(object):
                 if not has_tried_move:
                     has_tried_move = True
                     if move_to:
-                        self.move_to(func_x(p), func_y(p))
+                        self.move_to(g.functions[0].subs(g.limits[0], p), g.functions[1].subs(g.limits[0], p))
                         continue
-                self.line_to(func_x(p), func_y(p))
+                self.line_to(g.functions[0].subs(g.limits[0], p), g.functions[1].subs(g.limits[0], p))
 
 
 def draw(arr, *args, **kwargs):
