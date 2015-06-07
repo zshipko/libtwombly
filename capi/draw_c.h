@@ -24,8 +24,8 @@ typedef float Pixel __attribute__ ((vector_size (16)));
 
 drawing draw_create(int64_t width, int64_t height, int channels, uint8_t *data);
 drawing draw_create_bgr(int64_t width, int64_t height, int channels, uint8_t *data);
-drawing draw_create16(int64_t width, int64_t height, int channels, uint8_t *data);
-drawing draw_create16_bgr(int64_t width, int64_t height, int channels, uint8_t *data);
+drawing draw_create16(int64_t width, int64_t height, int channels, uint16_t *data);
+drawing draw_create16_bgr(int64_t width, int64_t height, int channels, uint16_t *data);
 
 void draw_free(drawing d);
 

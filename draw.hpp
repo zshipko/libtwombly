@@ -142,12 +142,16 @@ class Drawing : public agg::path_storage {
 public:
     agg::rendering_buffer buffer;
     agg::rasterizer_scanline_aa<> *raster;
-    agg::scanline_p8 *sl;
+    agg::scanline32_p8 *sl;
     agg::trans_affine mtx;
     DrawingType pix;
 
     // Creates a drawing context from width, height, channels and data
     Drawing(int32_t w, int32_t h, int32_t c, uint8_t *d) : buffer(d, w, h, w * c), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr) {
+        alloc();
+    }
+
+    Drawing(int32_t w, int32_t h, int32_t c, uint16_t *d) : buffer((uint8_t*)d, w, h, w * c * 2), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr) {
         alloc();
     }
 
@@ -210,7 +214,7 @@ public:
         if (sl)
             delete sl;
 
-        sl = new agg::scanline_p8();
+        sl = new agg::scanline32_p8();
     }
 
 
@@ -572,7 +576,6 @@ public:
         raster->add_path(m, pathid);
         agg::render_scanlines_aa( *raster, *sl, base, sa, sg);
     }
-
 
     // Fills and paints
     void fill(){
