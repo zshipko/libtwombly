@@ -1,5 +1,6 @@
 from ctypes import *
 from numpy import zeros, arange
+from twombly_colors import _colors
 
 twombly = cdll.LoadLibrary("libtwombly.so")
 
@@ -178,7 +179,11 @@ class Drawing(object):
     def clear(self, r, g, b, a=255):
         _methods["clear"](self._drawing, chr(r), chr(g), chr(b), chr(a))
 
-    def set_color(self, r, g, b, a=255):
+    def set_color(self, r, g=None, b=None, a=255):
+        if type(r) == str:
+            r, g, b, a = _colors.get(r.lower().replace(' ', ''), [0, 0, 0, 255])
+        elif g is None or b is None:
+            g = b = r
         _methods["set_color"](self._drawing, chr(r), chr(g), chr(b), chr(a))
 
     def curve_to(self, a, b, c=None, d=None, e=None, f=None):
@@ -244,6 +249,7 @@ class Drawing(object):
 def draw(arr, *args, **kwargs):
     return Drawing(arr, *args, **kwargs)
 
-def new_image(width, height, channels, depth='uint8'):
+def new_image(width, height, channels=3, depth='uint8'):
     return zeros((height, width, channels), depth)
+
 
