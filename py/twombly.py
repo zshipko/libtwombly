@@ -1,4 +1,5 @@
 from ctypes import *
+from numpy import zeros, arange
 
 twombly = cdll.LoadLibrary("libtwombly.so")
 
@@ -105,6 +106,7 @@ _methods = dict(
             args = [DrawingType, c_char, c_char, c_char, c_char]),
     fill =_method_decl(twombly.draw_fill),
     stroke =_method_decl(twombly.draw_stroke),
+    dash =_method_decl(twombly.draw_dash, args = [DrawingType, c_double, c_double]),
     paint =_method_decl(twombly.draw_paint),
     auto_close =_method_decl(twombly.draw_autoClose,
             args = [c_bool]),
@@ -132,6 +134,15 @@ _methods = dict(
     stroke_pattern =_method_decl(twombly.draw_fillPattern,
             args = [DrawingType, c_long, c_long, c_int, c_char_p]),
 )
+
+_HAS_SYMPY = False
+try:
+    import sympy as sym
+    from sympy import geometry as geo
+    from sympy.utilities import lambdify
+    _HAS_SYMPY = True
+except ImportError as e:
+    pass
 
 class Drawing(object):
     def __init__(self, arr, bgr=False, width=None, height=None):
@@ -188,6 +199,45 @@ class Drawing(object):
         if self._drawing is not None:
             self._free(self._drawing)
 
+    def add_geometry(self, g, move_to=False, step=1):
+        if not _HAS_SYMPY:
+            raise Exception("Not implemented, sympy not installed")
+
+        if isinstance(g, geo.Ellipse):
+            self.ellipse(g.center.x, g.center.y, g.hradius, g.vradius)
+        elif getattr(g, 'vertices', False):
+            if move_to: self.move_to(g.vertices[0].x, g.vertices[0].y)
+            else: self.line_to(g.vertices[0].x, g.vertices[0].y)
+            for v in g.vertices[1:]:
+                self.line_to(v.x, v.y)
+        elif getattr(g, 'points', False):
+            if move_to: self.move_to(g.points[0].x, g.points[0].y)
+            else: self.line_to(g.points[0].x, g.points[0].y)
+            for p in g.points[1:]:
+                self.line_to(p.x, p.y)
+        elif getattr(g, 'x', False) and getattr(g, 'y', False):
+            if move_to: self.move_to(g.x, g.y)
+            else: self.line_to(g.x, g.y)
+        elif getattr(g, 'p1', False) and getattr(g, 'p2', False):
+            if move_to: self.move_to(g.p1.x, g.py.y)
+            else: self.line_to(g.p1.x, g.p1.y)
+            self.line_to(g.p2.x, g.p2.y)
+        elif getattr(g, 'functions', False):
+            has_tried_move = False
+            func_x = lambdify(g.limits[0], g.functions[0])
+            func_y = lambdify(g.limits[0], g.functions[1])
+            for p in arange(g.limits[1], g.limits[2]+1, step):
+                if not has_tried_move:
+                    has_tried_move = True
+                    if move_to:
+                        self.move_to(func_x(p), func_y(p))
+                        continue
+                self.line_to(func_x(p), func_y(p))
+
+
 def draw(arr, *args, **kwargs):
     return Drawing(arr, *args, **kwargs)
+
+def new_image(width, height, channels, depth='uint8'):
+    return zeros((height, width, channels), depth)
 
