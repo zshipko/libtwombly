@@ -205,24 +205,30 @@ class Drawing(object):
 
         if isinstance(g, geo.Ellipse):
             self.ellipse(g.center.x, g.center.y, g.hradius, g.vradius)
-        elif getattr(g, 'vertices', False):
-            if move_to: self.move_to(g.vertices[0].x, g.vertices[0].y)
-            else: self.line_to(g.vertices[0].x, g.vertices[0].y)
-            for v in g.vertices[1:]:
-                self.line_to(v.x, v.y)
-        elif getattr(g, 'points', False):
+        elif hasattr(g, 'vertices'):
+            try:
+                if move_to: self.move_to(g.vertices[0].x, g.vertices[0].y)
+                else: self.line_to(g.vertices[0].x, g.vertices[0].y)
+                for v in g.vertices[1:]:
+                    self.line_to(v.x, v.y)
+            except AttributeError:
+                if move_to: self.move_to(g.vertices[0][0], g.vertices[0][1])
+                else: self.line_to(g.vertices[0][0], g.vertices[0][1])
+                for v in g.vertices[1:]:
+                    self.line_to(v[0], v[1])
+        elif hasattr(g, 'points'):
             if move_to: self.move_to(g.points[0].x, g.points[0].y)
             else: self.line_to(g.points[0].x, g.points[0].y)
             for p in g.points[1:]:
                 self.line_to(p.x, p.y)
-        elif getattr(g, 'x', False) and getattr(g, 'y', False):
+        elif hasattr(g, 'x') and hasattr(g, 'y'):
             if move_to: self.move_to(g.x, g.y)
             else: self.line_to(g.x, g.y)
-        elif getattr(g, 'p1', False) and getattr(g, 'p2', False):
+        elif hasattr(g, 'p1') and hasattr(g, 'p2'):
             if move_to: self.move_to(g.p1.x, g.py.y)
             else: self.line_to(g.p1.x, g.p1.y)
             self.line_to(g.p2.x, g.p2.y)
-        elif getattr(g, 'functions', False):
+        elif hasattr(g, 'functions'):
             has_tried_move = False
             func_x = lambdify(g.limits[0], g.functions[0])
             func_y = lambdify(g.limits[0], g.functions[1])
