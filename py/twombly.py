@@ -219,6 +219,7 @@ class Drawing(object):
     def __del__(self):
         if self._drawing is not None:
             self._free(self._drawing)
+            self._drawing = None
 
     def add_geometry(self, g, move_to=False, step=1):
         if not _HAS_SYMPY:

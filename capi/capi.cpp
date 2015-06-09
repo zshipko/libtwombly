@@ -134,6 +134,8 @@ void draw_free(drawing d){
         else if (d.bits_per_channel == 16) delete (Drawing<rgba64>*)d.handle;
         break;
     }
+
+    d.handle = NULL;
 }
 
 bool draw_getAntialias(drawing d){
