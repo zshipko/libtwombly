@@ -191,10 +191,12 @@ public:
     ~Drawing(){
         if (raster){
             delete raster;
+            raster = nullptr;
         }
 
         if (sl){
             delete sl;
+            sl = nullptr;
         }
     }
 

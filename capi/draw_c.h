@@ -27,7 +27,7 @@ drawing draw_create_bgr(int64_t width, int64_t height, int channels, uint8_t *da
 drawing draw_create16(int64_t width, int64_t height, int channels, uint16_t *data);
 drawing draw_create16_bgr(int64_t width, int64_t height, int channels, uint16_t *data);
 
-void draw_free(drawing d);
+void draw_free(drawing *d);
 
 bool draw_getAntialias(drawing);
 void draw_setAntialias(drawing, bool);

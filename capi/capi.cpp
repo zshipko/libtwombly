@@ -115,27 +115,27 @@ drawing draw_create16_bgr(int64_t width, int64_t height, int channels, uint16_t 
     return d;
 }
 
-void draw_free(drawing d){
-    if (!d.handle){
+void draw_free(drawing *d){
+    if (!d->handle){
         return;
     }
 
-    switch(d.channels){
+    switch(d->channels){
     case 1:
-        if (d.bits_per_channel == 8) delete (Drawing<gray8>*)d.handle;
-        else if (d.bits_per_channel == 16) delete (Drawing<gray8>*)d.handle;
+        if (d->bits_per_channel == 8) delete (Drawing<gray8>*)d->handle;
+        else if (d->bits_per_channel == 16) delete (Drawing<gray8>*)d->handle;
         break;
     case 3:
-        if (d.bits_per_channel == 8) delete (Drawing<rgb24>*)d.handle;
-        else if (d.bits_per_channel == 16) delete (Drawing<rgb48>*)d.handle;
+        if (d->bits_per_channel == 8) delete (Drawing<rgb24>*)d->handle;
+        else if (d->bits_per_channel == 16) delete (Drawing<rgb48>*)d->handle;
         break;
     case 4:
-        if (d.bits_per_channel == 8) delete (Drawing<rgba32>*)d.handle;
-        else if (d.bits_per_channel == 16) delete (Drawing<rgba64>*)d.handle;
+        if (d->bits_per_channel == 8) delete (Drawing<rgba32>*)d->handle;
+        else if (d->bits_per_channel == 16) delete (Drawing<rgba64>*)d->handle;
         break;
     }
 
-    d.handle = NULL;
+    d->handle = NULL;
 }
 
 bool draw_getAntialias(drawing d){
