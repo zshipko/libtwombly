@@ -133,6 +133,8 @@ void draw_free(drawing *d){
         if (d->bits_per_channel == 8) delete (Drawing<rgba32>*)d->handle;
         else if (d->bits_per_channel == 16) delete (Drawing<rgba64>*)d->handle;
         break;
+    default:
+        return;
     }
 
     d->handle = NULL;
