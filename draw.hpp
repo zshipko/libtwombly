@@ -658,7 +658,7 @@ public:
         renderer_gradient_type ren_gradient(base, span_allocator, span_gradient);
 
         // transform
-        agg::conv_transform<agg::conv_curve<agg::path_storage>> m(p, _mtx);
+        agg::conv_transform<agg::conv_curve<agg::path_storage>> m(p, mtx);
         raster->add_path(m, pathid);
         agg::render_scanlines(*raster, *sl, ren_gradient);
     }
@@ -696,7 +696,7 @@ public:
         renderer_gradient_type ren_gradient(base, span_allocator, span_gradient);
 
         // transform
-        agg::conv_transform<agg::conv_stroke<agg::conv_curve<agg::path_storage>>> m(q, _mtx);
+        agg::conv_transform<agg::conv_stroke<agg::conv_curve<agg::path_storage>>> m(q, mtx);
         raster->add_path(m, pathid);
         agg::render_scanlines(*raster, *sl, ren_gradient);
     }

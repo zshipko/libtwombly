@@ -332,7 +332,7 @@ class Drawing(object):
         else:
             orientation = "_" + orientation
 
-        _methods["fill_" + kind + "_gradient" + orientation](self, (c_float * 4)(*b), (c_float * 4)(*m), (c_float * 4)(*e), x, y, mtx)
+        _methods["fill_" + kind + "_gradient" + orientation](self, (c_float * 4)(*b), (c_float * 4)(*m), (c_float * 4)(*e), x, y, mtx._mtx)
 
     def stroke_gradient(self, b, m, e, x, y, kind="linear", orientation="v", mtx=TransformMatrix()):
         if kind != "linear":
@@ -340,7 +340,7 @@ class Drawing(object):
         else:
             orientation = "_" + orientation
 
-        _methods["stroke_" + kind + "_gradient" + orientation](self, (c_float * 4)(*b), (c_float * 4)(*m), (c_float * 4)(*e), x, y, mtx)
+        _methods["stroke_" + kind + "_gradient" + orientation](self, (c_float * 4)(*b), (c_float * 4)(*m), (c_float * 4)(*e), x, y, mtx._mtx)
 
     def matrix(self):
         return TransformMatrix(_transform_matrix_get(self))
