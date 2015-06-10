@@ -1,5 +1,5 @@
 from ctypes import *
-from numpy import zeros, arange, ndarray
+from numpy import zeros, arange, ndarray, asarray
 from twombly_colors import _colors
 
 twombly = cdll.LoadLibrary("libtwombly.so")
@@ -10,6 +10,11 @@ class DrawingType(Structure):
             ("channels", c_int),
             ("bits_per_channel", c_int),
             ("is_bgr", c_bool)
+    ]
+
+class TransformType(Structure):
+    _fields_ = [
+        ("handle", c_void_p)
     ]
 
 def _method_decl(c_fn, res=None, args=[DrawingType]):
@@ -27,7 +32,7 @@ _methods = dict(
         DrawingType, [c_long, c_long, c_long, c_void_p]),
     create16_bgr =_method_decl(twombly.draw_create16_bgr,
         DrawingType, [c_long, c_long, c_long, c_void_p]),
-    free =_method_decl(twombly.draw_free),
+    free =_method_decl(twombly.draw_free, args=[POINTER(DrawingType)]),
     get_antialias =_method_decl(twombly.draw_getAntialias, c_bool),
     set_antialias =_method_decl(twombly.draw_getAntialias,
         args=[DrawingType, c_bool]),
@@ -134,7 +139,67 @@ _methods = dict(
             args = [DrawingType, c_long, c_long, c_int, c_char_p]),
     stroke_pattern =_method_decl(twombly.draw_fillPattern,
             args = [DrawingType, c_long, c_long, c_int, c_char_p]),
+    fill_linear_gradient_h = _method_decl(twombly.draw_fillLinearGradientH,
+        args=[DrawingType, POINTER(c_float), POINTER(c_float), POINTER(c_float), c_int, c_int]),
+    fill_linear_gradient_v = _method_decl(twombly.draw_fillLinearGradientV,
+        args=[DrawingType, POINTER(c_float), POINTER(c_float), POINTER(c_float), c_int, c_int]),
+    fill_radial_gradient = _method_decl(twombly.draw_fillRadialGradient,
+args=[DrawingType, POINTER(c_float), POINTER(c_float), POINTER(c_float), c_int, c_int]),
+    stroke_linear_gradient_h = _method_decl(twombly.draw_strokeLinearGradientH,
+        args=[DrawingType, POINTER(c_float), POINTER(c_float), POINTER(c_float), c_int, c_int]),
+    stroke_linear_gradient_v = _method_decl(twombly.draw_strokeLinearGradientV,
+        args=[DrawingType, POINTER(c_float), POINTER(c_float), POINTER(c_float), c_int, c_int]),
+    stroke_radial_gradient = _method_decl(twombly.draw_strokeRadialGradient,
+args=[DrawingType, POINTER(c_float), POINTER(c_float), POINTER(c_float), c_int, c_int]),
 )
+
+_transform_matrix_create = _method_decl(twombly.draw_transformMatrixCreate, TransformType, args=[])
+_transform_matrix_free = _method_decl(twombly.draw_transformMatrixFree, args=[TransformType])
+_transform_matrix_get = _method_decl(twombly.draw_getTransformMatrix, TransformType, args=[DrawingType])
+
+
+class TransformMatrix(object):
+    def __init__(self, m=None):
+        if m is None:
+            m = _transform_matrix_create()
+            self._free = True
+        else: self._free = False
+
+        self._mtx = m
+        _as_parameter = self._mtx
+
+    def scale(self, x, y):
+        _method_decl(twombly.draw_transformMatrixScale, args=[TransformType, c_double, c_double])(self._mtx, x, y)
+
+    def translate(self, x, y):
+        _method_decl(twombly.draw_transformMatrixTranslate, args=[TransformType, c_double, c_double])(self._mtx, x, y)
+
+    def rotate(self, a):
+        _method_decl(twombly.draw_transformMatrixRotate, args=[TransformType, c_double])(self._mtx, a)
+
+    def reset(self):
+        _method_decl(twombly.draw_transformMatrixReset, args=[TransformType])(self._mtx)
+
+    def __del__(self):
+        if self._free and self._mtx is not None:
+            _method_decl(twombly.draw_transformMatrixFree, args=[POINTER(TransformType)])(pointer(self._mtx))
+            self._free = False
+            self._mtx = None
+
+    def transform(x, y, inverse=False):
+        if inverse:
+            _method_decl(twombly.draw_transformMatrixInverseTransform, args=[TransformType, POINTER(c_double), POINTER(c_double)])(self._mtx, pointer(x), pointer(y))
+        else:
+            _method_decl(twombly.draw_transformMatrixTransform, args=[TransformType, POINTER(c_double), POINTER(c_double)])(self._mtx, pointer(x), pointer(y))
+        return (x, y)
+
+    def to_list(self):
+        arr = zeros(6, dtype="double")
+        _method_decl(twombly.draw_transformMatrixToDouble, args=[TransformType, POINTER(c_double)])(self._mtx, cast(arr.ctypes.data, POINTER(c_double)))
+        return arr
+
+    def set(self, arr):
+        _method_decl(twombly.draw_transformMatrixFromDouble, args=[TransformType, POINTER(c_double)])(self._mtx, cast(asarray(arr, dtype='double').ctypes.data, POINTER(c_double)))
 
 _HAS_SYMPY = False
 try:
@@ -190,7 +255,6 @@ class Drawing(object):
 
         self._as_parameter_ = self._drawing
 
-
     def __getattr__(self, key):
         def wrapper(*args):
             return _methods[key](self._drawing, *args)
@@ -218,7 +282,7 @@ class Drawing(object):
 
     def __del__(self):
         if self._drawing is not None:
-            self._free(self._drawing)
+            self._free(pointer(self._drawing))
             self._drawing = None
 
     def add_geometry(self, g, move_to=False, step=1):
@@ -261,6 +325,25 @@ class Drawing(object):
                         self.move_to(g.functions[0].subs(g.limits[0], p), g.functions[1].subs(g.limits[0], p))
                         continue
                 self.line_to(g.functions[0].subs(g.limits[0], p), g.functions[1].subs(g.limits[0], p))
+
+    def fill_gradient(self, b, m, e, x, y, kind="linear", orientation="v", mtx=TransformMatrix()):
+        if kind != "linear":
+            orientation = ""
+        else:
+            orientation = "_" + orientation
+
+        _methods["fill_" + kind + "_gradient" + orientation](self, (c_float * 4)(*b), (c_float * 4)(*m), (c_float * 4)(*e), x, y, mtx)
+
+    def stroke_gradient(self, b, m, e, x, y, kind="linear", orientation="v", mtx=TransformMatrix()):
+        if kind != "linear":
+            orientation = ""
+        else:
+            orientation = "_" + orientation
+
+        _methods["stroke_" + kind + "_gradient" + orientation](self, (c_float * 4)(*b), (c_float * 4)(*m), (c_float * 4)(*e), x, y, mtx)
+
+    def matrix(self):
+        return TransformMatrix(_transform_matrix_get(self))
 
 
 def draw(arr, *args, **kwargs):

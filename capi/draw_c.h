@@ -5,6 +5,8 @@
 
 #include "draw.hpp"
 
+
+
 #ifdef __cplusplus
 struct drawing {
     void *handle;
@@ -20,7 +22,7 @@ extern "C" {
 
 #define draw_frombimage(im) (im.depth == u16 ? draw_create(im.width, im.height, im.channels, im.u16) : draw_create(im.width, im.height, im.channels, im.u8))
 
-typedef float Pixel __attribute__ ((vector_size (16)));
+typedef float* Pixel; //  __attribute__ ((vector_size (16)));
 
 drawing draw_create(int64_t width, int64_t height, int channels, uint8_t *data);
 drawing draw_create_bgr(int64_t width, int64_t height, int channels, uint8_t *data);
@@ -97,14 +99,29 @@ void draw_concat(drawing, drawing);
 void draw_fillPattern (drawing d, int64_t width, int64_t height, int channels, uint8_t *data);
 void draw_strokePattern (drawing d, int64_t width, int64_t height, int channels, uint8_t *data);
 
-/*void draw_fillLinerGradientH(Pixel b, Pixel m, Pixel e, int s, int x);
-void draw_fillLinerGradientV(Pixel b, Pixel m, Pixel e, int s, int x);
-void draw_fillRadialGradient(Pixel b, Pixel m, Pixel e, int s, int x);
-void draw_strokeLinerGradientH(Pixel b, Pixel m, Pixel e, int s, int x);
-void draw_strokeLinerGradientV(Pixel b, Pixel m, Pixel e, int s, int x);
-void draw_strokeRadialGradient(Pixel b, Pixel m, Pixel e, int s, int x);*/
-// void draw_blur(drawing, double a);
+typedef struct transform_matrix {
+    void *handle;
+} transform_matrix;
 
+void draw_transformMatrixScale(transform_matrix mtx, double a, double b);
+void draw_transformMatrixTranslate(transform_matrix mtx, double a, double b);
+void draw_transformMatrixRotate(transform_matrix mtx, double a);
+void draw_transformMatrixReset(transform_matrix mtx);
+transform_matrix draw_getTransformMatrix(drawing d);
+transform_matrix draw_transformMatrixCreate();
+void draw_transformMatrixFree(transform_matrix *mtx);
+double draw_transformMatrixDeterminant(transform_matrix mtx);
+void draw_transformMatrixInverseTransform(transform_matrix mtx, double *x, double *y);
+void draw_transformMatrixTransform(transform_matrix mtx, double *x, double *y);
+void draw_transformMatrixToDouble(transform_matrix mtx, double *d);
+void draw_transformMatrixFromDouble(transform_matrix mtx, double *d);
+
+void draw_fillLinearGradientH(drawing d, Pixel b, Pixel m, Pixel e, int s, int x, transform_matrix mtx);
+void draw_fillLinearGradientV(drawing d, Pixel b, Pixel m, Pixel e, int s, int x, transform_matrix mtx);
+void draw_fillRadialGradient(drawing d, Pixel b, Pixel m, Pixel e, int s, int x, transform_matrix mtx);
+void draw_strokeLinearGradientH(drawing d, Pixel b, Pixel m, Pixel e, int s, int x, transform_matrix mtx);
+void draw_strokeLinearGradientV(drawing d, Pixel b, Pixel m, Pixel e, int s, int x, transform_matrix mtx);
+void draw_strokeRadialGradient(drawing d, Pixel b, Pixel m, Pixel e, int s, int x, transform_matrix mtx);
 
 #ifdef __cplusplus
 }

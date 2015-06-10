@@ -1,6 +1,30 @@
 #ifndef TWOMBLY_DRAW_HEADER
 #define TWOMBLY_DRAW_HEADER
 
+// Defined for both C and C++
+
+enum line_cap_style {
+    butt_cap,
+    square_cap,
+    round_cap
+};
+
+enum line_join_style {
+    miter_join         = 0,
+    miter_join_revert  = 1,
+    round_join         = 2,
+    bevel_join         = 3,
+    miter_join_round   = 4
+};
+
+enum filling_rule {
+    fill_non_zero,
+    fill_even_odd
+};
+
+#define TW_POLY_SIZE(p) (sizeof(p) / (sizeof(*p) * 2))
+
+
 #ifdef __cplusplus
 
 #include "image.hpp"
@@ -45,23 +69,22 @@
 #include "agg_font_freetype.h"
 #endif
 
-#define TW_POLY_SIZE(p) (sizeof(p) / (sizeof(*p) * 2))
-
 namespace tw {
 
 // The Color type is used when dealing with
-// colors withing the drawing context
+// colors withing the drawing context. comes in both 8 and 16 bit variations
 typedef agg::rgba8 Color;
 typedef agg::rgba16 Color16;
 
 inline Color rgba(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+inline Color rgb(uint8_t r, uint8_t g, uint8_t b);
+inline Color16 rgba_16(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+inline Color16 rgb_16(uint8_t r, uint8_t g, uint8_t b);
+
 #ifndef NO_OPENCV
 inline Color rgba(Scalar s);
 inline Color16 rgba_16(Scalar s);
 #endif
-inline Color rgb(uint8_t r, uint8_t g, uint8_t b);
-inline Color16 rgba_16(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
-inline Color16 rgb_16(uint8_t r, uint8_t g, uint8_t b);
 
 template <typename ColorType>
 inline Color rgb(ColorType t){
@@ -86,32 +109,12 @@ inline Color rgb(ColorType t){
     return dst;
 }
 
-enum line_cap_style {
-    butt_cap,
-    square_cap,
-    round_cap
-};
-
-enum line_join_style {
-    miter_join         = 0,
-    miter_join_revert  = 1,
-    round_join         = 2,
-    bevel_join         = 3,
-    miter_join_round   = 4
-};
-
-enum filling_rule {
-    fill_non_zero,
-    fill_even_odd
-};
-
-
 // Used for simple 3 stop gradients
-template<class FillArray>
+template<class FillArray, class ColorType>
 void fill_color_array_3_stop(FillArray& array,
-                      Color begin,
-                      Color middle,
-                      Color end){
+                      ColorType begin,
+                      ColorType middle,
+                      ColorType end){
     unsigned i;
     unsigned half_size = array.size() / 2;
     for(i = 0; i < half_size; ++i){
@@ -319,10 +322,12 @@ public:
         concat_path(s, pathid);
     }
 
+    // End the polygon and close it
     inline void closePolygon(){
         close_polygon();
     }
 
+    // End the current polygon and begin a new one
     inline void endPolygon(){
         end_poly();
     }
@@ -613,21 +618,21 @@ public:
     }
 
     template<typename S, typename ColorType>
-    void fillGradient(ColorType b, ColorType m, ColorType e, int s, int x){
-        agg::pod_auto_array<Color, 256> color_array;
+    void fillGradient(ColorType b, ColorType m, ColorType e, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
+        agg::pod_auto_array<ColorType, 256> color_array;
         fill_color_array_3_stop(color_array, b, m, e);
-        fillGradient<S>(color_array, s, x );
+        fillGradient<S>(color_array, s, x, _mtx);
     }
 
     template<typename S, typename ColorType>
-    void strokeGradient(ColorType b, ColorType m, ColorType e, int s, int x){
-        agg::pod_auto_array<Color, 256> color_array;
+    void strokeGradient(ColorType b, ColorType m, ColorType e, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
+        agg::pod_auto_array<ColorType, 256> color_array;
         fill_color_array_3_stop(color_array, b, m, e);
-        strokeGradient<S>(color_array, s, x);
+        strokeGradient<S>(color_array, s, x, _mtx);
     }
 
     template<typename S, typename ColorType>
-    void fillGradient(agg::pod_auto_array<ColorType, 256> color_array, int s, int x){
+    void fillGradient(agg::pod_auto_array<ColorType, 256> color_array, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
         agg::conv_curve<agg::path_storage> p(*this);
 
         typedef agg::renderer_base<DrawingType> renderer_base_type;
@@ -642,8 +647,7 @@ public:
         typedef agg::renderer_scanline_aa<renderer_base_type,
                                       span_allocator_type, span_gradient_type> renderer_gradient_type;
         gradient_func_type  gradient_func;                   // The gradient function
-        agg::trans_affine   gradient_mtx;                    // Affine transformer
-        interpolator_type   span_interpolator(gradient_mtx); // Span interpolator
+        interpolator_type   span_interpolator(_mtx); // Span interpolator
         span_allocator_type span_allocator;
 
         span_gradient_type span_gradient(span_interpolator,
@@ -654,13 +658,13 @@ public:
         renderer_gradient_type ren_gradient(base, span_allocator, span_gradient);
 
         // transform
-        agg::conv_transform<agg::conv_curve<agg::path_storage>> m(p, mtx);
+        agg::conv_transform<agg::conv_curve<agg::path_storage>> m(p, _mtx);
         raster->add_path(m, pathid);
         agg::render_scanlines(*raster, *sl, ren_gradient);
     }
 
     template<typename S, typename ColorType>
-    void strokeGradient(agg::pod_auto_array<ColorType, 256> color_array, int s, int x){
+    void strokeGradient(agg::pod_auto_array<ColorType, 256> color_array, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
         agg::conv_curve<agg::path_storage> p(*this);
         agg::conv_stroke<agg::conv_curve<agg::path_storage>> q(p);
         q.width(_width);
@@ -681,8 +685,7 @@ public:
         typedef agg::renderer_scanline_aa<renderer_base_type,
                                       span_allocator_type, span_gradient_type> renderer_gradient_type;
         gradient_func_type  gradient_func;                   // The gradient function
-        agg::trans_affine   gradient_mtx;                    // Affine transformer
-        interpolator_type   span_interpolator(gradient_mtx); // Span interpolator
+        interpolator_type   span_interpolator(_mtx); // Span interpolator
         span_allocator_type span_allocator;
 
         span_gradient_type span_gradient(span_interpolator,
@@ -693,39 +696,39 @@ public:
         renderer_gradient_type ren_gradient(base, span_allocator, span_gradient);
 
         // transform
-        agg::conv_transform<agg::conv_stroke<agg::conv_curve<agg::path_storage>>> m(q, mtx);
+        agg::conv_transform<agg::conv_stroke<agg::conv_curve<agg::path_storage>>> m(q, _mtx);
         raster->add_path(m, pathid);
         agg::render_scanlines(*raster, *sl, ren_gradient);
     }
 
     template <typename ColorType>
-    void fillLinearGradientH(ColorType b, ColorType m, ColorType e, int s, int x){
-        fillGradient<agg::gradient_x>(b, m, e, s, x);
+    void fillLinearGradientH(ColorType b, ColorType m, ColorType e, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
+        fillGradient<agg::gradient_x>(b, m, e, s, x, _mtx);
     }
 
     template <typename ColorType>
-    void fillLinearGradientV(ColorType b, ColorType m, ColorType e, int s, int x){
-        fillGradient<agg::gradient_y>(b, m, e, s, x);
+    void fillLinearGradientV(ColorType b, ColorType m, ColorType e, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
+        fillGradient<agg::gradient_y>(b, m, e, s, x, mtx);
     }
 
     template <typename ColorType>
-    void fillRadialGradient(ColorType b, ColorType m, ColorType e, int s, int x){
-        fillGradient<agg::gradient_radial>(b, m, e, s, x);
+    void fillRadialGradient(ColorType b, ColorType m, ColorType e, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
+        fillGradient<agg::gradient_radial>(b, m, e, s, x, _mtx);
     }
 
     template <typename ColorType>
-    void strokeLinearGradientH(ColorType b, ColorType m, ColorType e, int s, int x){
-        strokeGradient<agg::gradient_x>(b, m, e, s, x);
+    void strokeLinearGradientH(ColorType b, ColorType m, ColorType e, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
+        strokeGradient<agg::gradient_x>(b, m, e, s, x, _mtx);
     }
 
     template <typename ColorType>
-    void strokeLinearGradientV(ColorType b, ColorType m, ColorType e, int s, int x){
-        strokeGradient<agg::gradient_y>(b, m, e, s, x);
+    void strokeLinearGradientV(ColorType b, ColorType m, ColorType e, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
+        strokeGradient<agg::gradient_y>(b, m, e, s, x, _mtx);
     }
 
     template <typename ColorType>
-    void strokeRadialGradient(ColorType b, ColorType m, ColorType e, int s, int x){
-        strokeGradient<agg::gradient_radial>(b, m, e, s, x);
+    void strokeRadialGradient(ColorType b, ColorType m, ColorType e, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
+        strokeGradient<agg::gradient_radial>(b, m, e, s, x, _mtx);
     }
 
     // Adds current path and actually draws everything
@@ -837,27 +840,10 @@ Drawing<bgr48> draw(Mat3w& im);
 
 #else // cplusplus
 
-enum line_cap_style {
-    butt_cap,
-    square_cap,
-    round_cap
-};
+// C interface
+
 typedef enum line_cap_style line_cap_style;
-
-enum line_join_style {
-    miter_join         = 0,
-    miter_join_revert  = 1,
-    round_join         = 2,
-    bevel_join         = 3,
-    miter_join_round   = 4
-};
 typedef enum line_join_style line_join_style;
-
-
-enum filling_rule {
-    fill_non_zero,
-    fill_even_odd
-};
 typedef enum filling_rule filling_rule;
 
 typedef struct Point {
