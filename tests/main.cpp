@@ -11,6 +11,12 @@ using namespace tw;
 #define BLUE 0
 #define ALPHA 3
 
+int opencvErrorHandler(int status, const char* func_name, const char* err_msg,
+                   const char* file_name, int line, void*)
+{
+    return 0;
+}
+
 const lest::test drawing_test[] = {
     CASE ( "Mat3b drawing" ) {
         Mat3b im(100, 100);
@@ -126,10 +132,36 @@ const lest::test drawing_test[] = {
         } catch(std::exception &exc){
 
         }
-    }
+    },
 
+    CASE ( "Gradient" ) {
+        Mat3w im2(500, 500);
+        im2.setTo(Scalar(255, 255, 255));
+        auto d = draw(im2);
+
+        d.setColor(255, 0, 0);
+        d.moveTo(100, 100);
+        d.curveTo(400, 400, 100, 320);
+        d.stroke();
+
+        d.newPath();
+        d.ellipse(250, 250, 250, 250);
+
+        d.fillLinearGradientH(Color16(255<<8, 0, 0, 127<<8), Color16(0, 255<<8, 0, 127<<8), Color16(0, 0, 255<<8, 255<<8), 0, 350);
+
+        EXPECT((im2.at<Scalar>(250, 250)[0] > 0));
+
+        try{
+            imshow("Gradient test", im2);
+            waitKey(0);
+            destroyAllWindows();
+        } catch(std::exception &exc){
+
+        }
+    }
 };
 
 int main(int argc, char **argv){
+    cv::redirectError(opencvErrorHandler);
     lest::run(drawing_test, argc, argv);
 }
