@@ -125,9 +125,9 @@ inline Color rgb(ColorType t){
 // Used for simple 3 stop gradients
 template<class FillArray, class ColorType>
 void fill_color_array_3_stop(FillArray& array,
-                      ColorType begin,
-                      ColorType middle,
-                      ColorType end){
+                             ColorType begin,
+                             ColorType middle,
+                             ColorType end){
     unsigned i;
     unsigned half_size = array.size() / 2;
     for(i = 0; i < half_size; ++i){
@@ -195,11 +195,11 @@ public:
 #endif
 
 #ifdef bimage_header_file
-    Drawing (bimage im) : buffer((uint8_t*)im.ptr, im.width, im.height, im.width * im.channels * (im.depth == u16 ? 2 : 1)), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr){
+Drawing (bimage im) : buffer((uint8_t*)im.ptr, im.width, im.height, im.width * im.channels * (im.depth == u16 ? 2 : 1)), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr){
         alloc();
     }
 
-    Drawing (bimage *im) : buffer((uint8_t*)im->ptr, im->width, im->height, im->width * im->channels * (im->depth == u16 ? 2 : 1)), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr){
+Drawing (bimage *im) : buffer((uint8_t*)im->ptr, im->width, im->height, im->width * im->channels * (im->depth == u16 ? 2 : 1)), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr){
         alloc();
     }
 #endif
@@ -654,19 +654,19 @@ public:
         typedef agg::span_interpolator_linear<> interpolator_type;
         typedef agg::span_allocator<ColorType> span_allocator_type;
         typedef agg::span_gradient<ColorType,
-                                   interpolator_type,
-                                   gradient_func_type,
-                                   color_array_type> span_gradient_type;
+        interpolator_type,
+        gradient_func_type,
+        color_array_type> span_gradient_type;
         typedef agg::renderer_scanline_aa<renderer_base_type,
-                                      span_allocator_type, span_gradient_type> renderer_gradient_type;
+        span_allocator_type, span_gradient_type> renderer_gradient_type;
         gradient_func_type  gradient_func;                   // The gradient function
         interpolator_type   span_interpolator(_mtx); // Span interpolator
         span_allocator_type span_allocator;
 
         span_gradient_type span_gradient(span_interpolator,
-                                     gradient_func,
-                                     color_array,
-                                     s, x);
+                                         gradient_func,
+                                         color_array,
+                                         s, x);
 
         renderer_gradient_type ren_gradient(base, span_allocator, span_gradient);
 
@@ -692,19 +692,19 @@ public:
         typedef agg::span_interpolator_linear<> interpolator_type;
         typedef agg::span_allocator<ColorType> span_allocator_type;
         typedef agg::span_gradient<ColorType,
-                                   interpolator_type,
-                                   gradient_func_type,
-                                   color_array_type> span_gradient_type;
+        interpolator_type,
+        gradient_func_type,
+        color_array_type> span_gradient_type;
         typedef agg::renderer_scanline_aa<renderer_base_type,
-                                      span_allocator_type, span_gradient_type> renderer_gradient_type;
+        span_allocator_type, span_gradient_type> renderer_gradient_type;
         gradient_func_type  gradient_func;                   // The gradient function
         interpolator_type   span_interpolator(_mtx); // Span interpolator
         span_allocator_type span_allocator;
 
         span_gradient_type span_gradient(span_interpolator,
-                                     gradient_func,
-                                     color_array,
-                                     s, x);
+                                         gradient_func,
+                                         color_array,
+                                         s, x);
 
         renderer_gradient_type ren_gradient(base, span_allocator, span_gradient);
 
