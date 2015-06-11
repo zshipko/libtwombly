@@ -33,5 +33,13 @@ class TestDrawing(unittest.TestCase):
         self.assertEquals(self.image[150, 150][1], 255)
         self.assertEquals(self.image[150, 150][0], self.image[150, 150][2])
 
+    def test_transform_matrix(self):
+        m = self.drawing.matrix()
+        arr = m.array()
+        arr *= 0
+        arr += 10
+        m.array(arr)
+        self.assertEquals(self.drawing.matrix().array()[0], 10)
+
 if __name__ == '__main__':
     unittest.main()

@@ -22,6 +22,19 @@ enum filling_rule {
     fill_even_odd
 };
 
+enum path_commands {
+    path_cmd_stop     = 0,        //----path_cmd_stop
+    path_cmd_move_to  = 1,        //----path_cmd_move_to
+    path_cmd_line_to  = 2,        //----path_cmd_line_to
+    path_cmd_curve3   = 3,        //----path_cmd_curve3
+    path_cmd_curve4   = 4,        //----path_cmd_curve4
+    path_cmd_curveN   = 5,        //----path_cmd_curveN
+    path_cmd_catrom   = 6,        //----path_cmd_catrom
+    path_cmd_ubspline = 7,        //----path_cmd_ubspline
+    path_cmd_end_poly = 0x0F,     //----path_cmd_end_poly
+    path_cmd_mask     = 0x0F      //----path_cmd_mask
+};
+
 #define TW_POLY_SIZE(p) (sizeof(p) / (sizeof(*p) * 2))
 
 
@@ -845,6 +858,7 @@ Drawing<bgr48> draw(Mat3w& im);
 typedef enum line_cap_style line_cap_style;
 typedef enum line_join_style line_join_style;
 typedef enum filling_rule filling_rule;
+typedef enum path_commands path_commands;
 
 typedef struct Point {
     double x, y;
