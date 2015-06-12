@@ -198,7 +198,15 @@ _transform_matrix_scale = _method_decl(twombly.draw_transformMatrixScale, args=[
 
 
 class TransformMatrix(object):
-    ''' transforms points and drawings '''
+    '''
+        transforms points and drawings
+
+        >>> mtx = TransformMatrix()
+        >>> arr = mtx.array()     # get matrix data
+        >>> arr = arr * 2
+        >>> mtx.array(arr)        # sets matrix sata
+        >>> mtx.transform(10, 10) # returns (20.0, 20.0)
+    '''
     def __init__(self, m=None):
         if m is None:
             m = _transform_matrix_create()
