@@ -267,7 +267,7 @@ except ImportError:
     pass
 
 def as_chr(arr):
-    return [chr(int(i)) for i in arr]
+    return [c_char(int(i)) for i in arr]
 
 def as_uint16(arr):
     return [c_uint16(int(i)) for i in arr]
