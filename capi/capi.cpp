@@ -406,3 +406,27 @@ void draw_concat(drawing a, drawing b){
     agg::path_storage pth = _get_path(b);
     DRAWING(a, concatPath, pth);
 }
+
+void draw_alphaLayerInit(drawing a){
+    DRAWING(a, alphaLayerInit);
+}
+
+void draw_alphaLayerFree(drawing a){
+    DRAWING(a, alphaLayerFree);
+}
+
+void draw_alphaLayerFill(drawing a, uint8_t v){
+    DRAWING(a, alphaLayerFill, v);
+}
+
+uint8_t draw_alphaLayerGet(drawing a, int32_t x, int32_t y){
+    DRAWING(a, alphaLayerGet, x, y);
+}
+
+uint8_t *draw_alphaLayerPtr(drawing a){
+    DRAWING(a, alphaLayerPtr);
+}
+
+uint8_t *draw_alphaLayerPtrOffs(drawing a, int32_t x, int32_t y){
+    DRAWING(a, alphaLayerPtrOffs, x, y);
+}

@@ -128,6 +128,7 @@ class Drawing : public agg::path_storage {
     agg::renderer_scanline_aa_solid<agg::renderer_base<DrawingType>> render_aa;
     agg::renderer_scanline_bin_solid<agg::renderer_base<DrawingType>> render_bin;
     agg::renderer_base<DrawingType> base;
+    agg::scanline32_p8 *sl;
 
     unsigned pathid; // stores current path
     Color current_color;
@@ -138,53 +139,51 @@ public:
         int32_t x, y, c;
     } size;
 
+    DrawingType pix;
     agg::rendering_buffer buffer;
     agg::rasterizer_scanline_aa<> *raster;
-    agg::scanline32_p8 *sl;
+
     agg::trans_affine mtx;
-
-    DrawingType pix;
-
-    uint8_t *alpha_buf;
+    uint8_t *alpha_layer;
 
     // Creates a drawing context from width, height, channels and data
-    Drawing(int32_t w, int32_t h, int32_t c, uint8_t *d, uint8_t *_alpha_buf=nullptr) : buffer(d, w, h, w * c), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(w, h, c),  alpha_buf(_alpha_buf) {
+    Drawing(int32_t w, int32_t h, int32_t c, uint8_t *d, uint8_t *_alpha_layer=nullptr) : buffer(d, w, h, w * c), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(w, h, c),  alpha_layer(_alpha_layer) {
         alloc();
     }
 
-    Drawing(int32_t w, int32_t h, int32_t c, uint16_t *d, uint8_t *_alpha_buf=nullptr) : buffer((uint8_t*)d, w, h, w * c * 2), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(w, h, c),  alpha_buf(_alpha_buf) {
+    Drawing(int32_t w, int32_t h, int32_t c, uint16_t *d, uint8_t *_alpha_layer=nullptr) : buffer((uint8_t*)d, w, h, w * c * 2), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(w, h, c),  alpha_layer(_alpha_layer) {
         alloc();
     }
 
 #ifndef NO_OPECV
     // Creates a drawing context from standard OpenCV Mat types
-    Drawing(Mat3b &im, uint8_t *_alpha_buf=nullptr) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels()),pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.cols, im.rows, im.channels()),  alpha_buf(_alpha_buf) {
+    Drawing(Mat3b &im, uint8_t *_alpha_layer=nullptr) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels()),pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.cols, im.rows, im.channels()),  alpha_layer(_alpha_layer) {
         alloc();
     }
 
-    Drawing(Mat4b &im, uint8_t *_alpha_buf=nullptr) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels()), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.cols, im.rows, im.channels()),  alpha_buf(_alpha_buf) {
+    Drawing(Mat4b &im, uint8_t *_alpha_layer=nullptr) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels()), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.cols, im.rows, im.channels()),  alpha_layer(_alpha_layer) {
         alloc();
     }
 
-    Drawing(Mat3w &im, uint8_t *_alpha_buf=nullptr) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels() * 2),pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.cols, im.rows, im.channels()),  alpha_buf(_alpha_buf) {
+    Drawing(Mat3w &im, uint8_t *_alpha_layer=nullptr) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels() * 2),pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.cols, im.rows, im.channels()),  alpha_layer(_alpha_layer) {
         alloc();
     }
 
-    Drawing(Mat4w &im,  uint8_t *_alpha_buf=nullptr) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels() * 2), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.cols, im.rows, im.channels()),  alpha_buf(_alpha_buf) {
+    Drawing(Mat4w &im,  uint8_t *_alpha_layer=nullptr) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels() * 2), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.cols, im.rows, im.channels()),  alpha_layer(_alpha_layer) {
         alloc();
     }
 
-    Drawing(Mat &im,  uint8_t *_alpha_buf=nullptr) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels() * sizeof(im.data[0])), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.cols, im.rows, im.channels()),  alpha_buf(_alpha_buf) {
+    Drawing(Mat &im,  uint8_t *_alpha_layer=nullptr) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels() * sizeof(im.data[0])), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.cols, im.rows, im.channels()),  alpha_layer(_alpha_layer) {
         alloc();
     }
 #endif
 
 #ifdef bimage_header_file
-    Drawing (bimage im,  uint8_t *_alpha_buf=nullptr) : buffer((uint8_t*)im.ptr, im.width, im.height, im.width * im.channels * (im.depth == u16 ? 2 : 1)), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.width, im.height, im.channels),  alpha_buf(_alpha_buf) {
+    Drawing (bimage im,  uint8_t *_alpha_layer=nullptr) : buffer((uint8_t*)im.ptr, im.width, im.height, im.width * im.channels * (im.depth == u16 ? 2 : 1)), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.width, im.height, im.channels),  alpha_layer(_alpha_layer) {
         alloc();
     }
 
-    Drawing (bimage *im, uint8_t *_alpha_buf=nullptr) : buffer((uint8_t*)im->ptr, im->width, im->height, im->width * im->channels * (im->depth == u16 ? 2 : 1)), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im->width, im->height, im->channels), alpha_buf(_alpha_buf) {
+    Drawing (bimage *im, uint8_t *_alpha_layer=nullptr) : buffer((uint8_t*)im->ptr, im->width, im->height, im->width * im->channels * (im->depth == u16 ? 2 : 1)), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im->width, im->height, im->channels), alpha_layer(_alpha_layer) {
         alloc();
     }
 #endif
@@ -200,7 +199,7 @@ public:
             sl = nullptr;
         }
 
-        removeAlphaLayer();
+        alphaLayerFree();
     }
 
     // Actually create the image,
@@ -222,17 +221,35 @@ public:
         sl = new agg::scanline32_p8();
     }
 
-    void makeAlphaLayer(){
-        if (alpha_buf == nullptr){
-            alpha_buf = new uint8_t[size.x * size.y]();
-            memset(alpha_buf, 255, size.x * size.y);
+    void alphaLayerInit(){
+        if (alpha_layer == nullptr){
+            alpha_layer = new uint8_t[size.x * size.y]();
+            memset(alpha_layer, 255, size.x * size.y);
         }
     }
 
-    void removeAlphaLayer(){
-        if (alpha_buf){
-            delete[] alpha_buf;
-            alpha_buf = nullptr;
+    void alphaLayerFill(uint8_t a){
+        if (alpha_layer){
+            memset(alpha_layer, a, size.x * size.y);
+        }
+    }
+
+    uint8_t &alphaLayerGet(int32_t x, int32_t y){
+        return alpha_layer[(y * size.x) + x];
+    }
+
+    uint8_t *alphaLayerPtrOffs(int32_t x, int32_t y){
+        return alpha_layer + (y * size.x) + x;
+    }
+
+    uint8_t *alphaLayerPtr(){
+        return alpha_layer;
+    }
+
+    void alphaLayerFree(){
+        if (alpha_layer){
+            delete[] alpha_layer;
+            alpha_layer = nullptr;
         }
     }
 
@@ -577,8 +594,8 @@ public:
         agg::conv_transform<agg::conv_curve<agg::path_storage>> m(pth, mtx);
         raster->add_path(m, pathid);
 
-        if (alpha_buf != nullptr){
-            agg::rendering_buffer alpha_mask_rbuf(alpha_buf, size.x, size.y, size.x);
+        if (alpha_layer != nullptr){
+            agg::rendering_buffer alpha_mask_rbuf(alpha_layer, size.x, size.y, size.x);
             agg::amask_no_clip_gray8 alpha_mask(alpha_mask_rbuf);
             agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_mask_adaptor(pix, alpha_mask);
             agg::renderer_base<agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8>> alpha_base(alpha_mask_adaptor);
@@ -613,8 +630,8 @@ public:
         agg::conv_transform<agg::conv_stroke<agg::conv_curve<agg::path_storage>>> m(pth, mtx);
         raster->add_path(m, pathid);
 
-        if (alpha_buf != nullptr){
-            agg::rendering_buffer alpha_mask_rbuf(alpha_buf, size.x, size.y, size.x);
+        if (alpha_layer != nullptr){
+            agg::rendering_buffer alpha_mask_rbuf(alpha_layer, size.x, size.y, size.x);
             agg::amask_no_clip_gray8 alpha_mask(alpha_mask_rbuf);
             agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_mask_adaptor(pix, alpha_mask);
             agg::renderer_base<agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8>> alpha_base(alpha_mask_adaptor);
@@ -684,14 +701,11 @@ public:
         typedef S gradient_func_type;
         typedef agg::span_interpolator_linear<> interpolator_type;
         typedef agg::span_allocator<ColorType> span_allocator_type;
-        typedef agg::span_gradient<ColorType,
-        interpolator_type,
-        gradient_func_type,
-        color_array_type> span_gradient_type;
+        typedef agg::span_gradient<ColorType, interpolator_type, gradient_func_type, color_array_type> span_gradient_type;
         typedef agg::renderer_scanline_aa<renderer_base_type,
         span_allocator_type, span_gradient_type> renderer_gradient_type;
-        gradient_func_type  gradient_func;                   // The gradient function
-        interpolator_type   span_interpolator(_mtx); // Span interpolator
+        gradient_func_type  gradient_func;
+        interpolator_type   span_interpolator(_mtx);
         span_allocator_type span_allocator;
 
         span_gradient_type span_gradient(span_interpolator,
@@ -703,8 +717,8 @@ public:
         agg::conv_transform<agg::conv_curve<agg::path_storage>> m(p, mtx);
         raster->add_path(m, pathid);
 
-        if (alpha_buf != nullptr){
-            agg::rendering_buffer alpha_mask_rbuf(alpha_buf, size.x, size.y, size.x);
+        if (alpha_layer != nullptr){
+            agg::rendering_buffer alpha_mask_rbuf(alpha_layer, size.x, size.y, size.x);
             agg::amask_no_clip_gray8 alpha_mask(alpha_mask_rbuf);
             agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_mask_adaptor(pix, alpha_mask);
             agg::renderer_base<agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8>> alpha_base(alpha_mask_adaptor);
@@ -747,8 +761,8 @@ public:
         agg::conv_transform<agg::conv_stroke<agg::conv_curve<agg::path_storage>>> m(q, mtx);
         raster->add_path(m, pathid);
 
-        if (alpha_buf != nullptr){
-            agg::rendering_buffer alpha_mask_rbuf(alpha_buf, size.x, size.y, size.x);
+        if (alpha_layer != nullptr){
+            agg::rendering_buffer alpha_mask_rbuf(alpha_layer, size.x, size.y, size.x);
             agg::amask_no_clip_gray8 alpha_mask(alpha_mask_rbuf);
             agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_mask_adaptor(pix, alpha_mask);
             agg::renderer_base<agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8>> alpha_base(alpha_mask_adaptor);
@@ -798,8 +812,8 @@ public:
     template <typename S>
     void paint(S &pth){
         raster->add_path(pth, pathid);
-        if (alpha_buf != nullptr){
-            agg::rendering_buffer alpha_mask_rbuf(alpha_buf, size.x, size.y, size.x);
+        if (alpha_layer != nullptr){
+            agg::rendering_buffer alpha_mask_rbuf(alpha_layer, size.x, size.y, size.x);
             agg::amask_no_clip_gray8 alpha_mask(alpha_mask_rbuf);
             agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_mask_adaptor(pix, alpha_mask);
             agg::renderer_base<agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8>> alpha_base(alpha_mask_adaptor);
@@ -901,10 +915,10 @@ typedef Drawing<bgra64> DrawingBGRA64;
 typedef Drawing<bgr48> DrawingBGR48;
 
 #ifndef NO_OPECV
-Drawing<bgra32> draw(Mat4b& im, uint8_t* alpha_buf=nullptr);
-Drawing<bgr24>draw(Mat3b& im, uint8_t* alpha_buf=nullptr);
-Drawing<bgra64> draw(Mat4w& im, uint8_t* alpha_buf=nullptr);
-Drawing<bgr48> draw(Mat3w& im, uint8_t* alpha_buf=nullptr);
+Drawing<bgra32> draw(Mat4b& im, uint8_t* alpha_layer=nullptr);
+Drawing<bgr24>draw(Mat3b& im, uint8_t* alpha_layer=nullptr);
+Drawing<bgra64> draw(Mat4w& im, uint8_t* alpha_layer=nullptr);
+Drawing<bgr48> draw(Mat3w& im, uint8_t* alpha_layer=nullptr);
 #endif
 
 #else // cplusplus

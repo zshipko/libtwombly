@@ -98,6 +98,13 @@ unsigned int draw_prevVertex(drawing, double *, double *);
 void draw_modifyVertex(drawing, unsigned int, double, double, unsigned int);
 unsigned int draw_totalVertices(drawing);
 
+void draw_alphaLayerInit(drawing a);
+void draw_alphaLayerFree(drawing a);
+void draw_alphaLayerFill(drawing a, uint8_t v);
+uint8_t draw_alphaLayerGet(drawing a, int32_t x, int32_t y);
+uint8_t *draw_alphaLayerPtr(drawing a);
+uint8_t *draw_alphaLayerPtrOffs(drawing a, int32_t x, int32_t y);
+
 void draw_join(drawing, drawing);
 void draw_concat(drawing, drawing);
 void draw_fillPattern (drawing d, drawing e);

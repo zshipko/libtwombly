@@ -91,7 +91,7 @@ _METHODS = dict(
     invert_polygon=_method_decl(twombly.draw_invertPolygon),
     reset=_method_decl(twombly.draw_reset),
     clear=_method_decl(twombly.draw_clear,
-                       args=[DrawingType, c_char, c_char, c_char, c_char]),
+                       args=[DrawingType, c_uint8, c_uint8, c_uint8, c_uint8]),
     remove_paths=_method_decl(twombly.draw_removePaths),
     ellipse=_method_decl(twombly.draw_ellipse,
                          args=[DrawingType, c_double, c_double, c_double, c_double]),
@@ -141,7 +141,7 @@ _METHODS = dict(
     put_text=_method_decl(twombly.draw_putText, c_double,
                           args=[DrawingType, c_double, c_double, c_char_p, c_char_p, c_double, c_double]),
     set_color=_method_decl(twombly.draw_setColor,
-                           args=[DrawingType, c_char, c_char, c_char, c_char]),
+                           args=[DrawingType, c_uint8, c_uint8, c_uint8, c_uint8]),
     fill=_method_decl(twombly.draw_fill),
     stroke=_method_decl(twombly.draw_stroke),
     dash=_method_decl(
@@ -190,6 +190,15 @@ _METHODS = dict(
     stroke_radial_gradient=_method_decl(twombly.draw_strokeRadialGradient,
                                         args=[DrawingType, POINTER(c_float), POINTER(c_float),
                                               POINTER(c_float), c_int, c_int]),
+    alpha_layer_init=_method_decl(twombly.draw_alphaLayerInit),
+    alpa_layer_free=_method_decl(twombly.draw_alphaLayerFree),
+    alpha_layer_fill=_method_decl(twombly.draw_alphaLayerFill,
+                                  args=[DrawingType, c_uint8]),
+    alpha_layer=_method_decl(twombly.draw_alphaLayerGet, c_uint8,
+                                 args=[DrawingType, c_int32, c_int32]),
+    alpha_layer_ptr_offs=_method_decl(twombly.draw_alphaLayerPtrOffs, POINTER(c_uint8),
+                                          args=[DrawingType, c_int32, c_int32]),
+    alpha_layer_ptr=_method_decl(twombly.draw_alphaLayerPtr, POINTER(c_uint8))
 )
 
 _transform_matrix_create = _method_decl(twombly.draw_transformMatrixCreate, TransformType, args=[])
@@ -274,8 +283,8 @@ try:
 except ImportError:
     pass
 
-def as_chr(arr):
-    return [c_char(chr(int(i))) for i in arr]
+def as_uint8(arr):
+    return [c_uint8(int(i)) for i in arr]
 
 def as_uint16(arr):
     return [c_uint16(int(i)) for i in arr]
@@ -295,9 +304,9 @@ class Color(ndarray):
         self[2] = blue
         self[3] = alpha
 
-    def as_chr(self):
+    def as_uint8(self):
         ''' convert red, green, blue, alpha to chars 0-255 '''
-        return as_chr(self)
+        return as_uint8(self)
 
     def as_uint16(self):
         ''' convert red, green, blue, alpha to uint16s 0-65535 '''
@@ -363,10 +372,10 @@ class Drawing(object):
         return [x_ptr[0], y_ptr[0], cmd_ptr[0]]
 
     def clear(self, r, g=None, b=None, a=255):
-        _METHODS["clear"](self._drawing, *Color(r, g, b, a).as_chr())
+        _METHODS["clear"](self._drawing, *Color(r, g, b, a).as_uint8())
 
     def set_color(self, r, g=None, b=None, a=255):
-        _METHODS["set_color"](self._drawing, *Color(r, g, b, a).as_chr())
+        _METHODS["set_color"](self._drawing, *Color(r, g, b, a).as_uint8())
 
     def curve_to(self, a, b, c=None, d=None, e=None, f=None):
         if c is None or d is None:
