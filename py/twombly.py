@@ -136,9 +136,9 @@ _METHODS = dict(
                         args=[DrawingType, c_double, c_double, c_double, c_double, c_double]),
     arc_rel=_method_decl(twombly.draw_arcRel,
                          args=[DrawingType, c_double, c_double, c_double, c_double, c_double]),
-    put_text_simple=_method_decl(twombly.draw_putTextSimple, c_double,
+    put_text_simple=_method_decl(twombly.draw_textSimple, c_double,
                                  args=[DrawingType, c_double, c_double, c_char_p, c_int, c_double, c_char_p]),
-    put_text=_method_decl(twombly.draw_putText, c_double,
+    put_text=_method_decl(twombly.draw_text, c_double,
                           args=[DrawingType, c_double, c_double, c_char_p, c_char_p, c_double, c_double]),
     set_color=_method_decl(twombly.draw_setColor,
                            args=[DrawingType, c_uint8, c_uint8, c_uint8, c_uint8]),
@@ -190,15 +190,15 @@ _METHODS = dict(
     stroke_radial_gradient=_method_decl(twombly.draw_strokeRadialGradient,
                                         args=[DrawingType, POINTER(c_float), POINTER(c_float),
                                               POINTER(c_float), c_int, c_int]),
-    alpha_layer_init=_method_decl(twombly.draw_alphaLayerInit),
-    alpa_layer_free=_method_decl(twombly.draw_alphaLayerFree),
-    alpha_layer_fill=_method_decl(twombly.draw_alphaLayerFill,
+    alpha_layer_init=_method_decl(twombly.draw_alphaMaskInit),
+    alpa_layer_free=_method_decl(twombly.draw_alphaMaskFree),
+    alpha_layer_fill=_method_decl(twombly.draw_alphaMaskFill,
                                   args=[DrawingType, c_uint8]),
-    alpha_layer=_method_decl(twombly.draw_alphaLayerGet, c_uint8,
+    alpha_layer=_method_decl(twombly.draw_alphaMaskGet, c_uint8,
                                  args=[DrawingType, c_int32, c_int32]),
-    alpha_layer_ptr_offs=_method_decl(twombly.draw_alphaLayerPtrOffs, POINTER(c_uint8),
+    alpha_layer_ptr_offs=_method_decl(twombly.draw_alphaMaskPtrOffs, POINTER(c_uint8),
                                           args=[DrawingType, c_int32, c_int32]),
-    alpha_layer_ptr=_method_decl(twombly.draw_alphaLayerPtr, POINTER(c_uint8))
+    alpha_layer_ptr=_method_decl(twombly.draw_alphaMaskPtr, POINTER(c_uint8))
 )
 
 _transform_matrix_create = _method_decl(twombly.draw_transformMatrixCreate, TransformType, args=[])

@@ -35,8 +35,21 @@ enum path_commands {
     path_cmd_mask     = 0x0F      //----path_cmd_mask
 };
 
-#define TW_POLY_SIZE(p) (sizeof(p) / (sizeof(*p) * 2))
+enum gradient_type {
+    gradient_type_linear_color,
+    gradient_type_circle,
+    gradient_type_radial,
+    gradient_type_radial_d,
+    gradient_type_radial_focus,
+    gradient_type_x,
+    gradient_type_y,
+    gradient_type_diamond,
+    gradient_type_xy,
+    gradient_type_sqrt_xy,
+    gradient_type_conic
+};
 
+#define TW_POLY_SIZE(p) (sizeof(p) / (sizeof(*p) * 2))
 
 #ifdef __cplusplus
 
@@ -115,6 +128,34 @@ void fill_color_array_3_stop(FillArray& array,
     }
 }
 
+template <typename ColorType, int S=256>
+class Gradient {
+public:
+    std::vector<ColorType> colors;
+    agg::pod_auto_array<ColorType, S> arr;
+
+    Gradient() {}
+
+    Gradient(ColorType beg, ColorType mid, ColorType end){
+        addStop(beg);
+        addStop(mid);
+        addStop(end);
+    }
+
+    void addStop(ColorType const & c){
+        colors.push_back(c);
+    }
+
+    void generate(){
+        unsigned stop_len = arr.size() / colors.size();
+        for(size_t color_index = 0; color_index < colors.size()-1; color_index++){
+            for(int i = 0; i < stop_len; i++){
+                arr[i * color_index*stop_len] = colors[color_index].gradient(colors[color_index+1], (i - stop_len) / double(stop_len));
+            }
+        }
+    }
+};
+
 // Drawing type
 template <typename DrawingType>
 class Drawing : public agg::path_storage {
@@ -144,46 +185,46 @@ public:
     agg::rasterizer_scanline_aa<> *raster;
 
     agg::trans_affine mtx;
-    uint8_t *alpha_layer;
+    uint8_t *alpha_mask;
 
     // Creates a drawing context from width, height, channels and data
-    Drawing(int32_t w, int32_t h, int32_t c, uint8_t *d, uint8_t *_alpha_layer=nullptr) : buffer(d, w, h, w * c), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(w, h, c),  alpha_layer(_alpha_layer) {
+    Drawing(int32_t w, int32_t h, int32_t c, uint8_t *d, uint8_t *_alpha_mask=nullptr) : buffer(d, w, h, w * c), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(w, h, c),  alpha_mask(_alpha_mask) {
         alloc();
     }
 
-    Drawing(int32_t w, int32_t h, int32_t c, uint16_t *d, uint8_t *_alpha_layer=nullptr) : buffer((uint8_t*)d, w, h, w * c * 2), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(w, h, c),  alpha_layer(_alpha_layer) {
+    Drawing(int32_t w, int32_t h, int32_t c, uint16_t *d, uint8_t *_alpha_mask=nullptr) : buffer((uint8_t*)d, w, h, w * c * 2), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(w, h, c),  alpha_mask(_alpha_mask) {
         alloc();
     }
 
 #ifndef NO_OPECV
     // Creates a drawing context from standard OpenCV Mat types
-    Drawing(Mat3b &im, uint8_t *_alpha_layer=nullptr) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels()),pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.cols, im.rows, im.channels()),  alpha_layer(_alpha_layer) {
+    Drawing(Mat3b &im, uint8_t *_alpha_mask=nullptr) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels()),pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.cols, im.rows, im.channels()),  alpha_mask(_alpha_mask) {
         alloc();
     }
 
-    Drawing(Mat4b &im, uint8_t *_alpha_layer=nullptr) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels()), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.cols, im.rows, im.channels()),  alpha_layer(_alpha_layer) {
+    Drawing(Mat4b &im, uint8_t *_alpha_mask=nullptr) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels()), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.cols, im.rows, im.channels()),  alpha_mask(_alpha_mask) {
         alloc();
     }
 
-    Drawing(Mat3w &im, uint8_t *_alpha_layer=nullptr) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels() * 2),pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.cols, im.rows, im.channels()),  alpha_layer(_alpha_layer) {
+    Drawing(Mat3w &im, uint8_t *_alpha_mask=nullptr) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels() * 2),pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.cols, im.rows, im.channels()),  alpha_mask(_alpha_mask) {
         alloc();
     }
 
-    Drawing(Mat4w &im,  uint8_t *_alpha_layer=nullptr) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels() * 2), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.cols, im.rows, im.channels()),  alpha_layer(_alpha_layer) {
+    Drawing(Mat4w &im,  uint8_t *_alpha_mask=nullptr) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels() * 2), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.cols, im.rows, im.channels()),  alpha_mask(_alpha_mask) {
         alloc();
     }
 
-    Drawing(Mat &im,  uint8_t *_alpha_layer=nullptr) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels() * sizeof(im.data[0])), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.cols, im.rows, im.channels()),  alpha_layer(_alpha_layer) {
+    Drawing(Mat &im,  uint8_t *_alpha_mask=nullptr) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels() * sizeof(im.data[0])), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.cols, im.rows, im.channels()),  alpha_mask(_alpha_mask) {
         alloc();
     }
 #endif
 
 #ifdef bimage_header_file
-    Drawing (bimage im,  uint8_t *_alpha_layer=nullptr) : buffer((uint8_t*)im.ptr, im.width, im.height, im.width * im.channels * (im.depth == u16 ? 2 : 1)), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.width, im.height, im.channels),  alpha_layer(_alpha_layer) {
+    Drawing (bimage im,  uint8_t *_alpha_mask=nullptr) : buffer((uint8_t*)im.ptr, im.width, im.height, im.width * im.channels * (im.depth == u16 ? 2 : 1)), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.width, im.height, im.channels),  alpha_mask(_alpha_mask) {
         alloc();
     }
 
-    Drawing (bimage *im, uint8_t *_alpha_layer=nullptr) : buffer((uint8_t*)im->ptr, im->width, im->height, im->width * im->channels * (im->depth == u16 ? 2 : 1)), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im->width, im->height, im->channels), alpha_layer(_alpha_layer) {
+    Drawing (bimage *im, uint8_t *_alpha_mask=nullptr) : buffer((uint8_t*)im->ptr, im->width, im->height, im->width * im->channels * (im->depth == u16 ? 2 : 1)), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im->width, im->height, im->channels), alpha_mask(_alpha_mask) {
         alloc();
     }
 #endif
@@ -199,7 +240,7 @@ public:
             sl = nullptr;
         }
 
-        alphaLayerFree();
+        alphaMaskFree();
     }
 
     // Actually create the image,
@@ -221,35 +262,35 @@ public:
         sl = new agg::scanline32_p8();
     }
 
-    void alphaLayerInit(){
-        if (alpha_layer == nullptr){
-            alpha_layer = new uint8_t[size.x * size.y]();
-            memset(alpha_layer, 255, size.x * size.y);
+    void alphaMaskInit(){
+        if (alpha_mask == nullptr){
+            alpha_mask = new uint8_t[size.x * size.y];
+            memset(alpha_mask, 255, size.x * size.y);
         }
     }
 
-    void alphaLayerFill(uint8_t a){
-        if (alpha_layer){
-            memset(alpha_layer, a, size.x * size.y);
+    void alphaMaskFill(uint8_t a){
+        if (alpha_mask){
+            memset(alpha_mask, a, size.x * size.y);
         }
     }
 
-    uint8_t &alphaLayerGet(int32_t x, int32_t y){
-        return alpha_layer[(y * size.x) + x];
+    uint8_t &alphaMaskGet(int32_t x, int32_t y){
+        return alpha_mask[(y * size.x) + x];
     }
 
-    uint8_t *alphaLayerPtrOffs(int32_t x, int32_t y){
-        return alpha_layer + (y * size.x) + x;
+    uint8_t *alphaMaskPtrOffs(int32_t x, int32_t y){
+        return alpha_mask + (y * size.x) + x;
     }
 
-    uint8_t *alphaLayerPtr(){
-        return alpha_layer;
+    uint8_t *alphaMaskPtr(){
+        return alpha_mask;
     }
 
-    void alphaLayerFree(){
-        if (alpha_layer){
-            delete[] alpha_layer;
-            alpha_layer = nullptr;
+    void alphaMaskFree(){
+        if (alpha_mask){
+            delete[] alpha_mask;
+            alpha_mask = nullptr;
         }
     }
 
@@ -422,7 +463,6 @@ public:
         raster->filling_rule((agg::filling_rule_e)fr);
     }
 
-
     // Get previous position
     inline Point lastPosition(){
         return Point(lastX(), lastY());
@@ -513,9 +553,10 @@ public:
     }
 
     // Draw text without freetype
-    double putTextSimple(double x, double y, const char *txt, int size=50, double width=2.0, const char *font=nullptr, bool flip_y = true){
+    double textSimple(double x, double y, const char *txt, int size=50, double width=2.0, const char *font=nullptr, bool flip_y = true){
         agg::gsv_text text;
         agg::gsv_text_outline<agg::trans_affine> outline(text, mtx);
+
         text.text(txt);
         text.flip(flip_y);
         text.size(size);
@@ -528,11 +569,10 @@ public:
 
         raster->add_path(outline);
         return text.text_width();
-
     }
 
 #ifndef NO_FREETYPE
-    double putText(double x, double y, const char *txt, const char *font, double width, double height){
+    double text(double x, double y, const char *txt, const char *font, double width, double height){
         agg::glyph_rendering font_ren = agg::glyph_ren_outline;
         agg::font_engine_freetype_int32 font_engine;
         agg::font_cache_manager< agg::font_engine_freetype_int32> font_manager(font_engine);
@@ -577,12 +617,13 @@ public:
         setColor(Color(r, g, b, a));
     }
 
-    // Fill/stroke path with image data
+    // Fill/stroke path with another drawing
     template<typename ColorType>
     void fillPattern (Drawing<DrawingType> &d) {
         typedef agg::wrap_mode_repeat wrap_x_type;
         typedef agg::wrap_mode_repeat wrap_y_type;
         typedef agg::image_accessor_wrap<DrawingType, wrap_x_type, wrap_y_type> img_source_type;
+        typedef agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_adaptor_type;
 
         agg::conv_curve<agg::path_storage> pth(*this);
         agg::span_allocator<ColorType> sa;
@@ -594,33 +635,34 @@ public:
         agg::conv_transform<agg::conv_curve<agg::path_storage>> m(pth, mtx);
         raster->add_path(m, pathid);
 
-        if (alpha_layer != nullptr){
-            agg::rendering_buffer alpha_mask_rbuf(alpha_layer, size.x, size.y, size.x);
+        if (alpha_mask != nullptr){
+            agg::rendering_buffer alpha_mask_rbuf(alpha_mask, size.x, size.y, size.x);
             agg::amask_no_clip_gray8 alpha_mask(alpha_mask_rbuf);
-            agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_mask_adaptor(pix, alpha_mask);
-            agg::renderer_base<agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8>> alpha_base(alpha_mask_adaptor);
-            agg::render_scanlines_aa( *raster, *sl, alpha_base, sa, sg);
+            alpha_adaptor_type alpha_mask_adaptor(pix, alpha_mask);
+            agg::renderer_base<alpha_adaptor_type> alpha_base(alpha_mask_adaptor);
+            agg::render_scanlines_aa(*raster, *sl, alpha_base, sa, sg);
          } else {
-            agg::render_scanlines_aa( *raster, *sl, base, sa, sg);
+            agg::render_scanlines_bin(*raster, *sl, base, sa, sg);
          }
     }
 
     template <typename ColorType>
     void strokePattern (Drawing<DrawingType> &d) {
-        agg::conv_curve<agg::path_storage> p(*this);
-        agg::conv_stroke<agg::conv_curve<agg::path_storage>> pth(p);
-
         typedef agg::wrap_mode_repeat wrap_x_type;
         typedef agg::wrap_mode_repeat wrap_y_type;
-
         typedef agg::image_accessor_wrap<DrawingType, wrap_x_type, wrap_y_type> img_source_type;
         typedef agg::span_pattern_rgb<img_source_type> span_gen_type;
+        typedef agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_adaptor_type;
 
+        agg::conv_curve<agg::path_storage> p(*this);
+        agg::conv_stroke<agg::conv_curve<agg::path_storage>> pth(p);
         agg::span_allocator<ColorType> sa;
 
+        // get image set up
         img_source_type img_src (d.pix);
         span_gen_type sg ( img_src, d.size.x, d.size.y);
 
+        // apply settings
         pth.width(_width);
         pth.line_cap((agg::line_cap_e)_linecap);
         pth.line_join((agg::line_join_e)_linejoin);
@@ -630,25 +672,23 @@ public:
         agg::conv_transform<agg::conv_stroke<agg::conv_curve<agg::path_storage>>> m(pth, mtx);
         raster->add_path(m, pathid);
 
-        if (alpha_layer != nullptr){
-            agg::rendering_buffer alpha_mask_rbuf(alpha_layer, size.x, size.y, size.x);
+        if (alpha_mask != nullptr){
+            agg::rendering_buffer alpha_mask_rbuf(alpha_mask, size.x, size.y, size.x);
             agg::amask_no_clip_gray8 alpha_mask(alpha_mask_rbuf);
-            agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_mask_adaptor(pix, alpha_mask);
-            agg::renderer_base<agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8>> alpha_base(alpha_mask_adaptor);
-            agg::render_scanlines_aa( *raster, *sl, alpha_base, sa, sg);
+            alpha_adaptor_type alpha_mask_adaptor(pix, alpha_mask);
+            agg::renderer_base<alpha_adaptor_type> alpha_base(alpha_mask_adaptor);
+            agg::render_scanlines_aa(*raster, *sl, alpha_base, sa, sg);
          } else {
-            agg::render_scanlines_aa( *raster, *sl, base, sa, sg);
+            agg::render_scanlines_bin(*raster, *sl, base, sa, sg);
          }
     }
 
-    // Fills and paints
     void fill(){
         agg::conv_curve<agg::path_storage> pth(*this);
         agg::conv_transform<agg::conv_curve<agg::path_storage>> m(pth, mtx);
         paint(m);
     }
 
-    // Strokes and paints
     void stroke(){
         agg::conv_curve<agg::path_storage> p(*this);
         agg::conv_stroke<agg::conv_curve<agg::path_storage>> pth(p);
@@ -662,7 +702,6 @@ public:
         paint(m);
     }
 
-    // Converts stroke to dash and paints
     void dash(double a, double b){
         agg::conv_curve<agg::path_storage> curve(*this);
         agg::conv_dash<agg::conv_curve<agg::path_storage>> p(curve);
@@ -678,27 +717,119 @@ public:
         paint(m);
     }
 
-    template<typename S, typename ColorType>
+    template<typename GradientType, typename ColorType>
     void fillGradient(ColorType b, ColorType m, ColorType e, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
-        agg::pod_auto_array<ColorType, 256> color_array;
-        fill_color_array_3_stop(color_array, b, m, e);
-        fillGradient<S>(color_array, s, x, _mtx);
+        Gradient<ColorType> grad(b, m, e);
+        grad.generate();
+        fillGradient<GradientType>(grad.arr, s, x, _mtx);
     }
 
-    template<typename S, typename ColorType>
+    template<typename GradientType, typename ColorType>
     void strokeGradient(ColorType b, ColorType m, ColorType e, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
-        agg::pod_auto_array<ColorType, 256> color_array;
-        fill_color_array_3_stop(color_array, b, m, e);
-        strokeGradient<S>(color_array, s, x, _mtx);
+        Gradient<ColorType> grad(b, m, e);
+        grad.generate();
+        strokeGradient<GradientType>(grad.arr, s, x, _mtx);
     }
 
-    template<typename S, typename ColorType>
+    template <typename GradientType, typename ColorType>
+    void strokeGradient(Gradient<ColorType> const & grad, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
+        grad.generate();
+        strokeGradient<GradientType>(grad.arr, s, x, _mtx);
+    }
+
+    template <typename GradientType, typename ColorType>
+    void fillGradient(Gradient<ColorType> const & grad, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
+        grad.generate();
+        fillGradient<GradientType>(grad.arr, s, x, _mtx);
+    }
+
+    template <typename ColorType>
+    void strokeGradient(Gradient<ColorType> const & grad, int s, int x, gradient_type grad_type){
+        grad.generate();
+        switch(grad_type){
+            case gradient_type_linear_color:
+                strokeGradient<agg::gradient_linear_color>(grad, s, x);
+                break;
+            case gradient_type_circle:
+                strokeGradient<agg::gradient_circle>(grad, s, x);
+                break;
+            case gradient_type_radial:
+                strokeGradient<agg::gradient_radial>(grad, s, x);
+                break;
+            case gradient_type_radial_d:
+                strokeGradient<agg::gradient_radial_d>(grad, s, x);
+                break;
+            case gradient_type_radial_focus:
+                strokeGradient<agg::gradient_radial_focus>(grad, s, x);
+                break;
+            case gradient_type_x:
+                strokeGradient<agg::gradient_x>(grad, s, x);
+                break;
+            case gradient_type_y:
+                strokeGradient<agg::gradient_y>(grad, s, x);
+                break;
+            case gradient_type_diamond:
+                strokeGradient<agg::gradient_diamond>(grad, s, x);
+                break;
+            case gradient_type_xy:
+                strokeGradient<agg::gradient_xy>(grad, s, x);
+                break;
+            case gradient_type_sqrt_xy:
+                strokeGradient<agg::gradient_sqrt_xy>(grad, s, x);
+                break;
+            case gradient_type_conic:
+                strokeGradient<agg::gradient_conic>(grad, s, x);
+                break;
+        }
+    }
+
+    template <typename ColorType>
+    void fillGradient(Gradient<ColorType> const & grad, int s, int x, gradient_type grad_type){
+        grad.generate();
+        switch(grad_type){
+            case gradient_type_linear_color:
+                fillGradient<agg::gradient_linear_color>(grad, s, x);
+                break;
+            case gradient_type_circle:
+                fillGradient<agg::gradient_circle>(grad, s, x);
+                break;
+            case gradient_type_radial:
+                fillGradient<agg::gradient_radial>(grad, s, x);
+                break;
+            case gradient_type_radial_d:
+                fillGradient<agg::gradient_radial_d>(grad, s, x);
+                break;
+            case gradient_type_radial_focus:
+                fillGradient<agg::gradient_radial_focus>(grad, s, x);
+                break;
+            case gradient_type_x:
+                fillGradient<agg::gradient_x>(grad, s, x);
+                break;
+            case gradient_type_y:
+                fillGradient<agg::gradient_y>(grad, s, x);
+                break;
+            case gradient_type_diamond:
+                fillGradient<agg::gradient_diamond>(grad, s, x);
+                break;
+            case gradient_type_xy:
+                fillGradient<agg::gradient_xy>(grad, s, x);
+                break;
+            case gradient_type_sqrt_xy:
+                fillGradient<agg::gradient_sqrt_xy>(grad, s, x);
+                break;
+            case gradient_type_conic:
+                fillGradient<agg::gradient_conic>(grad, s, x);
+                break;
+        }
+    }
+
+    template<typename GradientType, typename ColorType>
     void fillGradient(agg::pod_auto_array<ColorType, 256> color_array, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
         agg::conv_curve<agg::path_storage> p(*this);
 
         typedef agg::renderer_base<agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8>> renderer_base_type;
         typedef agg::pod_auto_array<ColorType, 256> color_array_type;
-        typedef S gradient_func_type;
+        typedef GradientType gradient_func_type;
         typedef agg::span_interpolator_linear<> interpolator_type;
         typedef agg::span_allocator<ColorType> span_allocator_type;
         typedef agg::span_gradient<ColorType, interpolator_type, gradient_func_type, color_array_type> span_gradient_type;
@@ -717,8 +848,8 @@ public:
         agg::conv_transform<agg::conv_curve<agg::path_storage>> m(p, mtx);
         raster->add_path(m, pathid);
 
-        if (alpha_layer != nullptr){
-            agg::rendering_buffer alpha_mask_rbuf(alpha_layer, size.x, size.y, size.x);
+        if (alpha_mask != nullptr){
+            agg::rendering_buffer alpha_mask_rbuf(alpha_mask, size.x, size.y, size.x);
             agg::amask_no_clip_gray8 alpha_mask(alpha_mask_rbuf);
             agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_mask_adaptor(pix, alpha_mask);
             agg::renderer_base<agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8>> alpha_base(alpha_mask_adaptor);
@@ -730,7 +861,7 @@ public:
         };
     }
 
-    template<typename S, typename ColorType>
+    template<typename GradientType, typename ColorType>
     void strokeGradient(agg::pod_auto_array<ColorType, 256> color_array, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
         agg::conv_curve<agg::path_storage> p(*this);
         agg::conv_stroke<agg::conv_curve<agg::path_storage>> q(p);
@@ -741,7 +872,7 @@ public:
 
         typedef agg::renderer_base<agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8>> renderer_base_type;
         typedef agg::pod_auto_array<ColorType, 256> color_array_type;
-        typedef S gradient_func_type;
+        typedef GradientType gradient_func_type;
         typedef agg::span_interpolator_linear<> interpolator_type;
         typedef agg::span_allocator<ColorType> span_allocator_type;
         typedef agg::span_gradient<ColorType, interpolator_type,
@@ -761,8 +892,8 @@ public:
         agg::conv_transform<agg::conv_stroke<agg::conv_curve<agg::path_storage>>> m(q, mtx);
         raster->add_path(m, pathid);
 
-        if (alpha_layer != nullptr){
-            agg::rendering_buffer alpha_mask_rbuf(alpha_layer, size.x, size.y, size.x);
+        if (alpha_mask != nullptr){
+            agg::rendering_buffer alpha_mask_rbuf(alpha_mask, size.x, size.y, size.x);
             agg::amask_no_clip_gray8 alpha_mask(alpha_mask_rbuf);
             agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_mask_adaptor(pix, alpha_mask);
             agg::renderer_base<agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8>> alpha_base(alpha_mask_adaptor);
@@ -812,8 +943,8 @@ public:
     template <typename S>
     void paint(S &pth){
         raster->add_path(pth, pathid);
-        if (alpha_layer != nullptr){
-            agg::rendering_buffer alpha_mask_rbuf(alpha_layer, size.x, size.y, size.x);
+        if (alpha_mask != nullptr){
+            agg::rendering_buffer alpha_mask_rbuf(alpha_mask, size.x, size.y, size.x);
             agg::amask_no_clip_gray8 alpha_mask(alpha_mask_rbuf);
             agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_mask_adaptor(pix, alpha_mask);
             agg::renderer_base<agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8>> alpha_base(alpha_mask_adaptor);
@@ -915,10 +1046,10 @@ typedef Drawing<bgra64> DrawingBGRA64;
 typedef Drawing<bgr48> DrawingBGR48;
 
 #ifndef NO_OPECV
-Drawing<bgra32> draw(Mat4b& im, uint8_t* alpha_layer=nullptr);
-Drawing<bgr24>draw(Mat3b& im, uint8_t* alpha_layer=nullptr);
-Drawing<bgra64> draw(Mat4w& im, uint8_t* alpha_layer=nullptr);
-Drawing<bgr48> draw(Mat3w& im, uint8_t* alpha_layer=nullptr);
+Drawing<bgra32> draw(Mat4b& im, uint8_t* alpha_mask=nullptr);
+Drawing<bgr24>draw(Mat3b& im, uint8_t* alpha_mask=nullptr);
+Drawing<bgra64> draw(Mat4w& im, uint8_t* alpha_mask=nullptr);
+Drawing<bgr48> draw(Mat3w& im, uint8_t* alpha_mask=nullptr);
 #endif
 
 #else // cplusplus
@@ -929,6 +1060,7 @@ typedef enum line_cap_style line_cap_style;
 typedef enum line_join_style line_join_style;
 typedef enum filling_rule filling_rule;
 typedef enum path_commands path_commands;
+typedef enum gradient_type gradient_type;
 
 typedef struct Point {
     double x, y;

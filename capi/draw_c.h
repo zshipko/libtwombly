@@ -79,9 +79,9 @@ void draw_curveTo6(drawing, double, double, double, double, double, double);
 void draw_curveRel6(drawing, double, double, double, double, double, double);
 void draw_arcTo(drawing, double, double, double, double, double);
 void draw_arcRel(drawing, double, double, double, double, double);
-double draw_putTextSimple(drawing, double, double, const char *, int, double, const char *);
+double draw_textSimple(drawing, double, double, const char *, int, double, const char *);
 #ifndef NO_FREETYPE
-double draw_putText(drawing, double, double, const char *, const char *, double, double);
+double draw_text(drawing, double, double, const char *, const char *, double, double);
 #endif
 void draw_setColor(drawing, uint8_t, uint8_t, uint8_t, uint8_t);
 void draw_fill(drawing);
@@ -98,12 +98,12 @@ unsigned int draw_prevVertex(drawing, double *, double *);
 void draw_modifyVertex(drawing, unsigned int, double, double, unsigned int);
 unsigned int draw_totalVertices(drawing);
 
-void draw_alphaLayerInit(drawing a);
-void draw_alphaLayerFree(drawing a);
-void draw_alphaLayerFill(drawing a, uint8_t v);
-uint8_t draw_alphaLayerGet(drawing a, int32_t x, int32_t y);
-uint8_t *draw_alphaLayerPtr(drawing a);
-uint8_t *draw_alphaLayerPtrOffs(drawing a, int32_t x, int32_t y);
+void draw_alphaMaskInit(drawing a);
+void draw_alphaMaskFree(drawing a);
+void draw_alphaMaskFill(drawing a, uint8_t v);
+uint8_t draw_alphaMaskGet(drawing a, int32_t x, int32_t y);
+uint8_t *draw_alphaMaskPtr(drawing a);
+uint8_t *draw_alphaMaskPtrOffs(drawing a, int32_t x, int32_t y);
 
 void draw_join(drawing, drawing);
 void draw_concat(drawing, drawing);
@@ -113,6 +113,10 @@ void draw_strokePattern (drawing d, drawing e);
 typedef struct transform_matrix {
     void *handle;
 } transform_matrix;
+
+typedef struct gradient {
+    void *handle;
+} gradient;
 
 void draw_transformMatrixScale(transform_matrix mtx, double a, double b);
 void draw_transformMatrixTranslate(transform_matrix mtx, double a, double b);
