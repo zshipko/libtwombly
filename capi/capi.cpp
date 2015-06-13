@@ -283,6 +283,22 @@ void draw_lineRel(drawing d, double x, double y){
     DRAWING(d, lineRel, x, y);
 }
 
+void draw_hLineTo(drawing d, double a){
+    DRAWING(d, hLineTo, a);
+}
+
+void draw_hLineRel(drawing d, double a){
+    DRAWING(d, hLineRel, a);
+}
+
+void draw_vLineTo(drawing d, double a){
+    DRAWING(d, vLineTo, a);
+}
+
+void draw_vLineRel(drawing d, double a){
+    DRAWING(d, vLineRel, a);
+}
+
 void draw_curveTo2(drawing d, double x, double y){
     DRAWING(d, curveTo, x, y);
 }

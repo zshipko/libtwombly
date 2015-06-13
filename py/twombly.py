@@ -110,6 +110,14 @@ _METHODS = dict(
                           args=[DrawingType, c_double, c_double]),
     line_to=_method_decl(twombly.draw_lineTo,
                          args=[DrawingType, c_double, c_double]),
+    vline_to=_method_decl(twombly.draw_vLineTo,
+                         args=[DrawingType, c_double]),
+    hline_to=_method_decl(twombly.draw_hLineTo,
+                         args=[DrawingType, c_double]),
+    vline_rel=_method_decl(twombly.draw_vLineRel,
+                         args=[DrawingType, c_double]),
+    hline_rel=_method_decl(twombly.draw_hLineRel,
+                         args=[DrawingType, c_double]),
     line_rel=_method_decl(twombly.draw_lineRel,
                           args=[DrawingType, c_double, c_double]),
     curve_to2=_method_decl(twombly.draw_curveTo2,
@@ -161,9 +169,9 @@ _METHODS = dict(
     concat=_method_decl(twombly.draw_concat,
                         args=[DrawingType, DrawingType]),
     fill_pattern=_method_decl(twombly.draw_fillPattern,
-                              args=[DrawingType, c_long, c_long, c_int, c_char_p]),
+                              args=[DrawingType, DrawingType]),
     stroke_pattern=_method_decl(twombly.draw_fillPattern,
-                                args=[DrawingType, c_long, c_long, c_int, c_char_p]),
+                                args=[DrawingType, DrawingType]),
     fill_linear_gradient_h=_method_decl(twombly.draw_fillLinearGradientH,
                                         args=[DrawingType, POINTER(c_float), POINTER(c_float),
                                               POINTER(c_float), c_int, c_int]),
@@ -267,7 +275,7 @@ except ImportError:
     pass
 
 def as_chr(arr):
-    return [c_char(int(i)) for i in arr]
+    return [c_char(chr(int(i))) for i in arr]
 
 def as_uint16(arr):
     return [c_uint16(int(i)) for i in arr]

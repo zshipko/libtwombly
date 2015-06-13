@@ -5,36 +5,36 @@ using namespace tw;
 #endif
 
 
-void draw_fillPattern (drawing d, int64_t width, int64_t height, int channels, uint8_t *data){
+void draw_fillPattern (drawing d, drawing e){
     switch(d.channels){
     case 3:
-        if (d.bits_per_channel == 8 && !d.is_bgr) ((Drawing<rgb24>*)d.handle)->fillPattern<Color>(width, height, channels, data);
-        else if (d.bits_per_channel == 8 && d.is_bgr) ((Drawing<bgr24>*)d.handle)->fillPattern<Color>(width, height, channels, data);
-        else if (d.bits_per_channel == 16 && !d.is_bgr) ((Drawing<rgb48>*)d.handle)->fillPattern<Color16>(width, height, channels, data);
-        else if (d.bits_per_channel == 16 && d.is_bgr) ((Drawing<bgr48>*)d.handle)->fillPattern<Color16>(width, height, channels, data);
+        if (d.bits_per_channel == 8 && !d.is_bgr) ((Drawing<rgb24>*)d.handle)->fillPattern<Color>(*(Drawing<rgb24>*)e.handle);
+        else if (d.bits_per_channel == 8 && d.is_bgr) ((Drawing<bgr24>*)d.handle)->fillPattern<Color>(*(Drawing<bgr24>*)e.handle);
+        else if (d.bits_per_channel == 16 && !d.is_bgr) ((Drawing<rgb48>*)d.handle)->fillPattern<Color16>(*(Drawing<rgb48>*)e.handle);
+        else if (d.bits_per_channel == 16 && d.is_bgr) ((Drawing<bgr48>*)d.handle)->fillPattern<Color16>(*(Drawing<bgr48>*)e.handle);
         break;
     case 4:
-        if (d.bits_per_channel == 8 && !d.is_bgr) ((Drawing<rgba32>*)d.handle)->fillPattern<Color>(width, height, channels, data);
-        else if (d.bits_per_channel == 8 && d.is_bgr) ((Drawing<bgra32>*)d.handle)->fillPattern<Color>(width, height, channels, data);
-        else if (d.bits_per_channel == 16 && !d.is_bgr) ((Drawing<rgba64>*)d.handle)->fillPattern<Color16>(width, height, channels, data);
-        else if (d.bits_per_channel == 16 && d.is_bgr) ((Drawing<bgra64>*)d.handle)->fillPattern<Color16>(width, height, channels, data);
+        if (d.bits_per_channel == 8 && !d.is_bgr) ((Drawing<rgba32>*)d.handle)->fillPattern<Color>(*(Drawing<rgba32>*)e.handle);
+        else if (d.bits_per_channel == 8 && d.is_bgr) ((Drawing<bgra32>*)d.handle)->fillPattern<Color>(*(Drawing<bgra32>*)e.handle);
+        else if (d.bits_per_channel == 16 && !d.is_bgr) ((Drawing<rgba64>*)d.handle)->fillPattern<Color16>(*(Drawing<rgba64>*)e.handle);
+        else if (d.bits_per_channel == 16 && d.is_bgr) ((Drawing<bgra64>*)d.handle)->fillPattern<Color16>(*(Drawing<bgra64>*)e.handle);
         break;
     }
 }
 
-void draw_strokePattern (drawing d, int64_t width, int64_t height, int channels, uint8_t *data){
+void draw_strokePattern (drawing d, drawing e){
     switch(d.channels){
     case 3:
-        if (d.bits_per_channel == 8 && !d.is_bgr) ((Drawing<rgb24>*)d.handle)->strokePattern<Color>(width, height, channels, data);
-        else if (d.bits_per_channel == 8 && d.is_bgr) ((Drawing<bgr24>*)d.handle)->strokePattern<Color>(width, height, channels, data);
-        else if (d.bits_per_channel == 16 && !d.is_bgr) ((Drawing<rgb48>*)d.handle)->strokePattern<Color16>(width, height, channels, data);
-        else if (d.bits_per_channel == 16 && d.is_bgr) ((Drawing<bgr48>*)d.handle)->strokePattern<Color16>(width, height, channels, data);
+        if (d.bits_per_channel == 8 && !d.is_bgr) ((Drawing<rgb24>*)d.handle)->strokePattern<Color>(*(Drawing<rgb24>*)e.handle);
+        else if (d.bits_per_channel == 8 && d.is_bgr) ((Drawing<bgr24>*)d.handle)->strokePattern<Color>(*(Drawing<bgr24>*)e.handle);
+        else if (d.bits_per_channel == 16 && !d.is_bgr) ((Drawing<rgb48>*)d.handle)->strokePattern<Color16>(*(Drawing<rgb48>*)e.handle);
+        else if (d.bits_per_channel == 16 && d.is_bgr) ((Drawing<bgr48>*)d.handle)->strokePattern<Color16>(*(Drawing<bgr48>*)e.handle);
         break;
     case 4:
-        if (d.bits_per_channel == 8 && !d.is_bgr) ((Drawing<rgba32>*)d.handle)->strokePattern<Color>(width, height, channels, data);
-        else if (d.bits_per_channel == 8 && d.is_bgr) ((Drawing<bgra32>*)d.handle)->strokePattern<Color>(width, height, channels, data);
-        else if (d.bits_per_channel == 16 && !d.is_bgr) ((Drawing<rgba64>*)d.handle)->strokePattern<Color16>(width, height, channels, data);
-        else if (d.bits_per_channel == 16 && d.is_bgr) ((Drawing<bgra64>*)d.handle)->strokePattern<Color16>(width, height, channels, data);
+        if (d.bits_per_channel == 8 && !d.is_bgr) ((Drawing<rgba32>*)d.handle)->strokePattern<Color>(*(Drawing<rgba32>*)e.handle);
+        else if (d.bits_per_channel == 8 && d.is_bgr) ((Drawing<bgra32>*)d.handle)->strokePattern<Color>(*(Drawing<bgra32>*)e.handle);
+        else if (d.bits_per_channel == 16 && !d.is_bgr) ((Drawing<rgba64>*)d.handle)->strokePattern<Color16>(*(Drawing<rgba64>*)e.handle);
+        else if (d.bits_per_channel == 16 && d.is_bgr) ((Drawing<bgra64>*)d.handle)->strokePattern<Color16>(*(Drawing<bgra64>*)e.handle);
         break;
     }
 }
