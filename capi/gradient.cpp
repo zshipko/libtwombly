@@ -4,6 +4,92 @@
 using namespace tw;
 #endif
 
+gradient draw_gradientCreate(){
+    gradient grad;
+    grad.handle = (void*) new Gradient<Color>();
+    return grad;
+}
+
+void draw_gradientFree(gradient *grad){
+    if (grad->handle){
+        delete ((Gradient<Color>*)grad->handle);
+        grad->handle = nullptr;
+    }
+}
+
+void draw_gradientAddStop(gradient grad, Pixel color){
+    ((Gradient<Color>*)grad.handle)->addStop(Color(color[0], color[1], color[2], color[3]));
+}
+
+transform_matrix draw_gradientGetMatrix(gradient grad){
+    transform_matrix mtx;
+    mtx.handle = &(((Gradient<Color>*)grad.handle)->mtx);
+    return mtx;
+}
+
+void draw_gradientSetMatrix(gradient grad, transform_matrix mtx){
+    ((Gradient<Color>*)grad.handle)->mtx = *(agg::trans_affine*)mtx.handle;
+}
+
+gradient draw_gradientCreate16(){
+    gradient grad;
+    grad.handle = (void*) new Gradient<Color16>();
+    return grad;
+}
+
+void draw_gradientAddStop16(gradient grad, Pixel color){
+    ((Gradient<Color16>*)grad.handle)->addStop(Color16(color[0], color[1], color[2], color[3]));
+}
+
+void draw_fillGradient (drawing d, gradient grad, int s, int x, gradient_type grad_type){
+    switch(d.channels){
+    case 3:
+        if (d.bits_per_channel == 8 )
+            ((Drawing<rgb24>*)d.handle)->fillGradient<Color>(
+                *((Gradient<Color>*)grad.handle), s, x, grad_type
+            );
+        else if (d.bits_per_channel == 16)
+            ((Drawing<rgb48>*)d.handle)->fillGradient<Color16>(
+                *((Gradient<Color16>*)grad.handle), s, x, grad_type
+            );
+        break;
+    case 4:
+        if (d.bits_per_channel == 8 )
+            ((Drawing<rgba32>*)d.handle)->fillGradient<Color>(
+                *((Gradient<Color>*)grad.handle), s, x, grad_type
+            );
+        else if (d.bits_per_channel == 16)
+            ((Drawing<rgba64>*)d.handle)->fillGradient<Color16>(
+                *((Gradient<Color16>*)grad.handle), s, x, grad_type
+            );
+        break;
+    }
+}
+
+void draw_strokeGradient (drawing d, gradient grad, int s, int x, gradient_type grad_type){
+    switch(d.channels){
+    case 3:
+        if (d.bits_per_channel == 8 )
+            ((Drawing<rgb24>*)d.handle)->strokeGradient<Color>(
+                *((Gradient<Color>*)grad.handle), s, x, grad_type
+            );
+        else if (d.bits_per_channel == 16)
+            ((Drawing<rgb48>*)d.handle)->strokeGradient<Color16>(
+                *((Gradient<Color16>*)grad.handle), s, x, grad_type
+            );
+        break;
+    case 4:
+        if (d.bits_per_channel == 8 )
+            ((Drawing<rgba32>*)d.handle)->strokeGradient<Color>(
+                *((Gradient<Color>*)grad.handle), s, x, grad_type
+            );
+        else if (d.bits_per_channel == 16)
+            ((Drawing<rgba64>*)d.handle)->strokeGradient<Color16>(
+                *((Gradient<Color16>*)grad.handle), s, x, grad_type
+            );
+        break;
+    }
+}
 
 void draw_fillPattern (drawing d, drawing e){
     switch(d.channels){
@@ -35,300 +121,6 @@ void draw_strokePattern (drawing d, drawing e){
         else if (d.bits_per_channel == 8 && d.is_bgr) ((Drawing<bgra32>*)d.handle)->strokePattern<Color>(*(Drawing<bgra32>*)e.handle);
         else if (d.bits_per_channel == 16 && !d.is_bgr) ((Drawing<rgba64>*)d.handle)->strokePattern<Color16>(*(Drawing<rgba64>*)e.handle);
         else if (d.bits_per_channel == 16 && d.is_bgr) ((Drawing<bgra64>*)d.handle)->strokePattern<Color16>(*(Drawing<bgra64>*)e.handle);
-        break;
-    }
-}
-
-void draw_fillLinearGradientH(drawing d, Pixel b, Pixel m, Pixel e, int s, int x, transform_matrix _mtx){
-switch(d.channels){
-    case 3:
-        if (d.bits_per_channel == 8 && !d.is_bgr) ((Drawing<rgb24>*)d.handle)->fillLinearGradientH<Color>(
-                Color(b[0], b[1], b[2], b[3]),
-                Color(m[0], m[1], m[2], m[3]),
-                Color(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 8 && d.is_bgr) ((Drawing<bgr24>*)d.handle)->fillLinearGradientH<Color>(
-                Color(b[0], b[1], b[2], b[3]),
-                Color(m[0], m[1], m[2], m[3]),
-                Color(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 16 && !d.is_bgr) ((Drawing<rgb48>*)d.handle)->fillLinearGradientH<Color16>(
-                Color16(b[0], b[1], b[2], b[3]),
-                Color16(m[0], m[1], m[2], m[3]),
-                Color16(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 16 && d.is_bgr) ((Drawing<bgr48>*)d.handle)->fillLinearGradientH<Color16>(
-                Color16(b[0], b[1], b[2], b[3]),
-                Color16(m[0], m[1], m[2], m[3]),
-                Color16(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        break;
-    case 4:
-        if (d.bits_per_channel == 8 && !d.is_bgr) ((Drawing<rgba32>*)d.handle)->fillLinearGradientH<Color>(
-                Color(b[0], b[1], b[2], b[3]),
-                Color(m[0], m[1], m[2], m[3]),
-                Color(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 8 && d.is_bgr) ((Drawing<bgra32>*)d.handle)->fillLinearGradientH<Color>(
-                Color(b[0], b[1], b[2], b[3]),
-                Color(m[0], m[1], m[2], m[3]),
-                Color(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 16 && !d.is_bgr) ((Drawing<rgba64>*)d.handle)->fillLinearGradientH<Color16>(
-                Color16(b[0], b[1], b[2], b[3]),
-                Color16(m[0], m[1], m[2], m[3]),
-                Color16(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 16 && d.is_bgr) ((Drawing<bgra64>*)d.handle)->fillLinearGradientH<Color16>(
-                Color16(b[0], b[1], b[2], b[3]),
-                Color16(m[0], m[1], m[2], m[3]),
-                Color16(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        break;
-    }
-}
-
-void draw_fillLinearGradientV(drawing d, Pixel b, Pixel m, Pixel e, int s, int x, transform_matrix _mtx){
-switch(d.channels){
-    case 3:
-        if (d.bits_per_channel == 8 && !d.is_bgr) ((Drawing<rgb24>*)d.handle)->fillLinearGradientV<Color>(
-                Color(b[0], b[1], b[2], b[3]),
-                Color(m[0], m[1], m[2], m[3]),
-                Color(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 8 && d.is_bgr) ((Drawing<bgr24>*)d.handle)->fillLinearGradientV<Color>(
-                Color(b[0], b[1], b[2], b[3]),
-                Color(m[0], m[1], m[2], m[3]),
-                Color(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 16 && !d.is_bgr) ((Drawing<rgb48>*)d.handle)->fillLinearGradientV<Color16>(
-                Color16(b[0], b[1], b[2], b[3]),
-                Color16(m[0], m[1], m[2], m[3]),
-                Color16(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 16 && d.is_bgr) ((Drawing<bgr48>*)d.handle)->fillLinearGradientV<Color16>(
-                Color16(b[0], b[1], b[2], b[3]),
-                Color16(m[0], m[1], m[2], m[3]),
-                Color16(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        break;
-    case 4:
-        if (d.bits_per_channel == 8 && !d.is_bgr) ((Drawing<rgba32>*)d.handle)->fillLinearGradientV<Color>(
-                Color(b[0], b[1], b[2], b[3]),
-                Color(m[0], m[1], m[2], m[3]),
-                Color(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 8 && d.is_bgr) ((Drawing<bgra32>*)d.handle)->fillLinearGradientV<Color>(
-                Color(b[0], b[1], b[2], b[3]),
-                Color(m[0], m[1], m[2], m[3]),
-                Color(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 16 && !d.is_bgr) ((Drawing<rgba64>*)d.handle)->fillLinearGradientV<Color16>(
-                Color16(b[0], b[1], b[2], b[3]),
-                Color16(m[0], m[1], m[2], m[3]),
-                Color16(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 16 && d.is_bgr) ((Drawing<bgra64>*)d.handle)->fillLinearGradientV<Color16>(
-                Color16(b[0], b[1], b[2], b[3]),
-                Color16(m[0], m[1], m[2], m[3]),
-                Color16(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        break;
-    }
-}
-
-void draw_strokeLinearGradientH(drawing d, Pixel b, Pixel m, Pixel e, int s, int x, transform_matrix _mtx){
-switch(d.channels){
-    case 3:
-        if (d.bits_per_channel == 8 && !d.is_bgr) ((Drawing<rgb24>*)d.handle)->strokeLinearGradientH<Color>(
-                Color(b[0], b[1], b[2], b[3]),
-                Color(m[0], m[1], m[2], m[3]),
-                Color(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 8 && d.is_bgr) ((Drawing<bgr24>*)d.handle)->strokeLinearGradientH<Color>(
-                Color(b[0], b[1], b[2], b[3]),
-                Color(m[0], m[1], m[2], m[3]),
-                Color(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 16 && !d.is_bgr) ((Drawing<rgb48>*)d.handle)->strokeLinearGradientH<Color16>(
-                Color16(b[0], b[1], b[2], b[3]),
-                Color16(m[0], m[1], m[2], m[3]),
-                Color16(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 16 && d.is_bgr) ((Drawing<bgr48>*)d.handle)->strokeLinearGradientH<Color16>(
-                Color16(b[0], b[1], b[2], b[3]),
-                Color16(m[0], m[1], m[2], m[3]),
-                Color16(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        break;
-    case 4:
-        if (d.bits_per_channel == 8 && !d.is_bgr) ((Drawing<rgba32>*)d.handle)->strokeLinearGradientH<Color>(
-                Color(b[0], b[1], b[2], b[3]),
-                Color(m[0], m[1], m[2], m[3]),
-                Color(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 8 && d.is_bgr) ((Drawing<bgra32>*)d.handle)->strokeLinearGradientH<Color>(
-                Color(b[0], b[1], b[2], b[3]),
-                Color(m[0], m[1], m[2], m[3]),
-                Color(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 16 && !d.is_bgr) ((Drawing<rgba64>*)d.handle)->strokeLinearGradientH<Color16>(
-                Color16(b[0], b[1], b[2], b[3]),
-                Color16(m[0], m[1], m[2], m[3]),
-                Color16(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 16 && d.is_bgr) ((Drawing<bgra64>*)d.handle)->strokeLinearGradientH<Color16>(
-                Color16(b[0], b[1], b[2], b[3]),
-                Color16(m[0], m[1], m[2], m[3]),
-                Color16(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        break;
-    }
-}
-
-void draw_strokeLinearGradientV(drawing d, Pixel b, Pixel m, Pixel e, int s, int x, transform_matrix _mtx){
-switch(d.channels){
-    case 3:
-        if (d.bits_per_channel == 8 && !d.is_bgr) ((Drawing<rgb24>*)d.handle)->strokeLinearGradientV<Color>(
-                Color(b[0], b[1], b[2], b[3]),
-                Color(m[0], m[1], m[2], m[3]),
-                Color(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 8 && d.is_bgr) ((Drawing<bgr24>*)d.handle)->strokeLinearGradientV<Color>(
-                Color(b[0], b[1], b[2], b[3]),
-                Color(m[0], m[1], m[2], m[3]),
-                Color(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 16 && !d.is_bgr) ((Drawing<rgb48>*)d.handle)->strokeLinearGradientV<Color16>(
-                Color16(b[0], b[1], b[2], b[3]),
-                Color16(m[0], m[1], m[2], m[3]),
-                Color16(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 16 && d.is_bgr) ((Drawing<bgr48>*)d.handle)->strokeLinearGradientV<Color16>(
-                Color16(b[0], b[1], b[2], b[3]),
-                Color16(m[0], m[1], m[2], m[3]),
-                Color16(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        break;
-    case 4:
-        if (d.bits_per_channel == 8 && !d.is_bgr) ((Drawing<rgba32>*)d.handle)->strokeLinearGradientV<Color>(
-                Color(b[0], b[1], b[2], b[3]),
-                Color(m[0], m[1], m[2], m[3]),
-                Color(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 8 && d.is_bgr) ((Drawing<bgra32>*)d.handle)->strokeLinearGradientV<Color>(
-                Color(b[0], b[1], b[2], b[3]),
-                Color(m[0], m[1], m[2], m[3]),
-                Color(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 16 && !d.is_bgr) ((Drawing<rgba64>*)d.handle)->strokeLinearGradientV<Color16>(
-                Color16(b[0], b[1], b[2], b[3]),
-                Color16(m[0], m[1], m[2], m[3]),
-                Color16(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 16 && d.is_bgr) ((Drawing<bgra64>*)d.handle)->strokeLinearGradientV<Color16>(
-                Color16(b[0], b[1], b[2], b[3]),
-                Color16(m[0], m[1], m[2], m[3]),
-                Color16(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        break;
-    }
-}
-
-void draw_fillRadialGradient(drawing d, Pixel b, Pixel m, Pixel e, int s, int x, transform_matrix _mtx){
-switch(d.channels){
-    case 3:
-        if (d.bits_per_channel == 8 && !d.is_bgr) ((Drawing<rgb24>*)d.handle)->fillRadialGradient<Color>(
-                Color(b[0], b[1], b[2], b[3]),
-                Color(m[0], m[1], m[2], m[3]),
-                Color(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 8 && d.is_bgr) ((Drawing<bgr24>*)d.handle)->fillRadialGradient<Color>(
-                Color(b[0], b[1], b[2], b[3]),
-                Color(m[0], m[1], m[2], m[3]),
-                Color(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 16 && !d.is_bgr) ((Drawing<rgb48>*)d.handle)->fillRadialGradient<Color16>(
-                Color16(b[0], b[1], b[2], b[3]),
-                Color16(m[0], m[1], m[2], m[3]),
-                Color16(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 16 && d.is_bgr) ((Drawing<bgr48>*)d.handle)->fillRadialGradient<Color16>(
-                Color16(b[0], b[1], b[2], b[3]),
-                Color16(m[0], m[1], m[2], m[3]),
-                Color16(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        break;
-    case 4:
-        if (d.bits_per_channel == 8 && !d.is_bgr) ((Drawing<rgba32>*)d.handle)->fillRadialGradient<Color>(
-                Color(b[0], b[1], b[2], b[3]),
-                Color(m[0], m[1], m[2], m[3]),
-                Color(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 8 && d.is_bgr) ((Drawing<bgra32>*)d.handle)->fillRadialGradient<Color>(
-                Color(b[0], b[1], b[2], b[3]),
-                Color(m[0], m[1], m[2], m[3]),
-                Color(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 16 && !d.is_bgr) ((Drawing<rgba64>*)d.handle)->fillRadialGradient<Color16>(
-                Color16(b[0], b[1], b[2], b[3]),
-                Color16(m[0], m[1], m[2], m[3]),
-                Color16(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 16 && d.is_bgr) ((Drawing<bgra64>*)d.handle)->fillRadialGradient<Color16>(
-                Color16(b[0], b[1], b[2], b[3]),
-                Color16(m[0], m[1], m[2], m[3]),
-                Color16(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        break;
-    }
-}
-
-void draw_strokeRadialGradient(drawing d, Pixel b, Pixel m, Pixel e, int s, int x, transform_matrix _mtx){
-switch(d.channels){
-    case 3:
-        if (d.bits_per_channel == 8 && !d.is_bgr) ((Drawing<rgb24>*)d.handle)->strokeRadialGradient<Color>(
-                Color(b[0], b[1], b[2], b[3]),
-                Color(m[0], m[1], m[2], m[3]),
-                Color(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 8 && d.is_bgr) ((Drawing<bgr24>*)d.handle)->strokeRadialGradient<Color>(
-                Color(b[0], b[1], b[2], b[3]),
-                Color(m[0], m[1], m[2], m[3]),
-                Color(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 16 && !d.is_bgr) ((Drawing<rgb48>*)d.handle)->strokeRadialGradient<Color16>(
-                Color16(b[0], b[1], b[2], b[3]),
-                Color16(m[0], m[1], m[2], m[3]),
-                Color16(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 16 && d.is_bgr) ((Drawing<bgr48>*)d.handle)->strokeRadialGradient<Color16>(
-                Color16(b[0], b[1], b[2], b[3]),
-                Color16(m[0], m[1], m[2], m[3]),
-                Color16(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        break;
-    case 4:
-        if (d.bits_per_channel == 8 && !d.is_bgr) ((Drawing<rgba32>*)d.handle)->strokeRadialGradient<Color>(
-                Color(b[0], b[1], b[2], b[3]),
-                Color(m[0], m[1], m[2], m[3]),
-                Color(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 8 && d.is_bgr) ((Drawing<bgra32>*)d.handle)->strokeRadialGradient<Color>(
-                Color(b[0], b[1], b[2], b[3]),
-                Color(m[0], m[1], m[2], m[3]),
-                Color(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 16 && !d.is_bgr) ((Drawing<rgba64>*)d.handle)->strokeRadialGradient<Color16>(
-                Color16(b[0], b[1], b[2], b[3]),
-                Color16(m[0], m[1], m[2], m[3]),
-                Color16(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
-        else if (d.bits_per_channel == 16 && d.is_bgr) ((Drawing<bgra64>*)d.handle)->strokeRadialGradient<Color16>(
-                Color16(b[0], b[1], b[2], b[3]),
-                Color16(m[0], m[1], m[2], m[3]),
-                Color16(e[0], e[1], e[2], e[3]),
-                s, x, *((agg::trans_affine*)_mtx.handle));
         break;
     }
 }

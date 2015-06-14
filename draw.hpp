@@ -36,7 +36,6 @@ enum path_commands {
 };
 
 enum gradient_type {
-    gradient_type_linear_color,
     gradient_type_circle,
     gradient_type_radial,
     gradient_type_radial_d,
@@ -112,27 +111,12 @@ inline Color rgba(Scalar s);
 inline Color16 rgba_16(Scalar s);
 #endif
 
-// Used for simple 3 stop gradients
-template<class FillArray, class ColorType>
-void fill_color_array_3_stop(FillArray& array,
-                             ColorType begin,
-                             ColorType middle,
-                             ColorType end){
-    unsigned i;
-    unsigned half_size = array.size() / 2;
-    for(i = 0; i < half_size; ++i){
-        array[i] = begin.gradient(middle, i / double(half_size));
-    }
-    for(; i < array.size(); ++i){
-        array[i] = middle.gradient(end, (i - half_size) / double(half_size));
-    }
-}
-
 template <typename ColorType, int S=256>
 class Gradient {
 public:
     std::vector<ColorType> colors;
     agg::pod_auto_array<ColorType, S> arr;
+    agg::trans_affine mtx;
 
     Gradient() {}
 
@@ -147,10 +131,10 @@ public:
     }
 
     void generate(){
-        unsigned stop_len = arr.size() / colors.size();
+        unsigned stop_len = arr.size() / (colors.size()-1);
         for(size_t color_index = 0; color_index < colors.size()-1; color_index++){
             for(int i = 0; i < stop_len; i++){
-                arr[i * color_index*stop_len] = colors[color_index].gradient(colors[color_index+1], (i - stop_len) / double(stop_len));
+                arr[i + color_index*stop_len] = colors[color_index].gradient(colors[color_index+1], (i - stop_len) / double(stop_len));
             }
         }
     }
@@ -578,11 +562,17 @@ public:
         agg::font_cache_manager< agg::font_engine_freetype_int32> font_manager(font_engine);
         const char *ptr = txt;
         double start_x = x;
+
+        // load font
         if (font_engine.load_font(font, 0, font_ren)){
+
+            // apply settings
             font_engine.width(width);
             font_engine.height(height);
             font_engine.flip_y(true);
             font_engine.hinting(true);
+
+            // draw each character
             while(*ptr){
                 const agg::glyph_cache* glyph = font_manager.glyph( (unsigned int)*ptr );
                 if (glyph != nullptr){
@@ -628,6 +618,7 @@ public:
         agg::conv_curve<agg::path_storage> pth(*this);
         agg::span_allocator<ColorType> sa;
 
+        // set up image
         img_source_type img_src (d.pix);
         agg::span_pattern_rgb<img_source_type> sg ( img_src, d.size.x, d.size.y);
 
@@ -717,125 +708,117 @@ public:
         paint(m);
     }
 
-    template<typename GradientType, typename ColorType>
-    void fillGradient(ColorType b, ColorType m, ColorType e, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
+    template<typename ColorType, typename GradientType>
+    void fillGradient(ColorType b, ColorType m, ColorType e, int s, int x){
         Gradient<ColorType> grad(b, m, e);
         grad.generate();
-        fillGradient<GradientType>(grad.arr, s, x, _mtx);
+        fillGradient<ColorType, GradientType>(grad.arr, s, x, grad.mtx);
     }
 
-    template<typename GradientType, typename ColorType>
-    void strokeGradient(ColorType b, ColorType m, ColorType e, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
+    template<typename ColorType, typename GradientType>
+    void strokeGradient(ColorType b, ColorType m, ColorType e, int s, int x){
         Gradient<ColorType> grad(b, m, e);
         grad.generate();
-        strokeGradient<GradientType>(grad.arr, s, x, _mtx);
+        strokeGradient<ColorType, GradientType>(grad.arr, s, x, grad.mtx);
     }
 
-    template <typename GradientType, typename ColorType>
-    void strokeGradient(Gradient<ColorType> const & grad, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
+    template <typename ColorType, typename GradientType>
+    void strokeGradient(Gradient<ColorType> grad, int s, int x){
         grad.generate();
-        strokeGradient<GradientType>(grad.arr, s, x, _mtx);
+        strokeGradient<ColorType, GradientType>(grad.arr, s, x, grad.mtx);
     }
 
-    template <typename GradientType, typename ColorType>
-    void fillGradient(Gradient<ColorType> const & grad, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
+    template <typename ColorType, typename GradientType>
+    void fillGradient(Gradient<ColorType> grad, int s, int x){
         grad.generate();
-        fillGradient<GradientType>(grad.arr, s, x, _mtx);
+        fillGradient<ColorType, GradientType>(grad.arr, s, x, grad.mtx);
     }
 
     template <typename ColorType>
-    void strokeGradient(Gradient<ColorType> const & grad, int s, int x, gradient_type grad_type){
+    void strokeGradient(Gradient<ColorType> grad, int s, int x, gradient_type grad_type){
         grad.generate();
         switch(grad_type){
-            case gradient_type_linear_color:
-                strokeGradient<agg::gradient_linear_color>(grad, s, x);
-                break;
             case gradient_type_circle:
-                strokeGradient<agg::gradient_circle>(grad, s, x);
+                strokeGradient<ColorType, agg::gradient_circle>(grad, s, x);
                 break;
             case gradient_type_radial:
-                strokeGradient<agg::gradient_radial>(grad, s, x);
+                strokeGradient<ColorType, agg::gradient_radial>(grad, s, x);
                 break;
             case gradient_type_radial_d:
-                strokeGradient<agg::gradient_radial_d>(grad, s, x);
+                strokeGradient<ColorType, agg::gradient_radial_d>(grad, s, x);
                 break;
             case gradient_type_radial_focus:
-                strokeGradient<agg::gradient_radial_focus>(grad, s, x);
+                strokeGradient<ColorType, agg::gradient_radial_focus>(grad, s, x);
                 break;
             case gradient_type_x:
-                strokeGradient<agg::gradient_x>(grad, s, x);
+                strokeGradient<ColorType, agg::gradient_x>(grad, s, x);
                 break;
             case gradient_type_y:
-                strokeGradient<agg::gradient_y>(grad, s, x);
+                strokeGradient<ColorType, agg::gradient_y>(grad, s, x);
                 break;
             case gradient_type_diamond:
-                strokeGradient<agg::gradient_diamond>(grad, s, x);
+                strokeGradient<ColorType, agg::gradient_diamond>(grad, s, x);
                 break;
             case gradient_type_xy:
-                strokeGradient<agg::gradient_xy>(grad, s, x);
+                strokeGradient<ColorType, agg::gradient_xy>(grad, s, x);
                 break;
             case gradient_type_sqrt_xy:
-                strokeGradient<agg::gradient_sqrt_xy>(grad, s, x);
+                strokeGradient<ColorType, agg::gradient_sqrt_xy>(grad, s, x);
                 break;
             case gradient_type_conic:
-                strokeGradient<agg::gradient_conic>(grad, s, x);
+                strokeGradient<ColorType, agg::gradient_conic>(grad, s, x);
                 break;
         }
     }
 
     template <typename ColorType>
-    void fillGradient(Gradient<ColorType> const & grad, int s, int x, gradient_type grad_type){
+    void fillGradient(Gradient<ColorType> grad, int s, int x, gradient_type grad_type){
         grad.generate();
         switch(grad_type){
-            case gradient_type_linear_color:
-                fillGradient<agg::gradient_linear_color>(grad, s, x);
-                break;
             case gradient_type_circle:
-                fillGradient<agg::gradient_circle>(grad, s, x);
+                fillGradient<ColorType, agg::gradient_circle>(grad, s, x);
                 break;
             case gradient_type_radial:
-                fillGradient<agg::gradient_radial>(grad, s, x);
+                fillGradient<ColorType, agg::gradient_radial>(grad, s, x);
                 break;
             case gradient_type_radial_d:
-                fillGradient<agg::gradient_radial_d>(grad, s, x);
+                fillGradient<ColorType, agg::gradient_radial_d>(grad, s, x);
                 break;
             case gradient_type_radial_focus:
-                fillGradient<agg::gradient_radial_focus>(grad, s, x);
+                fillGradient<ColorType, agg::gradient_radial_focus>(grad, s, x);
                 break;
             case gradient_type_x:
-                fillGradient<agg::gradient_x>(grad, s, x);
+                fillGradient<ColorType, agg::gradient_x>(grad, s, x);
                 break;
             case gradient_type_y:
-                fillGradient<agg::gradient_y>(grad, s, x);
+                fillGradient<ColorType, agg::gradient_y>(grad, s, x);
                 break;
             case gradient_type_diamond:
-                fillGradient<agg::gradient_diamond>(grad, s, x);
+                fillGradient<ColorType, agg::gradient_diamond>(grad, s, x);
                 break;
             case gradient_type_xy:
-                fillGradient<agg::gradient_xy>(grad, s, x);
+                fillGradient<ColorType, agg::gradient_xy>(grad, s, x);
                 break;
             case gradient_type_sqrt_xy:
-                fillGradient<agg::gradient_sqrt_xy>(grad, s, x);
+                fillGradient<ColorType, agg::gradient_sqrt_xy>(grad, s, x);
                 break;
             case gradient_type_conic:
-                fillGradient<agg::gradient_conic>(grad, s, x);
+                fillGradient<ColorType, agg::gradient_conic>(grad, s, x);
                 break;
         }
     }
 
-    template<typename GradientType, typename ColorType>
+    template<typename ColorType, typename GradientType>
     void fillGradient(agg::pod_auto_array<ColorType, 256> color_array, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
-        agg::conv_curve<agg::path_storage> p(*this);
-
         typedef agg::renderer_base<agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8>> renderer_base_type;
         typedef agg::pod_auto_array<ColorType, 256> color_array_type;
-        typedef GradientType gradient_func_type;
         typedef agg::span_interpolator_linear<> interpolator_type;
         typedef agg::span_allocator<ColorType> span_allocator_type;
-        typedef agg::span_gradient<ColorType, interpolator_type, gradient_func_type, color_array_type> span_gradient_type;
-        typedef agg::renderer_scanline_aa<renderer_base_type,
-        span_allocator_type, span_gradient_type> renderer_gradient_type;
-        gradient_func_type  gradient_func;
+        typedef agg::span_gradient<ColorType, interpolator_type, GradientType, color_array_type> span_gradient_type;
+        typedef agg::renderer_scanline_aa<renderer_base_type, span_allocator_type, span_gradient_type> renderer_gradient_type;
+        typedef agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_adaptor_type;
+
+        GradientType  gradient_func;
         interpolator_type   span_interpolator(_mtx);
         span_allocator_type span_allocator;
 
@@ -845,14 +828,15 @@ public:
                                          s, x);
 
         // transform
-        agg::conv_transform<agg::conv_curve<agg::path_storage>> m(p, mtx);
+        agg::conv_curve<agg::path_storage> pth(*this);
+        agg::conv_transform<agg::conv_curve<agg::path_storage>> m(pth, mtx);
         raster->add_path(m, pathid);
 
         if (alpha_mask != nullptr){
             agg::rendering_buffer alpha_mask_rbuf(alpha_mask, size.x, size.y, size.x);
             agg::amask_no_clip_gray8 alpha_mask(alpha_mask_rbuf);
-            agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_mask_adaptor(pix, alpha_mask);
-            agg::renderer_base<agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8>> alpha_base(alpha_mask_adaptor);
+            alpha_adaptor_type alpha_mask_adaptor(pix, alpha_mask);
+            agg::renderer_base<alpha_adaptor_type> alpha_base(alpha_mask_adaptor);
             renderer_gradient_type ren_gradient(alpha_base, span_allocator, span_gradient);
             agg::render_scanlines(*raster, *sl, ren_gradient);
          } else {
@@ -861,78 +845,47 @@ public:
         };
     }
 
-    template<typename GradientType, typename ColorType>
+    template<typename ColorType, typename GradientType>
     void strokeGradient(agg::pod_auto_array<ColorType, 256> color_array, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
-        agg::conv_curve<agg::path_storage> p(*this);
-        agg::conv_stroke<agg::conv_curve<agg::path_storage>> q(p);
-        q.width(_width);
-        q.line_cap((agg::line_cap_e)_linecap);
-        q.line_join((agg::line_join_e)_linejoin);
-        q.miter_limit(_miterlimit);
-
         typedef agg::renderer_base<agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8>> renderer_base_type;
         typedef agg::pod_auto_array<ColorType, 256> color_array_type;
-        typedef GradientType gradient_func_type;
         typedef agg::span_interpolator_linear<> interpolator_type;
         typedef agg::span_allocator<ColorType> span_allocator_type;
         typedef agg::span_gradient<ColorType, interpolator_type,
-                                   gradient_func_type, color_array_type> span_gradient_type;
+                                   GradientType, color_array_type> span_gradient_type;
         typedef agg::renderer_scanline_aa<renderer_base_type,
                                           span_allocator_type, span_gradient_type> renderer_gradient_type;
-        gradient_func_type gradient_func;
+        typedef agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_adaptor_type;
+
+        GradientType gradient_func;
         interpolator_type span_interpolator(_mtx);
         span_allocator_type span_allocator;
-
         span_gradient_type span_gradient(span_interpolator,
                                          gradient_func,
                                          color_array,
                                          s, x);
 
         // transform
+        agg::conv_curve<agg::path_storage> p(*this);
+        agg::conv_stroke<agg::conv_curve<agg::path_storage>> q(p);
+        q.width(_width);
+        q.line_cap((agg::line_cap_e)_linecap);
+        q.line_join((agg::line_join_e)_linejoin);
+        q.miter_limit(_miterlimit);
         agg::conv_transform<agg::conv_stroke<agg::conv_curve<agg::path_storage>>> m(q, mtx);
         raster->add_path(m, pathid);
 
         if (alpha_mask != nullptr){
             agg::rendering_buffer alpha_mask_rbuf(alpha_mask, size.x, size.y, size.x);
             agg::amask_no_clip_gray8 alpha_mask(alpha_mask_rbuf);
-            agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_mask_adaptor(pix, alpha_mask);
-            agg::renderer_base<agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8>> alpha_base(alpha_mask_adaptor);
+            alpha_adaptor_type alpha_mask_adaptor(pix, alpha_mask);
+            agg::renderer_base<alpha_adaptor_type> alpha_base(alpha_mask_adaptor);
             renderer_gradient_type ren_gradient(alpha_base, span_allocator, span_gradient);
             agg::render_scanlines(*raster, *sl, ren_gradient);
          } else {
             agg::renderer_scanline_aa<agg::renderer_base<DrawingType>, span_allocator_type, span_gradient_type> ren_gradient(base, span_allocator, span_gradient);
             agg::render_scanlines(*raster, *sl, ren_gradient);
         };
-    }
-
-    template <typename ColorType>
-    void fillLinearGradientH(ColorType b, ColorType m, ColorType e, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
-        fillGradient<agg::gradient_x>(b, m, e, s, x, _mtx);
-    }
-
-    template <typename ColorType>
-    void fillLinearGradientV(ColorType b, ColorType m, ColorType e, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
-        fillGradient<agg::gradient_y>(b, m, e, s, x, mtx);
-    }
-
-    template <typename ColorType>
-    void fillRadialGradient(ColorType b, ColorType m, ColorType e, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
-        fillGradient<agg::gradient_radial>(b, m, e, s, x, _mtx);
-    }
-
-    template <typename ColorType>
-    void strokeLinearGradientH(ColorType b, ColorType m, ColorType e, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
-        strokeGradient<agg::gradient_x>(b, m, e, s, x, _mtx);
-    }
-
-    template <typename ColorType>
-    void strokeLinearGradientV(ColorType b, ColorType m, ColorType e, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
-        strokeGradient<agg::gradient_y>(b, m, e, s, x, _mtx);
-    }
-
-    template <typename ColorType>
-    void strokeRadialGradient(ColorType b, ColorType m, ColorType e, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
-        strokeGradient<agg::gradient_radial>(b, m, e, s, x, _mtx);
     }
 
     // Adds current path and actually draws everything
@@ -942,18 +895,20 @@ public:
 
     template <typename S>
     void paint(S &pth){
+        typedef agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_adaptor_type;
+
         raster->add_path(pth, pathid);
         if (alpha_mask != nullptr){
             agg::rendering_buffer alpha_mask_rbuf(alpha_mask, size.x, size.y, size.x);
             agg::amask_no_clip_gray8 alpha_mask(alpha_mask_rbuf);
-            agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_mask_adaptor(pix, alpha_mask);
-            agg::renderer_base<agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8>> alpha_base(alpha_mask_adaptor);
+            alpha_adaptor_type alpha_mask_adaptor(pix, alpha_mask);
+            agg::renderer_base<alpha_adaptor_type> alpha_base(alpha_mask_adaptor);
             if (_antialias){
-                agg::renderer_scanline_aa_solid<agg::renderer_base<agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8>>> alpha_ren(alpha_base);
+                agg::renderer_scanline_aa_solid<agg::renderer_base<alpha_adaptor_type>> alpha_ren(alpha_base);
                 alpha_ren.color(current_color);
                 agg::render_scanlines(*raster, *sl, alpha_ren);
             } else {
-                agg::renderer_scanline_bin_solid<agg::renderer_base<agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8>>> alpha_ren(alpha_base);
+                agg::renderer_scanline_aa_solid<agg::renderer_base<alpha_adaptor_type>> alpha_ren(alpha_base);
                 alpha_ren.color(current_color);
                 agg::render_scanlines(*raster, *sl, alpha_ren);
             }
@@ -1051,31 +1006,6 @@ Drawing<bgr24>draw(Mat3b& im, uint8_t* alpha_mask=nullptr);
 Drawing<bgra64> draw(Mat4w& im, uint8_t* alpha_mask=nullptr);
 Drawing<bgr48> draw(Mat3w& im, uint8_t* alpha_mask=nullptr);
 #endif
-
-#else // cplusplus
-
-// C interface
-
-typedef enum line_cap_style line_cap_style;
-typedef enum line_join_style line_join_style;
-typedef enum filling_rule filling_rule;
-typedef enum path_commands path_commands;
-typedef enum gradient_type gradient_type;
-
-typedef struct Point {
-    double x, y;
-} Point;
-
-typedef struct Rectangle {
-    double x, y, width, height;
-} Rectangle;
-
-struct drawing {
-    void *handle;
-    int channels;
-    int bits_per_channel;
-};
-typedef struct drawing drawing;
 
 #endif // cplusplus
 

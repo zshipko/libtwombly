@@ -4,22 +4,6 @@
 using namespace tw;
 #endif
 
-#define DRAWING(d, fn, ...) do { switch(d.channels){ \
-    case 1: \
-        if (d.bits_per_channel == 8) return ((Drawing<gray8>*)d.handle)-> fn (__VA_ARGS__); \
-        else if(d.bits_per_channel == 16) return ((Drawing<gray16>*)d.handle)-> fn (__VA_ARGS__); \
-        break; \
-    case 3: \
-        if (d.bits_per_channel == 8) return d.is_bgr ? ((Drawing<bgr24>*)d.handle)-> fn (__VA_ARGS__) : ((Drawing<rgb24>*)d.handle)-> fn (__VA_ARGS__); \
-        else if(d.bits_per_channel == 16) return d.is_bgr ? ((Drawing<bgr48>*)d.handle)-> fn (__VA_ARGS__) : ((Drawing<rgb48>*)d.handle)-> fn (__VA_ARGS__); \
-        break; \
-    case 4: \
-        if (d.bits_per_channel == 8) return d.is_bgr ? ((Drawing<bgra32>*)d.handle)-> fn (__VA_ARGS__) : ((Drawing<rgba32>*)d.handle)-> fn (__VA_ARGS__); \
-        else if(d.bits_per_channel == 16) return d.is_bgr ? ((Drawing<bgra64>*)d.handle)-> fn (__VA_ARGS__) : ((Drawing<rgba64>*)d.handle)-> fn (__VA_ARGS__); \
-        break; \
-    }\
-    throw std::runtime_error("bad drawing"); } while(0)
-
 #ifdef __cplusplus
 static agg::path_storage _get_path(drawing d){
     return *(agg::path_storage*)d.handle;
