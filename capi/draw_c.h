@@ -43,6 +43,7 @@ drawing draw_create(int64_t width, int64_t height, int channels, uint8_t *data);
 drawing draw_create_bgr(int64_t width, int64_t height, int channels, uint8_t *data);
 drawing draw_create16(int64_t width, int64_t height, int channels, uint16_t *data);
 drawing draw_create16_bgr(int64_t width, int64_t height, int channels, uint16_t *data);
+drawing draw_createPath();
 
 void draw_free(drawing *d);
 

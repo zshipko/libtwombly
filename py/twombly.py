@@ -65,6 +65,7 @@ def _method_decl(c_fn, res=None, args=[DrawingType]):
     return tmp
 
 _METHODS = dict(
+    create_path=_method_decl(twombly.draw_createPath, DrawingType, args=[]),
     create=_method_decl(twombly.draw_create,
                         DrawingType, [c_long, c_long, c_long, c_void_p]),
     create16=_method_decl(twombly.draw_create16,
@@ -365,10 +366,15 @@ class Color(ndarray):
 
 class Drawing(object):
     ''' python wrapper for libtwombly Drawing class '''
-    def __init__(self, arr, bgr=False, width=None, height=None):
+    def __init__(self, arr=None, bgr=False, width=None, height=None):
         self._free = _METHODS["free"]
-        self.array = arr
 
+        if arr is None:
+            self._drawing = _METHODS["create_path"]()
+            self._as_parameter_ = self._drawing
+            return
+
+        self.array = arr
         bgr_str = ""
         if bgr:
             bgr_str = "_bgr"
@@ -394,10 +400,7 @@ class Drawing(object):
     def __getattr__(self, key):
         def wrapper(*args):
             ''' get method by name'''
-            try:
-                return _METHODS[key](self._drawing, *args)
-            except KeyError:
-                return None
+            return _METHODS[key](self._drawing, *args)
         return wrapper
 
     def get_vertices(self):
@@ -418,9 +421,9 @@ class Drawing(object):
             raise Exception("out of bounds")
         x_ptr = pointer(c_double(0))
         y_ptr = pointer(c_double(0))
-        cmd_ptr = pointer(c_uint(0))
-        _METHODS["get_vertex"](self, index, x_ptr, y_ptr, cmd_ptr)
-        return [x_ptr[0], y_ptr[0], cmd_ptr[0]]
+        _METHODS["get_vertex"](self, index, x_ptr, y_ptr)
+        cmd = _METHODS["get_command"](self, index)
+        return [x_ptr[0], y_ptr[0], cmd]
 
     def clear(self, r, g=None, b=None, a=255):
         _METHODS["clear"](self._drawing, *Color(r, g, b, a).as_uint8())

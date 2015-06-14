@@ -23,16 +23,16 @@ enum filling_rule {
 };
 
 enum path_commands {
-    path_cmd_stop     = 0,        //----path_cmd_stop
-    path_cmd_move_to  = 1,        //----path_cmd_move_to
-    path_cmd_line_to  = 2,        //----path_cmd_line_to
-    path_cmd_curve3   = 3,        //----path_cmd_curve3
-    path_cmd_curve4   = 4,        //----path_cmd_curve4
-    path_cmd_curveN   = 5,        //----path_cmd_curveN
-    path_cmd_catrom   = 6,        //----path_cmd_catrom
-    path_cmd_ubspline = 7,        //----path_cmd_ubspline
-    path_cmd_end_poly = 0x0F,     //----path_cmd_end_poly
-    path_cmd_mask     = 0x0F      //----path_cmd_mask
+    path_cmd_stop     = 0,
+    path_cmd_move_to  = 1,
+    path_cmd_line_to  = 2,
+    path_cmd_curve3   = 3,
+    path_cmd_curve4   = 4,
+    path_cmd_curveN   = 5,
+    path_cmd_catrom   = 6,
+    path_cmd_ubspline = 7,
+    path_cmd_end_poly = 0x0F,
+    path_cmd_mask     = 0x0F
 };
 
 enum gradient_type {
@@ -170,6 +170,12 @@ public:
 
     agg::trans_affine mtx;
     uint8_t *alpha_mask;
+
+    Drawing() : pix(buffer), size(0, 0, 0), sl(nullptr), raster(nullptr), alpha_mask(nullptr) {
+        base = agg::renderer_base<DrawingType>(pix);
+        render_aa = agg::renderer_scanline_aa_solid<agg::renderer_base<DrawingType> >(base);
+        render_bin = agg::renderer_scanline_bin_solid<agg::renderer_base<DrawingType> >(base);
+    }
 
     // Creates a drawing context from width, height, channels and data
     Drawing(int32_t w, int32_t h, int32_t c, uint8_t *d, uint8_t *_alpha_mask=nullptr) : buffer(d, w, h, w * c), pix(buffer), _antialias(true), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(w, h, c),  alpha_mask(_alpha_mask) {

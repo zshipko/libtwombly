@@ -10,6 +10,14 @@ static agg::path_storage _get_path(drawing d){
 }
 #endif
 
+drawing draw_createPath(){
+    drawing d;
+    d.handle = new Drawing<rgba32>();
+    d.bits_per_channel = 8;
+    d.channels = 4;
+    return d;
+}
+
 drawing draw_create(int64_t width, int64_t height, int channels, uint8_t *data){
     drawing d;
     d.handle = NULL;
