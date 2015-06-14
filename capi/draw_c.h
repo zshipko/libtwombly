@@ -5,9 +5,28 @@
 
 #include "draw.hpp"
 
-
-
 #ifdef __cplusplus
+using namespace tw;
+extern "C" {
+#endif
+
+// C interface
+#ifndef __cplusplus
+typedef enum line_cap_style line_cap_style;
+typedef enum line_join_style line_join_style;
+typedef enum filling_rule filling_rule;
+typedef enum path_commands path_commands;
+typedef enum gradient_type gradient_type;
+
+typedef struct Point {
+    double x, y;
+} Point;
+
+typedef struct Rectangle {
+    double x, y, width, height;
+} Rectangle;
+#endif
+
 struct drawing {
     void *handle;
     int channels;
@@ -15,10 +34,6 @@ struct drawing {
     bool is_bgr;
 };
 typedef struct drawing drawing;
-
-using namespace tw;
-extern "C" {
-#endif
 
 #define draw_frombimage(im) (im.depth == u16 ? draw_create(im.width, im.height, im.channels, im.u16) : draw_create(im.width, im.height, im.channels, im.u8))
 
@@ -79,9 +94,9 @@ void draw_curveTo6(drawing, double, double, double, double, double, double);
 void draw_curveRel6(drawing, double, double, double, double, double, double);
 void draw_arcTo(drawing, double, double, double, double, double);
 void draw_arcRel(drawing, double, double, double, double, double);
-double draw_putTextSimple(drawing, double, double, const char *, int, double, const char *);
+double draw_textSimple(drawing, double, double, const char *, int, double, const char *);
 #ifndef NO_FREETYPE
-double draw_putText(drawing, double, double, const char *, const char *, double, double);
+double draw_text(drawing, double, double, const char *, const char *, double, double);
 #endif
 void draw_setColor(drawing, uint8_t, uint8_t, uint8_t, uint8_t);
 void draw_fill(drawing);
@@ -98,12 +113,12 @@ unsigned int draw_prevVertex(drawing, double *, double *);
 void draw_modifyVertex(drawing, unsigned int, double, double, unsigned int);
 unsigned int draw_totalVertices(drawing);
 
-void draw_alphaLayerInit(drawing a);
-void draw_alphaLayerFree(drawing a);
-void draw_alphaLayerFill(drawing a, uint8_t v);
-uint8_t draw_alphaLayerGet(drawing a, int32_t x, int32_t y);
-uint8_t *draw_alphaLayerPtr(drawing a);
-uint8_t *draw_alphaLayerPtrOffs(drawing a, int32_t x, int32_t y);
+void draw_alphaMaskInit(drawing a);
+void draw_alphaMaskFree(drawing a);
+void draw_alphaMaskFill(drawing a, uint8_t v);
+uint8_t draw_alphaMaskGet(drawing a, int32_t x, int32_t y);
+uint8_t *draw_alphaMaskPtr(drawing a);
+uint8_t *draw_alphaMaskPtrOffs(drawing a, int32_t x, int32_t y);
 
 void draw_join(drawing, drawing);
 void draw_concat(drawing, drawing);
@@ -113,6 +128,10 @@ void draw_strokePattern (drawing d, drawing e);
 typedef struct transform_matrix {
     void *handle;
 } transform_matrix;
+
+typedef struct gradient {
+    void *handle;
+} gradient;
 
 void draw_transformMatrixScale(transform_matrix mtx, double a, double b);
 void draw_transformMatrixTranslate(transform_matrix mtx, double a, double b);
@@ -127,12 +146,36 @@ void draw_transformMatrixTransform(transform_matrix mtx, double *x, double *y);
 void draw_transformMatrixToDouble(transform_matrix mtx, double *d);
 void draw_transformMatrixFromDouble(transform_matrix mtx, double *d);
 
-void draw_fillLinearGradientH(drawing d, Pixel b, Pixel m, Pixel e, int s, int x, transform_matrix mtx);
-void draw_fillLinearGradientV(drawing d, Pixel b, Pixel m, Pixel e, int s, int x, transform_matrix mtx);
-void draw_fillRadialGradient(drawing d, Pixel b, Pixel m, Pixel e, int s, int x, transform_matrix mtx);
-void draw_strokeLinearGradientH(drawing d, Pixel b, Pixel m, Pixel e, int s, int x, transform_matrix mtx);
-void draw_strokeLinearGradientV(drawing d, Pixel b, Pixel m, Pixel e, int s, int x, transform_matrix mtx);
-void draw_strokeRadialGradient(drawing d, Pixel b, Pixel m, Pixel e, int s, int x, transform_matrix mtx);
+gradient draw_gradientCreate();
+void draw_gradientFree(gradient *grad);
+void draw_gradientAddStop(gradient grad, Pixel color);
+transform_matrix draw_gradientGetMatrix(gradient grad);
+void draw_gradientSetMatrix(gradient grad, transform_matrix mtx);
+void draw_fillGradient(drawing d, gradient grad, int s, int x, gradient_type grad_type);
+void draw_strokeGradient(drawing d, gradient grad, int s, int x, gradient_type grad_type);
+gradient draw_gradientCreate16();
+void draw_gradientAddStop16(gradient grad, Pixel color);
+
+void draw_fillGradient(drawing d, gradient grad, int s, int x, gradient_type grad_type);
+void draw_strokeGradient(drawing d, gradient grad, int s, int x, gradient_type grad_type);
+void draw_fillGradient16(drawing d, gradient grad, int s, int x, gradient_type grad_type);
+void draw_strokeGradient16(drawing d, gradient grad, int s, int x, gradient_type grad_type);
+
+#define DRAWING(d, fn, ...) do { switch(d.channels){ \
+    case 1: \
+        if (d.bits_per_channel == 8) return ((Drawing<gray8>*)d.handle)-> fn (__VA_ARGS__); \
+        else if(d.bits_per_channel == 16) return ((Drawing<gray16>*)d.handle)-> fn (__VA_ARGS__); \
+        break; \
+    case 3: \
+        if (d.bits_per_channel == 8) return d.is_bgr ? ((Drawing<bgr24>*)d.handle)-> fn (__VA_ARGS__) : ((Drawing<rgb24>*)d.handle)-> fn (__VA_ARGS__); \
+        else if(d.bits_per_channel == 16) return d.is_bgr ? ((Drawing<bgr48>*)d.handle)-> fn (__VA_ARGS__) : ((Drawing<rgb48>*)d.handle)-> fn (__VA_ARGS__); \
+        break; \
+    case 4: \
+        if (d.bits_per_channel == 8) return d.is_bgr ? ((Drawing<bgra32>*)d.handle)-> fn (__VA_ARGS__) : ((Drawing<rgba32>*)d.handle)-> fn (__VA_ARGS__); \
+        else if(d.bits_per_channel == 16) return d.is_bgr ? ((Drawing<bgra64>*)d.handle)-> fn (__VA_ARGS__) : ((Drawing<rgba64>*)d.handle)-> fn (__VA_ARGS__); \
+        break; \
+    }\
+    throw std::runtime_error("bad drawing"); } while(0)
 
 #ifdef __cplusplus
 }

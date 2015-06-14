@@ -8,6 +8,8 @@ template class Drawing<rgba64>;
 template class Drawing<rgb48>;
 template class Drawing<bgra32>;
 template class Drawing<bgr24>;
+template class Gradient<Color>;
+template class Gradient<Color16>;
 
 inline Color rgba(uint8_t r, uint8_t g, uint8_t b, uint8_t a){
     return Color(r, g, b, a);

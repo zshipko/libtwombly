@@ -15,6 +15,17 @@ PATH_CMD_UBSPLINE = 7
 PATH_CMD_END_POLY = 0x0F
 PATH_CMD_MASK = 0x0F
 
+GRADIENT_CIRCLE = 0
+GRADIENT_RADIAL = 1
+GRADIENT_RADIAL_D = 2
+GRADIENT_RADIAL_FOCUS = 3
+GRADIENT_X = 4
+GRADIENT_Y = 5
+GRADIENT_DIAMOND = 6
+GRADIENT_XY = 7
+GRADIENT_SQRT_XY = 8
+GRADIENT_CONIC = 9
+
 CAP_BUTT = 0
 CAP_SQUARE = 1
 CAP_ROUND = 2
@@ -36,6 +47,12 @@ class DrawingType(Structure):
 
 class TransformType(Structure):
     ''' C struct for transformation matrix '''
+    _fields_ = [
+        ("handle", c_void_p)
+    ]
+
+class GradientType(Structure):
+    ''' C struct for gradient '''
     _fields_ = [
         ("handle", c_void_p)
     ]
@@ -136,9 +153,9 @@ _METHODS = dict(
                         args=[DrawingType, c_double, c_double, c_double, c_double, c_double]),
     arc_rel=_method_decl(twombly.draw_arcRel,
                          args=[DrawingType, c_double, c_double, c_double, c_double, c_double]),
-    put_text_simple=_method_decl(twombly.draw_putTextSimple, c_double,
+    text_simple=_method_decl(twombly.draw_textSimple, c_double,
                                  args=[DrawingType, c_double, c_double, c_char_p, c_int, c_double, c_char_p]),
-    put_text=_method_decl(twombly.draw_putText, c_double,
+    text=_method_decl(twombly.draw_text, c_double,
                           args=[DrawingType, c_double, c_double, c_char_p, c_char_p, c_double, c_double]),
     set_color=_method_decl(twombly.draw_setColor,
                            args=[DrawingType, c_uint8, c_uint8, c_uint8, c_uint8]),
@@ -168,37 +185,28 @@ _METHODS = dict(
                       args=[DrawingType, DrawingType]),
     concat=_method_decl(twombly.draw_concat,
                         args=[DrawingType, DrawingType]),
+
+    # pattern
     fill_pattern=_method_decl(twombly.draw_fillPattern,
                               args=[DrawingType, DrawingType]),
     stroke_pattern=_method_decl(twombly.draw_fillPattern,
                                 args=[DrawingType, DrawingType]),
-    fill_linear_gradient_h=_method_decl(twombly.draw_fillLinearGradientH,
-                                        args=[DrawingType, POINTER(c_float), POINTER(c_float),
-                                              POINTER(c_float), c_int, c_int]),
-    fill_linear_gradient_v=_method_decl(twombly.draw_fillLinearGradientV,
-                                        args=[DrawingType, POINTER(c_float), POINTER(c_float),
-                                              POINTER(c_float), c_int, c_int]),
-    fill_radial_gradient=_method_decl(twombly.draw_fillRadialGradient,
-                                      args=[DrawingType, POINTER(c_float), POINTER(c_float),
-                                            POINTER(c_float), c_int, c_int]),
-    stroke_linear_gradient_h=_method_decl(twombly.draw_strokeLinearGradientH,
-                                          args=[DrawingType, POINTER(c_float), POINTER(c_float),
-                                                POINTER(c_float), c_int, c_int]),
-    stroke_linear_gradient_v=_method_decl(twombly.draw_strokeLinearGradientV,
-                                          args=[DrawingType, POINTER(c_float), POINTER(c_float),
-                                                POINTER(c_float), c_int, c_int]),
-    stroke_radial_gradient=_method_decl(twombly.draw_strokeRadialGradient,
-                                        args=[DrawingType, POINTER(c_float), POINTER(c_float),
-                                              POINTER(c_float), c_int, c_int]),
-    alpha_layer_init=_method_decl(twombly.draw_alphaLayerInit),
-    alpa_layer_free=_method_decl(twombly.draw_alphaLayerFree),
-    alpha_layer_fill=_method_decl(twombly.draw_alphaLayerFill,
+    # alpha mask
+    alpha_mask_init=_method_decl(twombly.draw_alphaMaskInit),
+    alpha_mask_free=_method_decl(twombly.draw_alphaMaskFree),
+    alpha_mask_fill=_method_decl(twombly.draw_alphaMaskFill,
                                   args=[DrawingType, c_uint8]),
-    alpha_layer=_method_decl(twombly.draw_alphaLayerGet, c_uint8,
+    alpha_mask=_method_decl(twombly.draw_alphaMaskGet, c_uint8,
                                  args=[DrawingType, c_int32, c_int32]),
-    alpha_layer_ptr_offs=_method_decl(twombly.draw_alphaLayerPtrOffs, POINTER(c_uint8),
+    alpha_mask_ptr_offs=_method_decl(twombly.draw_alphaMaskPtrOffs, POINTER(c_uint8),
                                           args=[DrawingType, c_int32, c_int32]),
-    alpha_layer_ptr=_method_decl(twombly.draw_alphaLayerPtr, POINTER(c_uint8))
+    alpha_mask_ptr=_method_decl(twombly.draw_alphaMaskPtr, POINTER(c_uint8)),
+
+    # gradient
+    fill_gradient=_method_decl(twombly.draw_fillGradient,
+                               args=[DrawingType, GradientType, c_int, c_int, c_int]),
+    stroke_gradient=_method_decl(twombly.draw_strokeGradient,
+                                 args=[DrawingType, GradientType, c_int, c_int, c_int]),
 )
 
 _transform_matrix_create = _method_decl(twombly.draw_transformMatrixCreate, TransformType, args=[])
@@ -231,7 +239,7 @@ class TransformMatrix(object):
         else: self._free = False
 
         self._mtx = m
-        _as_parameter = self._mtx
+        _as_parameter_ = self._mtx
 
     def scale(self, x, y):
         _transform_matrix_scale(self._mtx, x, y)
@@ -273,6 +281,41 @@ class TransformMatrix(object):
         _transform_matrix_to_double(self._mtx, cast(arr.ctypes.data, POINTER(c_double)))
         return arr
 
+_gradient_create = _method_decl(twombly.draw_gradientCreate, GradientType, args=[])
+_gradient_create16 = _method_decl(twombly.draw_gradientCreate16, GradientType, args=[])
+_gradient_free = _method_decl(twombly.draw_gradientFree, args=[POINTER(GradientType)])
+_gradient_add_stop = _method_decl(twombly.draw_gradientAddStop, args=[GradientType, POINTER(c_float)])
+_gradient_add_stop16 = _method_decl(twombly.draw_gradientAddStop16, args=[GradientType, POINTER(c_float)])
+_gradient_get_matrix = _method_decl(twombly.draw_gradientGetMatrix, TransformType, args=[GradientType])
+
+class Gradient(object):
+    ''' Gradient Class '''
+    def __init__(self, *args, **kw):
+        self.depth = kw.get('depth', 8)
+        if  self.depth == 16:
+            self._gradient = _gradient_create16()
+        else:
+            self._gradient = _gradient_create()
+
+        for arg in args:
+            self.add_stop(Color(arg))
+
+        self._as_parameter_ = self._gradient
+
+    def add_stop(self, c):
+        if self.depth == 8:
+            _gradient_add_stop(self._gradient, (c_float * 4)(*c))
+        elif self.depth == 16:
+            _gradient_add_stop16(self._gradient, (c_float * 4)(*c))
+
+    def matrix(self):
+        return TransformMatrix(_gradient_get_matrix(self._gradient))
+
+    def __del__(self):
+        if self._gradient is not None:
+            _gradient_free(pointer(self._gradient))
+            self._gradient = None
+
 
 _HAS_SYMPY = False
 try:
@@ -299,6 +342,14 @@ class Color(ndarray):
             red, green, blue, alpha = _colors.get(red.lower().replace(' ', ''), [0, 0, 0, alpha])
         elif green is None or blue is None:
             green = blue = red
+        elif hasattr(red, '__getitem__'):
+            arr = red
+            if len(red) == 3:
+                red.append(alpha)
+            elif len(red) != 4:
+                raise Exception("bad color")
+            red, green, blue, alpha = arr[0], arr[1], arr[2], arr[3]
+
         self[0] = red
         self[1] = green
         self[2] = blue
@@ -397,6 +448,7 @@ class Drawing(object):
             self._drawing = None
 
     def add_geometry(self, g, move_to=False, step=1):
+        ''' draw sympy equations '''
         if not _HAS_SYMPY:
             raise Exception("Not implemented, sympy not installed")
 
@@ -445,26 +497,6 @@ class Drawing(object):
                         continue
                 self.line_to(g.functions[0].subs(g.limits[0], x_pos),
                              g.functions[1].subs(g.limits[0], x_pos))
-
-    def fill_gradient(self, b, m, en, x, y, gradient_kind="linear", orientation="v", mtx=TransformMatrix()):
-        if gradient_kind != "linear":
-            orientation = ""
-        else:
-            orientation = "_" + orientation
-
-        gradient_call = "fill_" + gradient_kind + "_gradient" + orientation
-        _METHODS[gradient_call](self, (c_float * 4)(*b), (c_float * 4)(*m),
-                                (c_float * 4)(*en), x, y, mtx._mtx)
-
-    def stroke_gradient(self, b, m, en, x, y, gradient_kind="linear", orientation="v", mtx=TransformMatrix()):
-        if gradient_kind != "linear":
-            orientation = ""
-        else:
-            orientation = "_" + orientation
-
-        gradient_call = "stroke_" + gradient_kind + "_gradient" + orientation
-        _METHODS[gradient_call](self, (c_float * 4)(*b), (c_float * 4)(*m),
-                                (c_float * 4)(*en), x, y, mtx._mtx)
 
     def matrix(self):
         return TransformMatrix(_transform_matrix_get(self))

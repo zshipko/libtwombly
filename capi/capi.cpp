@@ -4,22 +4,6 @@
 using namespace tw;
 #endif
 
-#define DRAWING(d, fn, ...) do { switch(d.channels){ \
-    case 1: \
-        if (d.bits_per_channel == 8) return ((Drawing<gray8>*)d.handle)-> fn (__VA_ARGS__); \
-        else if(d.bits_per_channel == 16) return ((Drawing<gray16>*)d.handle)-> fn (__VA_ARGS__); \
-        break; \
-    case 3: \
-        if (d.bits_per_channel == 8) return d.is_bgr ? ((Drawing<bgr24>*)d.handle)-> fn (__VA_ARGS__) : ((Drawing<rgb24>*)d.handle)-> fn (__VA_ARGS__); \
-        else if(d.bits_per_channel == 16) return d.is_bgr ? ((Drawing<bgr48>*)d.handle)-> fn (__VA_ARGS__) : ((Drawing<rgb48>*)d.handle)-> fn (__VA_ARGS__); \
-        break; \
-    case 4: \
-        if (d.bits_per_channel == 8) return d.is_bgr ? ((Drawing<bgra32>*)d.handle)-> fn (__VA_ARGS__) : ((Drawing<rgba32>*)d.handle)-> fn (__VA_ARGS__); \
-        else if(d.bits_per_channel == 16) return d.is_bgr ? ((Drawing<bgra64>*)d.handle)-> fn (__VA_ARGS__) : ((Drawing<rgba64>*)d.handle)-> fn (__VA_ARGS__); \
-        break; \
-    }\
-    throw std::runtime_error("bad drawing"); } while(0)
-
 #ifdef __cplusplus
 static agg::path_storage _get_path(drawing d){
     return *(agg::path_storage*)d.handle;
@@ -331,13 +315,13 @@ void draw_arcRel(drawing d, double x, double y, double x1, double y1, double a){
     DRAWING(d, arcRel, x, y, x1, y1, a, false, false);
 }
 
-double draw_putTextSimple(drawing d, double x, double y, const char *str, int size, double width, const char *font){
-    DRAWING(d, putTextSimple, x, y, str, size, width, font);
+double draw_textSimple(drawing d, double x, double y, const char *str, int size, double width, const char *font){
+    DRAWING(d, textSimple, x, y, str, size, width, font);
 }
 
 #ifndef NO_FREETYPE
-double draw_putText(drawing d, double x, double y, const char *str, const char * font, double w, double h){
-    DRAWING(d, putText, x, y, str, font, w, h);
+double draw_text(drawing d, double x, double y, const char *str, const char * font, double w, double h){
+    DRAWING(d, text, x, y, str, font, w, h);
 }
 #endif
 
@@ -407,26 +391,26 @@ void draw_concat(drawing a, drawing b){
     DRAWING(a, concatPath, pth);
 }
 
-void draw_alphaLayerInit(drawing a){
-    DRAWING(a, alphaLayerInit);
+void draw_alphaMaskInit(drawing a){
+    DRAWING(a, alphaMaskInit);
 }
 
-void draw_alphaLayerFree(drawing a){
-    DRAWING(a, alphaLayerFree);
+void draw_alphaMaskFree(drawing a){
+    DRAWING(a, alphaMaskFree);
 }
 
-void draw_alphaLayerFill(drawing a, uint8_t v){
-    DRAWING(a, alphaLayerFill, v);
+void draw_alphaMaskFill(drawing a, uint8_t v){
+    DRAWING(a, alphaMaskFill, v);
 }
 
-uint8_t draw_alphaLayerGet(drawing a, int32_t x, int32_t y){
-    DRAWING(a, alphaLayerGet, x, y);
+uint8_t draw_alphaMaskGet(drawing a, int32_t x, int32_t y){
+    DRAWING(a, alphaMaskGet, x, y);
 }
 
-uint8_t *draw_alphaLayerPtr(drawing a){
-    DRAWING(a, alphaLayerPtr);
+uint8_t *draw_alphaMaskPtr(drawing a){
+    DRAWING(a, alphaMaskPtr);
 }
 
-uint8_t *draw_alphaLayerPtrOffs(drawing a, int32_t x, int32_t y){
-    DRAWING(a, alphaLayerPtrOffs, x, y);
+uint8_t *draw_alphaMaskPtrOffs(drawing a, int32_t x, int32_t y){
+    DRAWING(a, alphaMaskPtrOffs, x, y);
 }
