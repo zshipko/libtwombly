@@ -147,8 +147,12 @@ const lest::test drawing_test[] = {
         d.newPath();
         d.ellipse(250, 250, 250, 250);
 
-        d.fillLinearGradientH(Color16(255<<8, 0, 0, 127<<8), Color16(0, 255<<8, 0, 127<<8), Color16(0, 0, 255<<8, 255<<8), 0, 350);
+        Gradient<Color16> g;
+        g.addStop(Color16(255<<8, 0, 0, 127<<8));
+        g.addStop(Color16(0, 255<<8, 0, 127<<8));
+        g.addStop(Color16(0, 0, 255<<8, 127<<8));
 
+        d.fillGradient(g, 0, 300, gradient_type_y);
         EXPECT((im2.at<Scalar>(250, 250)[0] > 0));
 
         try{
