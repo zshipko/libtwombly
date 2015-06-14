@@ -9,5 +9,6 @@ int main(int argc, char **argv){
     draw_moveTo(d, 10, 10);
     draw_lineTo(d, im.width - 10, im.height - 10);
     draw_stroke(d);
+    bimage_save("basic.tiff", im);
     draw_free(&d);
 }
