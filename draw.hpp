@@ -111,22 +111,22 @@ inline Color rgba(Scalar s);
 inline Color16 rgba_16(Scalar s);
 #endif
 
-template <typename color_type, int S=256>
+template <typename ColorType, int S=256>
 class Gradient {
 public:
-    std::vector<color_type> colors;
-    agg::pod_auto_array<color_type, S> arr;
+    std::vector<ColorType> colors;
+    agg::pod_auto_array<ColorType, S> arr;
     agg::trans_affine mtx;
 
     Gradient() {}
 
-    Gradient(color_type beg, color_type mid, color_type end){
+    Gradient(ColorType beg, ColorType mid, ColorType end){
         add_stop(beg);
         add_stop(mid);
         add_stop(end);
     }
 
-    void add_stop(color_type const & c){
+    void add_stop(ColorType const & c){
         colors.push_back(c);
     }
 
@@ -141,7 +141,7 @@ public:
 };
 
 // Drawing type
-template <typename drawing_type>
+template <typename DrawingType>
 class Drawing : public agg::path_storage {
     // render settings
     bool _antialias;
@@ -150,9 +150,9 @@ class Drawing : public agg::path_storage {
     line_join_style _linejoin;
 
     // rendering
-    agg::renderer_scanline_aa_solid<agg::renderer_base<drawing_type>> render_aa;
-    agg::renderer_scanline_bin_solid<agg::renderer_base<drawing_type>> render_bin;
-    agg::renderer_base<drawing_type> base;
+    agg::renderer_scanline_aa_solid<agg::renderer_base<DrawingType>> render_aa;
+    agg::renderer_scanline_bin_solid<agg::renderer_base<DrawingType>> render_bin;
+    agg::renderer_base<DrawingType> base;
     agg::scanline32_p8 *sl;
 
     unsigned pathid; // stores current path
@@ -164,7 +164,7 @@ public:
         int32_t x, y, c;
     } size;
 
-    drawing_type pix;
+    DrawingType pix;
     agg::rendering_buffer buffer;
     agg::rasterizer_scanline_aa<> *raster;
 
@@ -172,9 +172,9 @@ public:
     uint8_t *alpha_mask;
 
     Drawing() : pix(buffer), size(0, 0, 0), sl(nullptr), raster(nullptr), alpha_mask(nullptr) {
-        base = agg::renderer_base<drawing_type>(pix);
-        render_aa = agg::renderer_scanline_aa_solid<agg::renderer_base<drawing_type> >(base);
-        render_bin = agg::renderer_scanline_bin_solid<agg::renderer_base<drawing_type> >(base);
+        base = agg::renderer_base<DrawingType>(pix);
+        render_aa = agg::renderer_scanline_aa_solid<agg::renderer_base<DrawingType> >(base);
+        render_bin = agg::renderer_scanline_bin_solid<agg::renderer_base<DrawingType> >(base);
     }
 
     // Creates a drawing context from width, height, channels and data
@@ -237,9 +237,9 @@ public:
     // this function will overwrite the current context if it already exists
     void alloc(){
         _miterlimit = 1;
-        base = agg::renderer_base<drawing_type>(pix);
-        render_aa = agg::renderer_scanline_aa_solid<agg::renderer_base<drawing_type> >(base);
-        render_bin = agg::renderer_scanline_bin_solid<agg::renderer_base<drawing_type> >(base);
+        base = agg::renderer_base<DrawingType>(pix);
+        render_aa = agg::renderer_scanline_aa_solid<agg::renderer_base<DrawingType> >(base);
+        render_bin = agg::renderer_scanline_bin_solid<agg::renderer_base<DrawingType> >(base);
 
         if (raster)
             delete raster;
@@ -380,13 +380,13 @@ public:
         agg::path_storage::invert_polygon(pathid);
     }
 
-    template <typename path_type>
-    void concat_polygon(path_type *data, size_t n = 0, bool closed = false){
+    template <typename PathType>
+    void concat_polygon(PathType *data, size_t n = 0, bool closed = false){
         concat_poly(data, n ? n : TW_POLY_SIZE(data), closed);
     }
 
-    template <typename path_type>
-    void join_polygon(path_type *data, size_t n = 0, bool closed = false){
+    template <typename PathType>
+    void join_polygon(PathType *data, size_t n = 0, bool closed = false){
         join_poly(data,  n ? n : TW_POLY_SIZE(data), closed);
     }
 
@@ -494,9 +494,9 @@ public:
      * flip_y
      */
 
-    template <typename color_type>
+    template <typename ColorType>
     inline void blur(double a){
-        agg::recursive_blur<color_type, agg::recursive_blur_calc_rgb<> > sb;
+        agg::recursive_blur<ColorType, agg::recursive_blur_calc_rgb<> > sb;
         sb.blur(pix, a);
     }
 
@@ -556,7 +556,7 @@ public:
 #endif // NO_FREETYPE
 
     // Copy from another drawing of the same type
-    void copy_from(Drawing<drawing_type> &d){
+    void copy_from(Drawing<DrawingType> &d){
         buffer.copy_from(d.buffer);
     }
 
@@ -572,15 +572,15 @@ public:
     }
 
     // Fill/stroke path with another drawing
-    template<typename color_type>
-    void fill_pattern (Drawing<drawing_type> &d) {
+    template<typename ColorType>
+    void fill_pattern (Drawing<DrawingType> &d) {
         typedef agg::wrap_mode_repeat wrap_x_type;
         typedef agg::wrap_mode_repeat wrap_y_type;
-        typedef agg::image_accessor_wrap<drawing_type, wrap_x_type, wrap_y_type> img_source_type;
-        typedef agg::pixfmt_amask_adaptor<drawing_type, agg::amask_no_clip_gray8> alpha_adaptor_type;
+        typedef agg::image_accessor_wrap<DrawingType, wrap_x_type, wrap_y_type> img_source_type;
+        typedef agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_adaptor_type;
 
         agg::conv_curve<agg::path_storage> pth(*this);
-        agg::span_allocator<color_type> sa;
+        agg::span_allocator<ColorType> sa;
 
         // set up image
         img_source_type img_src (d.pix);
@@ -601,17 +601,17 @@ public:
          }
     }
 
-    template <typename color_type>
-    void stroke_pattern (Drawing<drawing_type> &d) {
+    template <typename ColorType>
+    void stroke_pattern (Drawing<DrawingType> &d) {
         typedef agg::wrap_mode_repeat wrap_x_type;
         typedef agg::wrap_mode_repeat wrap_y_type;
-        typedef agg::image_accessor_wrap<drawing_type, wrap_x_type, wrap_y_type> img_source_type;
+        typedef agg::image_accessor_wrap<DrawingType, wrap_x_type, wrap_y_type> img_source_type;
         typedef agg::span_pattern_rgb<img_source_type> span_gen_type;
-        typedef agg::pixfmt_amask_adaptor<drawing_type, agg::amask_no_clip_gray8> alpha_adaptor_type;
+        typedef agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_adaptor_type;
 
         agg::conv_curve<agg::path_storage> p(*this);
         agg::conv_stroke<agg::conv_curve<agg::path_storage>> pth(p);
-        agg::span_allocator<color_type> sa;
+        agg::span_allocator<ColorType> sa;
 
         // get image set up
         img_source_type img_src (d.pix);
@@ -672,117 +672,117 @@ public:
         paint(m);
     }
 
-    template<typename color_type, typename gradient_type>
-    void fill_gradient(color_type b, color_type m, color_type e, int s, int x){
-        Gradient<color_type> grad(b, m, e);
+    template<typename ColorType, typename GradientType>
+    void fill_gradient(ColorType b, ColorType m, ColorType e, int s, int x){
+        Gradient<ColorType> grad(b, m, e);
         grad.generate();
-        fill_gradient<color_type, gradient_type>(grad.arr, s, x, grad.mtx);
+        fill_gradient<ColorType, GradientType>(grad.arr, s, x, grad.mtx);
     }
 
-    template<typename color_type, typename gradient_type>
-    void stroke_gradient(color_type b, color_type m, color_type e, int s, int x){
-        Gradient<color_type> grad(b, m, e);
+    template<typename ColorType, typename GradientType>
+    void stroke_gradient(ColorType b, ColorType m, ColorType e, int s, int x){
+        Gradient<ColorType> grad(b, m, e);
         grad.generate();
-        stroke_gradient<color_type, gradient_type>(grad.arr, s, x, grad.mtx);
+        stroke_gradient<ColorType, GradientType>(grad.arr, s, x, grad.mtx);
     }
 
-    template <typename color_type, typename gradient_type>
-    void stroke_gradient(Gradient<color_type> grad, int s, int x){
+    template <typename ColorType, typename GradientType>
+    void stroke_gradient(Gradient<ColorType> grad, int s, int x){
         grad.generate();
-        stroke_gradient<color_type, gradient_type>(grad.arr, s, x, grad.mtx);
+        stroke_gradient<ColorType, GradientType>(grad.arr, s, x, grad.mtx);
     }
 
-    template <typename color_type, typename gradient_type>
-    void fill_gradient(Gradient<color_type> grad, int s, int x){
+    template <typename ColorType, typename GradientType>
+    void fill_gradient(Gradient<ColorType> grad, int s, int x){
         grad.generate();
-        fill_gradient<color_type, gradient_type>(grad.arr, s, x, grad.mtx);
+        fill_gradient<ColorType, GradientType>(grad.arr, s, x, grad.mtx);
     }
 
-    template <typename color_type>
-    void stroke_gradient(Gradient<color_type> grad, int s, int x, gradient_type grad_type){
+    template <typename ColorType>
+    void stroke_gradient(Gradient<ColorType> grad, int s, int x, gradient_type grad_type){
         grad.generate();
         switch(grad_type){
             case gradient_type_circle:
-                stroke_gradient<color_type, agg::gradient_circle>(grad, s, x);
+                stroke_gradient<ColorType, agg::gradient_circle>(grad, s, x);
                 break;
             case gradient_type_radial:
-                stroke_gradient<color_type, agg::gradient_radial>(grad, s, x);
+                stroke_gradient<ColorType, agg::gradient_radial>(grad, s, x);
                 break;
             case gradient_type_radial_d:
-                stroke_gradient<color_type, agg::gradient_radial_d>(grad, s, x);
+                stroke_gradient<ColorType, agg::gradient_radial_d>(grad, s, x);
                 break;
             case gradient_type_radial_focus:
-                stroke_gradient<color_type, agg::gradient_radial_focus>(grad, s, x);
+                stroke_gradient<ColorType, agg::gradient_radial_focus>(grad, s, x);
                 break;
             case gradient_type_x:
-                stroke_gradient<color_type, agg::gradient_x>(grad, s, x);
+                stroke_gradient<ColorType, agg::gradient_x>(grad, s, x);
                 break;
             case gradient_type_y:
-                stroke_gradient<color_type, agg::gradient_y>(grad, s, x);
+                stroke_gradient<ColorType, agg::gradient_y>(grad, s, x);
                 break;
             case gradient_type_diamond:
-                stroke_gradient<color_type, agg::gradient_diamond>(grad, s, x);
+                stroke_gradient<ColorType, agg::gradient_diamond>(grad, s, x);
                 break;
             case gradient_type_xy:
-                stroke_gradient<color_type, agg::gradient_xy>(grad, s, x);
+                stroke_gradient<ColorType, agg::gradient_xy>(grad, s, x);
                 break;
             case gradient_type_sqrt_xy:
-                stroke_gradient<color_type, agg::gradient_sqrt_xy>(grad, s, x);
+                stroke_gradient<ColorType, agg::gradient_sqrt_xy>(grad, s, x);
                 break;
             case gradient_type_conic:
-                stroke_gradient<color_type, agg::gradient_conic>(grad, s, x);
+                stroke_gradient<ColorType, agg::gradient_conic>(grad, s, x);
                 break;
         }
     }
 
-    template <typename color_type>
-    void fill_gradient(Gradient<color_type> grad, int s, int x, gradient_type grad_type){
+    template <typename ColorType>
+    void fill_gradient(Gradient<ColorType> grad, int s, int x, gradient_type grad_type){
         grad.generate();
         switch(grad_type){
             case gradient_type_circle:
-                fill_gradient<color_type, agg::gradient_circle>(grad, s, x);
+                fill_gradient<ColorType, agg::gradient_circle>(grad, s, x);
                 break;
             case gradient_type_radial:
-                fill_gradient<color_type, agg::gradient_radial>(grad, s, x);
+                fill_gradient<ColorType, agg::gradient_radial>(grad, s, x);
                 break;
             case gradient_type_radial_d:
-                fill_gradient<color_type, agg::gradient_radial_d>(grad, s, x);
+                fill_gradient<ColorType, agg::gradient_radial_d>(grad, s, x);
                 break;
             case gradient_type_radial_focus:
-                fill_gradient<color_type, agg::gradient_radial_focus>(grad, s, x);
+                fill_gradient<ColorType, agg::gradient_radial_focus>(grad, s, x);
                 break;
             case gradient_type_x:
-                fill_gradient<color_type, agg::gradient_x>(grad, s, x);
+                fill_gradient<ColorType, agg::gradient_x>(grad, s, x);
                 break;
             case gradient_type_y:
-                fill_gradient<color_type, agg::gradient_y>(grad, s, x);
+                fill_gradient<ColorType, agg::gradient_y>(grad, s, x);
                 break;
             case gradient_type_diamond:
-                fill_gradient<color_type, agg::gradient_diamond>(grad, s, x);
+                fill_gradient<ColorType, agg::gradient_diamond>(grad, s, x);
                 break;
             case gradient_type_xy:
-                fill_gradient<color_type, agg::gradient_xy>(grad, s, x);
+                fill_gradient<ColorType, agg::gradient_xy>(grad, s, x);
                 break;
             case gradient_type_sqrt_xy:
-                fill_gradient<color_type, agg::gradient_sqrt_xy>(grad, s, x);
+                fill_gradient<ColorType, agg::gradient_sqrt_xy>(grad, s, x);
                 break;
             case gradient_type_conic:
-                fill_gradient<color_type, agg::gradient_conic>(grad, s, x);
+                fill_gradient<ColorType, agg::gradient_conic>(grad, s, x);
                 break;
         }
     }
 
-    template<typename color_type, typename gradient_type>
-    void fill_gradient(agg::pod_auto_array<color_type, 256> color_array, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
-        typedef agg::pod_auto_array<color_type, 256> color_array_type;
+    template<typename ColorType, typename GradientType>
+    void fill_gradient(agg::pod_auto_array<ColorType, 256> color_array, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
+        typedef agg::pod_auto_array<ColorType, 256> color_array_type;
         typedef agg::span_interpolator_linear<> interpolator_type;
-        typedef agg::span_allocator<color_type> span_allocator_type;
-        typedef agg::span_gradient<color_type, interpolator_type, gradient_type, color_array_type> span_gradient_type;
-        typedef agg::pixfmt_amask_adaptor<drawing_type, agg::amask_no_clip_gray8> alpha_adaptor_type;
+        typedef agg::span_allocator<ColorType> span_allocator_type;
+        typedef agg::span_gradient<ColorType, interpolator_type, GradientType, color_array_type> span_gradient_type;
+        typedef agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_adaptor_type;
         typedef agg::renderer_base<alpha_adaptor_type> renderer_base_type;
         typedef agg::renderer_scanline_aa<renderer_base_type, span_allocator_type, span_gradient_type> renderer_gradient_type;
 
-        gradient_type  gradient_func;
+        GradientType  gradient_func;
         interpolator_type   span_interpolator(_mtx);
         span_allocator_type span_allocator;
 
@@ -804,22 +804,22 @@ public:
             renderer_gradient_type ren_gradient(alpha_base, span_allocator, span_gradient);
             agg::render_scanlines(*raster, *sl, ren_gradient);
          } else {
-            agg::renderer_scanline_aa<agg::renderer_base<drawing_type>, span_allocator_type, span_gradient_type> ren_gradient(base, span_allocator, span_gradient);
+            agg::renderer_scanline_aa<agg::renderer_base<DrawingType>, span_allocator_type, span_gradient_type> ren_gradient(base, span_allocator, span_gradient);
             agg::render_scanlines(*raster, *sl, ren_gradient);
         };
     }
 
-    template<typename color_type, typename gradient_type>
-    void stroke_gradient(agg::pod_auto_array<color_type, 256> color_array, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
-        typedef agg::pod_auto_array<color_type, 256> color_array_type;
+    template<typename ColorType, typename GradientType>
+    void stroke_gradient(agg::pod_auto_array<ColorType, 256> color_array, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
+        typedef agg::pod_auto_array<ColorType, 256> color_array_type;
         typedef agg::span_interpolator_linear<> interpolator_type;
-        typedef agg::span_allocator<color_type> span_allocator_type;
-        typedef agg::span_gradient<color_type, interpolator_type, gradient_type, color_array_type> span_gradient_type;
-        typedef agg::pixfmt_amask_adaptor<drawing_type, agg::amask_no_clip_gray8> alpha_adaptor_type;
+        typedef agg::span_allocator<ColorType> span_allocator_type;
+        typedef agg::span_gradient<ColorType, interpolator_type, GradientType, color_array_type> span_gradient_type;
+        typedef agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_adaptor_type;
         typedef agg::renderer_base<alpha_adaptor_type> renderer_base_type;
         typedef agg::renderer_scanline_aa<renderer_base_type, span_allocator_type, span_gradient_type> renderer_gradient_type;
 
-        gradient_type gradient_func;
+        GradientType gradient_func;
         interpolator_type span_interpolator(_mtx);
         span_allocator_type span_allocator;
         span_gradient_type span_gradient(span_interpolator,
@@ -845,7 +845,7 @@ public:
             renderer_gradient_type ren_gradient(alpha_base, span_allocator, span_gradient);
             agg::render_scanlines(*raster, *sl, ren_gradient);
          } else {
-            agg::renderer_scanline_aa<agg::renderer_base<drawing_type>, span_allocator_type, span_gradient_type> ren_gradient(base, span_allocator, span_gradient);
+            agg::renderer_scanline_aa<agg::renderer_base<DrawingType>, span_allocator_type, span_gradient_type> ren_gradient(base, span_allocator, span_gradient);
             agg::render_scanlines(*raster, *sl, ren_gradient);
         };
     }
@@ -855,9 +855,9 @@ public:
         paint(*this);
     }
 
-    template <typename path_type>
-    void paint(path_type &pth){
-        typedef agg::pixfmt_amask_adaptor<drawing_type, agg::amask_no_clip_gray8> alpha_adaptor_type;
+    template <typename PathType>
+    void paint(PathType &pth){
+        typedef agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_adaptor_type;
 
         raster->add_path(pth, pathid);
         if (alpha_mask != nullptr){

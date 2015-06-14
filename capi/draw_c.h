@@ -35,7 +35,7 @@ struct drawing {
 };
 typedef struct drawing drawing;
 
-#define draw_frombimage(im) (im.depth == u16 ? draw_create(im.width, im.height, im.channels, im.u16) : draw_create(im.width, im.height, im.channels, im.u8))
+#define draw_frombimage(im) (im.depth == u16 ? draw_create16(im.width, im.height, im.channels, im.u16) : draw_create(im.width, im.height, im.channels, im.u8))
 
 typedef float* Pixel; //  __attribute__ ((vector_size (16)));
 
