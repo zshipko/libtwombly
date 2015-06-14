@@ -810,13 +810,13 @@ public:
 
     template<typename ColorType, typename GradientType>
     void fillGradient(agg::pod_auto_array<ColorType, 256> color_array, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
-        typedef agg::renderer_base<agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8>> renderer_base_type;
         typedef agg::pod_auto_array<ColorType, 256> color_array_type;
         typedef agg::span_interpolator_linear<> interpolator_type;
         typedef agg::span_allocator<ColorType> span_allocator_type;
         typedef agg::span_gradient<ColorType, interpolator_type, GradientType, color_array_type> span_gradient_type;
-        typedef agg::renderer_scanline_aa<renderer_base_type, span_allocator_type, span_gradient_type> renderer_gradient_type;
         typedef agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_adaptor_type;
+        typedef agg::renderer_base<alpha_adaptor_type> renderer_base_type;
+        typedef agg::renderer_scanline_aa<renderer_base_type, span_allocator_type, span_gradient_type> renderer_gradient_type;
 
         GradientType  gradient_func;
         interpolator_type   span_interpolator(_mtx);
@@ -847,15 +847,13 @@ public:
 
     template<typename ColorType, typename GradientType>
     void strokeGradient(agg::pod_auto_array<ColorType, 256> color_array, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
-        typedef agg::renderer_base<agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8>> renderer_base_type;
         typedef agg::pod_auto_array<ColorType, 256> color_array_type;
         typedef agg::span_interpolator_linear<> interpolator_type;
         typedef agg::span_allocator<ColorType> span_allocator_type;
-        typedef agg::span_gradient<ColorType, interpolator_type,
-                                   GradientType, color_array_type> span_gradient_type;
-        typedef agg::renderer_scanline_aa<renderer_base_type,
-                                          span_allocator_type, span_gradient_type> renderer_gradient_type;
+        typedef agg::span_gradient<ColorType, interpolator_type, GradientType, color_array_type> span_gradient_type;
         typedef agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_adaptor_type;
+        typedef agg::renderer_base<alpha_adaptor_type> renderer_base_type;
+        typedef agg::renderer_scanline_aa<renderer_base_type, span_allocator_type, span_gradient_type> renderer_gradient_type;
 
         GradientType gradient_func;
         interpolator_type span_interpolator(_mtx);
@@ -893,8 +891,8 @@ public:
         paint(*this);
     }
 
-    template <typename S>
-    void paint(S &pth){
+    template <typename PathType>
+    void paint(PathType &pth){
         typedef agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_adaptor_type;
 
         raster->add_path(pth, pathid);

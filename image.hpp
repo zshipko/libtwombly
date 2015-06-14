@@ -1,7 +1,6 @@
 #ifndef TWOMBLY_IMAGE_HEADER
 #define TWOMBLY_IMAGE_HEADER
 
-#include <bitset>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,18 +13,19 @@
 
 namespace tw {
 
-using namespace cv;
 
-#ifndef NO_OPENCV
-// simple content based hash
-std::bitset<64> hash(Mat const &im);
-#else
+#if defined(NO_OPENCV) || !defined(CV_8U)
 class Point {
+public:
     double x, y;
 };
+
 class Rectangle {
+public:
     double x, y, width, height;
 };
+#else // opencv is included
+using namespace cv;
 #endif
 
 } //namespace tw
