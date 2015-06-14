@@ -10,7 +10,7 @@ static agg::path_storage _get_path(drawing d){
 }
 #endif
 
-drawing draw_createPath(){
+drawing draw_create_path(){
     drawing d;
     d.handle = new Drawing<rgba32>();
     d.bits_per_channel = 8;
@@ -131,56 +131,56 @@ void draw_free(drawing *d){
     d->handle = NULL;
 }
 
-bool draw_getAntialias(drawing d){
+bool draw_get_antialias(drawing d){
     DRAWING(d, antialias);
 }
 
-void draw_setAntialias(drawing d, bool a){
+void draw_set_antialias(drawing d, bool a){
     DRAWING(d, antialias, a);
 }
 
-void draw_setLineWidth(drawing d, double w){
-    DRAWING(d, lineWidth, w);
+void draw_set_line_width(drawing d, double w){
+    DRAWING(d, line_width, w);
 }
 
-double draw_getLineWidth(drawing d){
-    DRAWING(d, lineWidth);
+double draw_get_line_width(drawing d){
+    DRAWING(d, line_width);
 }
 
-void draw_setMiterLimit(drawing d, double m){
-    DRAWING(d, miterLimit, m);
+void draw_set_miter_limit(drawing d, double m){
+    DRAWING(d, miter_limit, m);
 }
 
-double draw_getMiterLimit(drawing d){
-    DRAWING(d, miterLimit);
+double draw_get_miter_limit(drawing d){
+    DRAWING(d, miter_limit);
 }
 
-void draw_setLineJoin(drawing d, line_join_style lj){
-    DRAWING(d, lineJoin, lj);
+void draw_set_line_join(drawing d, line_join_style lj){
+    DRAWING(d, line_join, lj);
 }
 
-line_join_style draw_getLineJoin(drawing d){
-    DRAWING(d, lineJoin);
+line_join_style draw_get_line_join(drawing d){
+    DRAWING(d, line_join);
 }
 
-void draw_setLineCap(drawing d, line_cap_style lc){
-    DRAWING(d, lineCap, lc);
+void draw_set_line_cap(drawing d, line_cap_style lc){
+    DRAWING(d, line_cap, lc);
 }
 
-line_cap_style draw_getLineCap(drawing d){
-    DRAWING(d, lineCap);
+line_cap_style draw_get_line_cap(drawing d){
+    DRAWING(d, line_cap);
 }
 
-void draw_setActivePath(drawing d, unsigned int p){
-    DRAWING(d, activePath, p);
+void draw_set_active_path(drawing d, unsigned int p){
+    DRAWING(d, active_path, p);
 }
 
-unsigned int draw_getActivePath(drawing d){
-    DRAWING(d, activePath);
+unsigned int draw_get_active_path(drawing d){
+    DRAWING(d, active_path);
 }
 
-unsigned int draw_newPath(drawing d){
-    DRAWING(d, newPath);
+unsigned int draw_new_path(drawing d){
+    DRAWING(d, new_path);
 }
 
 void draw_rotate(drawing d, double angle){
@@ -203,20 +203,20 @@ void draw_skew(drawing d, double x, double y){
     DRAWING(d, skew, x, y);
 }
 
-void draw_clearTransforms(drawing d){
-    DRAWING(d, clearTransforms);
+void draw_clear_transforms(drawing d){
+    DRAWING(d, clear_transforms);
 }
 
-void draw_closePolygon(drawing d){
-    DRAWING(d, closePolygon);
+void draw_close_polygon(drawing d){
+    DRAWING(d, close_polygon);
 }
 
-void draw_endPolygon(drawing d){
-    DRAWING(d, endPolygon);
+void draw_end_polygon(drawing d){
+    DRAWING(d, end_polygon);
 }
 
-void draw_invertPolygon(drawing d){
-    DRAWING(d, invertPolygon);
+void draw_invert_polygon(drawing d){
+    DRAWING(d, invert_polygon);
 }
 
 void draw_reset(drawing d){
@@ -227,8 +227,8 @@ void draw_clear(drawing d, uint8_t r, uint8_t g, uint8_t b, uint8_t a){
     DRAWING(d, clear, r, g, b, a);
 }
 
-void draw_removePaths(drawing d){
-    DRAWING(d, removePaths);
+void draw_remove_all(drawing d){
+    DRAWING(d, remove_all);
 }
 
 void draw_ellipse(drawing d, double a, double b, double c, double e){
@@ -243,88 +243,88 @@ void draw_clip(drawing d, double x, double y, double w, double h){
     DRAWING(d, clip, x, y, w, h);
 }
 
-void draw_resetClip(drawing d){
-    DRAWING(d, resetClip);
+void draw_reset_clip(drawing d){
+    DRAWING(d, reset_clip);
 }
 
-double draw_lastX(drawing d){
-    DRAWING(d, lastX);
+double draw_last_x(drawing d){
+    DRAWING(d, last_x);
 }
 
-double draw_lastY(drawing d){
-    DRAWING(d, lastY);
+double draw_last_y(drawing d){
+    DRAWING(d, last_y);
 }
 
-void draw_relToAbs(drawing d, double *x, double *y){
-    DRAWING(d, relToAbs, x, y);
+void draw_rel_to_abs(drawing d, double *x, double *y){
+    DRAWING(d, rel_to_abs, x, y);
 }
 
-void draw_moveTo(drawing d, double x, double y){
-    DRAWING(d, moveTo, x, y);
+void draw_move_to(drawing d, double x, double y){
+    DRAWING(d, move_to, x, y);
 }
 
-void draw_moveRel(drawing d, double x, double y){
-    DRAWING(d, moveRel, x, y);
+void draw_move_rel(drawing d, double x, double y){
+    DRAWING(d, move_rel, x, y);
 }
 
-void draw_lineTo(drawing d, double x, double y){
-    DRAWING(d, lineTo, x, y);
+void draw_line_to(drawing d, double x, double y){
+    DRAWING(d, line_to, x, y);
 }
 
-void draw_lineRel(drawing d, double x, double y){
-    DRAWING(d, lineRel, x, y);
+void draw_line_rel(drawing d, double x, double y){
+    DRAWING(d, line_rel, x, y);
 }
 
-void draw_hLineTo(drawing d, double a){
-    DRAWING(d, hLineTo, a);
+void draw_hline_to(drawing d, double a){
+    DRAWING(d, hline_to, a);
 }
 
-void draw_hLineRel(drawing d, double a){
-    DRAWING(d, hLineRel, a);
+void draw_hline_rel(drawing d, double a){
+    DRAWING(d, hline_rel, a);
 }
 
-void draw_vLineTo(drawing d, double a){
-    DRAWING(d, vLineTo, a);
+void draw_vline_to(drawing d, double a){
+    DRAWING(d, vline_to, a);
 }
 
-void draw_vLineRel(drawing d, double a){
-    DRAWING(d, vLineRel, a);
+void draw_vline_rel(drawing d, double a){
+    DRAWING(d, vline_rel, a);
 }
 
-void draw_curveTo2(drawing d, double x, double y){
-    DRAWING(d, curveTo, x, y);
+void draw_curve_to2(drawing d, double x, double y){
+    DRAWING(d, curve_to, x, y);
 }
 
-void draw_curveRel2(drawing d, double x, double y){
-    DRAWING(d, curveRel, x, y);
+void draw_curve_rel2(drawing d, double x, double y){
+    DRAWING(d, curve_rel, x, y);
 }
 
-void draw_curveTo4(drawing d, double x, double y, double x1, double y1){
-    DRAWING(d, curveTo, x, y, x1, y1);
+void draw_curve_to4(drawing d, double x, double y, double x1, double y1){
+    DRAWING(d, curve_to, x, y, x1, y1);
 }
 
-void draw_curveRel4(drawing d, double x, double y, double x1, double y1){
-    DRAWING(d, curveRel, x, y, x1, y1);
+void draw_curve_rel4(drawing d, double x, double y, double x1, double y1){
+    DRAWING(d, curve_rel, x, y, x1, y1);
 }
 
-void draw_curveTo6(drawing d, double x, double y, double x1, double y1, double a, double b){
-    DRAWING(d, curveTo, x, y, x1, y1, a, b);
+void draw_curve_to6(drawing d, double x, double y, double x1, double y1, double a, double b){
+    DRAWING(d, curve_to, x, y, x1, y1, a, b);
 }
 
-void draw_curveRel6(drawing d, double x, double y, double x1, double y1, double a, double b){
-    DRAWING(d, curveRel, x, y, x1, y1, a, b);
+void draw_curve_rel6(drawing d, double x, double y, double x1, double y1, double a, double b){
+    DRAWING(d, curve_rel, x, y, x1, y1, a, b);
 }
 
-void draw_arcTo(drawing d, double x, double y, double x1, double y1, double a){
-    DRAWING(d, arcTo, x, y, x1, y1, a, false, false);
+void draw_arc_to(drawing d, double x, double y, double x1, double y1, double a){
+    DRAWING(d, arc_to, x, y, x1, y1, a, false, false);
 }
 
-void draw_arcRel(drawing d, double x, double y, double x1, double y1, double a){
-    DRAWING(d, arcRel, x, y, x1, y1, a, false, false);
+void draw_arc_rel(drawing d, double x, double y, double x1, double y1, double a){
+    DRAWING(d, arc_rel, x, y, x1, y1, a, false, false);
 }
 
-double draw_textSimple(drawing d, double x, double y, const char *str, int size, double width, const char *font){
-    DRAWING(d, textSimple, x, y, str, size, width, font);
+double draw_text_simple(drawing d, double x, double y, const char *str, int size, double width, const char *font){
+    DRAWING(d, text_simple, x, y, str, size, width, font);
 }
 
 #ifndef NO_FREETYPE
@@ -333,8 +333,8 @@ double draw_text(drawing d, double x, double y, const char *str, const char * fo
 }
 #endif
 
-void draw_setColor(drawing d, uint8_t r, uint8_t g, uint8_t b, uint8_t a){
-    DRAWING(d, setColor, r, g, b, a);
+void draw_set_color(drawing d, uint8_t r, uint8_t g, uint8_t b, uint8_t a){
+    DRAWING(d, set_color, r, g, b, a);
 }
 
 void draw_fill(drawing d){
@@ -353,72 +353,72 @@ void draw_paint(drawing d){
     DRAWING(d, paint);
 }
 
-void draw_autoClose(drawing d, bool c){
-    DRAWING(d, autoClose, c);
+void draw_auto_close(drawing d, bool c){
+    DRAWING(d, auto_close, c);
 }
 
-bool draw_inPath(drawing d, double x, double y){
-    DRAWING(d, inPath, x, y);
+bool draw_in_path(drawing d, double x, double y){
+    DRAWING(d, in_path, x, y);
 }
 
-unsigned int draw_getVertex(drawing d, unsigned int idx, double *x, double *y){
-    DRAWING(d, getVertex, idx, x, y);
+unsigned int draw_get_vertex(drawing d, unsigned int idx, double *x, double *y){
+    DRAWING(d, vertex, idx, x, y);
 }
 
-unsigned int draw_nextVertex(drawing d, double *x, double *y){
-    DRAWING(d, getVertex, x, y);
+unsigned int draw_next_vertex(drawing d, double *x, double *y){
+    DRAWING(d, vertex, x, y);
 }
 
-unsigned int draw_getCommand(drawing d, unsigned int idx){
-    DRAWING(d, getCommand, idx);
+unsigned int draw_get_command(drawing d, unsigned int idx){
+    DRAWING(d, command, idx);
 }
 
-unsigned int draw_lastVertex(drawing d, double *x, double *y){
-    DRAWING(d, lastVertex, x, y);
+unsigned int draw_last_vertex(drawing d, double *x, double *y){
+    DRAWING(d, last_vertex, x, y);
 }
 
-unsigned int draw_prevVertex(drawing d, double *x, double *y){
-    DRAWING(d, prevVertex, x, y);
+unsigned int draw_prev_vertex(drawing d, double *x, double *y){
+    DRAWING(d, prev_vertex, x, y);
 }
 
-void draw_modifyVertex(drawing d, unsigned int idx, double x, double y, unsigned int cmd){
-    DRAWING(d, modifyVertex, idx, x, y, cmd);
+void draw_modify_vertex(drawing d, unsigned int idx, double x, double y, unsigned int cmd){
+    DRAWING(d, modify_vertex, idx, x, y, cmd);
 }
 
-unsigned int draw_totalVertices(drawing d){
-    DRAWING(d, totalVertices);
+unsigned int draw_total_vertices(drawing d){
+    DRAWING(d, total_vertices);
 }
 
 void draw_join(drawing a, drawing b){
     agg::path_storage pth = _get_path(b);
-    DRAWING(a, joinPath, pth);
+    DRAWING(a, join_path, pth);
 }
 
 void draw_concat(drawing a, drawing b){
     agg::path_storage pth = _get_path(b);
-    DRAWING(a, concatPath, pth);
+    DRAWING(a, concat_path, pth);
 }
 
-void draw_alphaMaskInit(drawing a){
-    DRAWING(a, alphaMaskInit);
+void draw_alpha_mask_init(drawing a){
+    DRAWING(a, alpha_mask_init);
 }
 
-void draw_alphaMaskFree(drawing a){
-    DRAWING(a, alphaMaskFree);
+void draw_alpha_mask_free(drawing a){
+    DRAWING(a, alpha_mask_free);
 }
 
-void draw_alphaMaskFill(drawing a, uint8_t v){
-    DRAWING(a, alphaMaskFill, v);
+void draw_alpha_mask_fill(drawing a, uint8_t v){
+    DRAWING(a, alpha_mask_fill, v);
 }
 
-uint8_t draw_alphaMaskGet(drawing a, int32_t x, int32_t y){
-    DRAWING(a, alphaMaskGet, x, y);
+uint8_t draw_alpha_mask_get(drawing a, int32_t x, int32_t y){
+    DRAWING(a, alpha_mask_get, x, y);
 }
 
-uint8_t *draw_alphaMaskPtr(drawing a){
-    DRAWING(a, alphaMaskPtr);
+uint8_t *draw_alpha_mask_ptr(drawing a){
+    DRAWING(a, alpha_mask_ptr);
 }
 
-uint8_t *draw_alphaMaskPtrOffs(drawing a, int32_t x, int32_t y){
-    DRAWING(a, alphaMaskPtrOffs, x, y);
+uint8_t *draw_alpha_mask_ptr_offs(drawing a, int32_t x, int32_t y){
+    DRAWING(a, alpha_mask_ptr_offs, x, y);
 }

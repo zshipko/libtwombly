@@ -11,7 +11,7 @@ using namespace tw;
 #define BLUE 0
 #define ALPHA 3
 
-int opencvErrorHandler(int status, const char* func_name, const char* err_msg,
+int opencv_error_handler(int status, const char* func_name, const char* err_msg,
                    const char* file_name, int line, void*)
 {
     return 0;
@@ -59,35 +59,36 @@ const lest::test drawing_test[] = {
     CASE ( "Path" ) {
         Mat3b im(500, 500);
         auto d = draw(im);
-        d.newPath();
-        d.setColor(255, 255, 255);
-        d.moveTo(10, 10);
-        d.lineTo(490, 490);
+        d.new_path();
+        d.set_color(255, 255, 255);
+        d.move_to(10, 10);
+        d.line_to(490, 490);
+        d.stroke();
 
-        int pathid = d.activePath();
+        int pathid = d.active_path();
 
-        EXPECT (d.totalVertices() == 2);
+        EXPECT (d.total_vertices() == 2);
 
         double x, y;
-        d.getVertex(1, &x, &y);
+        d.vertex(1, &x, &y);
         EXPECT(x == 490);
         EXPECT(y == 490);
 
-        d.modifyVertex(1, 248, 249);
-        d.getVertex(1, &x, &y);
+        d.modify_vertex(1, 248, 249);
+        d.vertex(1, &x, &y);
         EXPECT(x == 248);
         EXPECT(y == 249);
 
-        d.newPath();
-        EXPECT (d.activePath() != pathid);
-        EXPECT (d.activePath() > pathid);
+        d.new_path();
+        EXPECT (d.active_path() != pathid);
+        EXPECT (d.active_path() > pathid);
 
-        d.newPath();
-        d.lineWidth(2);
+        d.new_path();
+        d.line_width(2);
         d.ellipse(250, 250, 100, 100);
         d.stroke();
 
-        d.activePath(pathid);
+        d.active_path(pathid);
         d.stroke();
 
         try{
@@ -105,9 +106,9 @@ const lest::test drawing_test[] = {
         im2.setTo(Scalar(255, 255, 255));
         auto d = draw(im2);
 
-        d.setColor(255, 0, 0);
-        d.moveTo(100, 100);
-        d.curveTo(400, 400, 100, 320);
+        d.set_color(255, 0, 0);
+        d.move_to(100, 100);
+        d.curve_to(400, 400, 100, 320);
         d.stroke();
 
         try {
@@ -118,11 +119,11 @@ const lest::test drawing_test[] = {
 
         }
 
-        d.newPath();
+        d.new_path();
         d.clear(255, 255, 255);
-        d.setColor(0, 255, 0);
-        d.moveTo(100, 100);
-        d.curveTo(400, 400, 150, 320);
+        d.set_color(0, 255, 0);
+        d.move_to(100, 100);
+        d.curve_to(400, 400, 150, 320);
         d.stroke();
 
         try{
@@ -139,20 +140,20 @@ const lest::test drawing_test[] = {
         im2.setTo(Scalar(255, 255, 255));
         auto d = draw(im2);
 
-        d.setColor(255, 0, 0);
-        d.moveTo(100, 100);
-        d.curveTo(400, 400, 100, 320);
+        d.set_color(255, 0, 0);
+        d.move_to(100, 100);
+        d.curve_to(400, 400, 100, 320);
         d.stroke();
 
-        d.newPath();
+        d.new_path();
         d.ellipse(250, 250, 250, 250);
 
         Gradient<Color16> g;
-        g.addStop(Color16(255<<8, 0, 0, 127<<8));
-        g.addStop(Color16(0, 255<<8, 0, 127<<8));
-        g.addStop(Color16(0, 0, 255<<8, 127<<8));
+        g.add_stop(Color16(255<<8, 0, 0, 127<<8));
+        g.add_stop(Color16(0, 255<<8, 0, 127<<8));
+        g.add_stop(Color16(0, 0, 255<<8, 127<<8));
 
-        d.fillGradient(g, 0, 300, gradient_type_y);
+        d.fill_gradient(g, 0, 300, gradient_type_y);
         EXPECT((im2.at<Scalar>(250, 250)[0] > 0));
 
         try{
@@ -166,6 +167,6 @@ const lest::test drawing_test[] = {
 };
 
 int main(int argc, char **argv){
-    cv::redirectError(opencvErrorHandler);
+    cv::redirectError(opencv_error_handler);
     lest::run(drawing_test, argc, argv);
 }
