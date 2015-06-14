@@ -67,6 +67,10 @@ void draw_moveTo(drawing, double, double);
 void draw_moveRel(drawing, double, double);
 void draw_lineTo(drawing, double, double);
 void draw_lineRel(drawing, double, double);
+void draw_hLineTo(drawing d, double a);
+void draw_hLineRel(drawing d, double a);
+void draw_vLineTo(drawing d, double a);
+void draw_vLineRel(drawing d, double a);
 void draw_curveTo2(drawing, double, double);
 void draw_curveRel2(drawing, double, double);
 void draw_curveTo4(drawing, double, double, double, double);
@@ -94,10 +98,17 @@ unsigned int draw_prevVertex(drawing, double *, double *);
 void draw_modifyVertex(drawing, unsigned int, double, double, unsigned int);
 unsigned int draw_totalVertices(drawing);
 
+void draw_alphaLayerInit(drawing a);
+void draw_alphaLayerFree(drawing a);
+void draw_alphaLayerFill(drawing a, uint8_t v);
+uint8_t draw_alphaLayerGet(drawing a, int32_t x, int32_t y);
+uint8_t *draw_alphaLayerPtr(drawing a);
+uint8_t *draw_alphaLayerPtrOffs(drawing a, int32_t x, int32_t y);
+
 void draw_join(drawing, drawing);
 void draw_concat(drawing, drawing);
-void draw_fillPattern (drawing d, int64_t width, int64_t height, int channels, uint8_t *data);
-void draw_strokePattern (drawing d, int64_t width, int64_t height, int channels, uint8_t *data);
+void draw_fillPattern (drawing d, drawing e);
+void draw_strokePattern (drawing d, drawing e);
 
 typedef struct transform_matrix {
     void *handle;

@@ -38,20 +38,20 @@ inline Color16 rgb_16(uint8_t r, uint8_t g, uint8_t b){
 }
 
 #ifndef NO_OPENCV
-Drawing<bgra32> draw(Mat4b& im){
-    return Drawing<bgra32>(im);
+Drawing<bgra32> draw(Mat4b& im, uint8_t *alpha_buf){
+    return Drawing<bgra32>(im, alpha_buf);
 }
 
-Drawing<bgr24>draw(Mat3b& im){
-    return Drawing<bgr24>(im);
+Drawing<bgr24>draw(Mat3b& im, uint8_t *alpha_buf){
+    return Drawing<bgr24>(im, alpha_buf);
 }
 
-Drawing<bgra64> draw(Mat4w& im){
-    return Drawing<bgra64>(im);
+Drawing<bgra64> draw(Mat4w& im, uint8_t *alpha_buf){
+    return Drawing<bgra64>(im, alpha_buf);
 }
 
-Drawing<bgr48> draw(Mat3w& im){
-    return Drawing<bgr48>(im);
+Drawing<bgr48> draw(Mat3w& im, uint8_t *alpha_buf){
+    return Drawing<bgr48>(im, alpha_buf);
 }
 #endif
 

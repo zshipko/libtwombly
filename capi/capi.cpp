@@ -283,6 +283,22 @@ void draw_lineRel(drawing d, double x, double y){
     DRAWING(d, lineRel, x, y);
 }
 
+void draw_hLineTo(drawing d, double a){
+    DRAWING(d, hLineTo, a);
+}
+
+void draw_hLineRel(drawing d, double a){
+    DRAWING(d, hLineRel, a);
+}
+
+void draw_vLineTo(drawing d, double a){
+    DRAWING(d, vLineTo, a);
+}
+
+void draw_vLineRel(drawing d, double a){
+    DRAWING(d, vLineRel, a);
+}
+
 void draw_curveTo2(drawing d, double x, double y){
     DRAWING(d, curveTo, x, y);
 }
@@ -389,4 +405,28 @@ void draw_join(drawing a, drawing b){
 void draw_concat(drawing a, drawing b){
     agg::path_storage pth = _get_path(b);
     DRAWING(a, concatPath, pth);
+}
+
+void draw_alphaLayerInit(drawing a){
+    DRAWING(a, alphaLayerInit);
+}
+
+void draw_alphaLayerFree(drawing a){
+    DRAWING(a, alphaLayerFree);
+}
+
+void draw_alphaLayerFill(drawing a, uint8_t v){
+    DRAWING(a, alphaLayerFill, v);
+}
+
+uint8_t draw_alphaLayerGet(drawing a, int32_t x, int32_t y){
+    DRAWING(a, alphaLayerGet, x, y);
+}
+
+uint8_t *draw_alphaLayerPtr(drawing a){
+    DRAWING(a, alphaLayerPtr);
+}
+
+uint8_t *draw_alphaLayerPtrOffs(drawing a, int32_t x, int32_t y){
+    DRAWING(a, alphaLayerPtrOffs, x, y);
 }
