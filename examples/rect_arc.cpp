@@ -5,7 +5,7 @@ using namespace tw;
 int main(int argc, char *argv[]){
     Mat3b im(400, 400);
 
-    auto ctx = DrawingRGB24(im);
+    auto ctx = draw(im);
 
     ctx.newPath();
     ctx.setColor(0, 0, 255);
