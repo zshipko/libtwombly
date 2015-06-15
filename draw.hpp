@@ -662,7 +662,6 @@ public:
         agg::conv_dash<agg::conv_curve<agg::path_storage>> p(curve);
         p.add_dash(a, b);
         agg::conv_stroke<agg::conv_dash<agg::conv_curve<agg::path_storage>>> pth(p);
-
         pth.width(_width);
         pth.line_cap((agg::line_cap_e)_linecap);
         pth.line_join((agg::line_join_e)_linejoin);
@@ -881,6 +880,8 @@ public:
                 agg::render_scanlines(*raster, *sl, render_bin);
             }
         }
+
+        remove_all();
     }
 
     inline void auto_close(bool c){
