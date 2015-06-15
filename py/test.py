@@ -2,7 +2,6 @@ import unittest
 from twombly import *
 from skimage.io import imsave
 
-
 class TestDrawing(unittest.TestCase):
     def setUp(self):
         self.image = new_image(1200, 800)
@@ -25,6 +24,7 @@ class TestDrawing(unittest.TestCase):
         self.assertEquals(self.image[11, 11][0], 255)
         self.assertEquals(self.image[79, 119][0], 255)
         self.assertEquals(self.image[79, 119][0], 255)
+        imsave("lines.png", self.image)
 
     def test_draw_rect(self):
         self.drawing.set_color(0, 255, 0)
@@ -40,6 +40,17 @@ class TestDrawing(unittest.TestCase):
         arr += 10
         m.array(arr)
         self.assertEquals(self.drawing.matrix().array()[0], 10)
+
+    def test_gradient(self):
+        g = Gradient()
+        g.add_stop(Color(255, 0, 0, 255))
+        g.add_stop(Color(0, 255, 0, 255))
+        g.add_stop(Color(0, 0, 255, 255))
+        self.drawing.rect(10, 10, 20, 20)
+        self.drawing.set_line_width(10)
+        self.drawing.fill_gradient(g, 0, 800, GRADIENT_Y)
+        self.assertEqual(self.image[11, 11][0], 248, 10)
+
 
 if __name__ == '__main__':
     unittest.main()

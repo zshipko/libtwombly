@@ -864,6 +864,7 @@ public:
         q.line_join((agg::line_join_e)_linejoin);
         q.miter_limit(_miterlimit);
         agg::conv_transform<agg::conv_stroke<agg::conv_curve<agg::path_storage>>> m(q, mtx);
+        raster->add_path(m, pathid);
 
 
         if (alpha_mask != nullptr){
@@ -921,9 +922,22 @@ public:
         raster->auto_close(c);
     }
 
-    // Check if current point is in rasterizer
-    inline bool in_path(double x, double y){
+    // Check if point is in rasterizer
+    // note: perserve must be set to true for this to work
+    inline bool is_drawn(double x, double y){
         return raster->hit_test(x, y);
+    }
+
+    // Check if current point is in current path
+    inline bool in_path(double x, double y){
+        double a, b;
+        for(auto i = 0; i < agg::path_storage::total_vertices(); i++){
+            agg::path_storage::vertex(i, &a, &b);
+            if (a == x && b == y)
+                return true;
+        }
+
+        return false;
     }
 };
 

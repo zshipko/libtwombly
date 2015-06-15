@@ -116,6 +116,7 @@ void draw_dash_color(drawing, Pixel, double, double);
 void draw_paint(drawing);
 void draw_auto_close(drawing, bool);
 bool draw_in_path(drawing, double, double);
+bool draw_is_drawn(drawing d, double x, double y);
 unsigned int draw_get_vertex(drawing, unsigned int, double *, double *);
 unsigned int draw_next_vertex(drawing, double *, double *);
 unsigned int draw_get_command(drawing, unsigned int);

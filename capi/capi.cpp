@@ -5,8 +5,8 @@ using namespace tw;
 #endif
 
 #ifdef __cplusplus
-static agg::path_storage _get_path(drawing d){
-    return *(agg::path_storage*)d.handle;
+static agg::path_storage *_get_path(drawing d){
+    return (agg::path_storage*)d.handle;
 }
 #endif
 
@@ -236,11 +236,11 @@ void draw_clear_transforms(drawing d){
 }
 
 void draw_close_polygon(drawing d){
-    _get_path(d).close_polygon();
+    _get_path(d)->close_polygon();
 }
 
 void draw_end_polygon(drawing d){
-    _get_path(d).end_poly();
+    _get_path(d)->end_poly();
 }
 
 void draw_invert_polygon(drawing d){
@@ -256,7 +256,7 @@ void draw_clear(drawing d, uint8_t r, uint8_t g, uint8_t b, uint8_t a){
 }
 
 void draw_remove_all(drawing d){
-    _get_path(d).remove_all();
+    _get_path(d)->remove_all();
 }
 
 void draw_ellipse(drawing d, double a, double b, double c, double e){
@@ -280,7 +280,7 @@ double draw_last_x(drawing d){
         return -1;
     }
 
-    return _get_path(d).last_x();
+    return _get_path(d)->last_x();
 }
 
 double draw_last_y(drawing d){
@@ -288,43 +288,43 @@ double draw_last_y(drawing d){
         return -1;
     }
 
-    return _get_path(d).last_y();
+    return _get_path(d)->last_y();
 }
 
 void draw_rel_to_abs(drawing d, double *x, double *y){
-    _get_path(d).rel_to_abs(x, y);
+    _get_path(d)->rel_to_abs(x, y);
 }
 
 void draw_move_to(drawing d, double x, double y){
-    _get_path(d).move_to(x, y);
+    _get_path(d)->move_to(x, y);
 }
 
 void draw_move_rel(drawing d, double x, double y){
-    _get_path(d).move_rel(x, y);
+    _get_path(d)->move_rel(x, y);
 }
 
 void draw_line_to(drawing d, double x, double y){
-    _get_path(d).line_to(x, y);
+    _get_path(d)->line_to(x, y);
 }
 
 void draw_line_rel(drawing d, double x, double y){
-    _get_path(d).line_rel(x, y);
+    _get_path(d)->line_rel(x, y);
 }
 
 void draw_hline_to(drawing d, double a){
-    _get_path(d).hline_to(a);
+    _get_path(d)->hline_to(a);
 }
 
 void draw_hline_rel(drawing d, double a){
-    _get_path(d).hline_rel(a);
+    _get_path(d)->hline_rel(a);
 }
 
 void draw_vline_to(drawing d, double a){
-    _get_path(d).vline_to(a);
+    _get_path(d)->vline_to(a);
 }
 
 void draw_vline_rel(drawing d, double a){
-    _get_path(d).vline_rel(a);
+    _get_path(d)->vline_rel(a);
 }
 
 void draw_curve_to2(drawing d, double x, double y){
@@ -415,6 +415,12 @@ bool draw_in_path(drawing d, double x, double y){
     return false;
 }
 
+bool draw_is_drawn(drawing d, double x, double y){
+    DRAWING(d, is_drawn, x, y);
+
+    return false;
+}
+
 unsigned int draw_get_vertex(drawing d, unsigned int idx, double *x, double *y){
     DRAWING(d, vertex, idx, x, y);
 
@@ -456,13 +462,13 @@ unsigned int draw_total_vertices(drawing d){
 }
 
 void draw_join(drawing a, drawing b){
-    agg::path_storage pth = _get_path(b);
-    DRAWING(a, join_path, pth);
+    agg::path_storage *pth = _get_path(b);
+    DRAWING(a, join_path, (*pth));
 }
 
 void draw_concat(drawing a, drawing b){
-    agg::path_storage pth = _get_path(b);
-    DRAWING(a, concat_path, pth);
+    agg::path_storage *pth = _get_path(b);
+    DRAWING(a, concat_path, (*pth));
 }
 
 void draw_alpha_mask_init(drawing a){
