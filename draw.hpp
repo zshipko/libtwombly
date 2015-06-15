@@ -509,9 +509,14 @@ public:
      * last_y
      * modify_vertex
      * modify_command
+     * swap_vertices
+     * total_vertices
+     * vertex
+     * command
      * vertex
      * flip_x
      * flip_y
+     * translate_all_paths
      */
 
     template <typename ColorType>
