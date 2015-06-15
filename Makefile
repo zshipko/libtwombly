@@ -103,7 +103,7 @@ clean-libs:
 	rm -f libtwombly.so libtwombly.a libagg.so libagg.a
 
 %.o: %.cpp
-	$(CXX) -O3 -std=c++11 -c -fPIC $*.cpp -I. $(incl) -o $@
+	$(CXX) -O3 -fno-exceptions -std=c++11 -c -fPIC $*.cpp -I. $(incl) -o $@
 
 %.o: %.c
 	$(CC) -O3 -c -fPIC $*.c $(incl) -o $@
