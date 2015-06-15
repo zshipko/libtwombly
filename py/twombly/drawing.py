@@ -1,6 +1,6 @@
 from ctypes import *
 from numpy import zeros, arange, ndarray, asarray
-from twombly_colors import _colors
+from twombly.colors import _colors
 
 twombly = cdll.LoadLibrary("libtwombly.so")
 
@@ -76,8 +76,9 @@ _METHODS = dict(
                               DrawingType, [c_long, c_long, c_long, c_void_p]),
     free=_method_decl(twombly.draw_free, args=[POINTER(DrawingType)]),
     get_antialias=_method_decl(twombly.draw_get_antialias, c_bool),
-    set_antialias=_method_decl(twombly.draw_get_antialias,
-                               args=[DrawingType, c_bool]),
+    set_antialias=_method_decl(twombly.draw_get_antialias, args=[DrawingType, c_bool]),
+    get_preserve=_method_decl(twombly.draw_get_preserve, c_bool),
+    set_preserve=_method_decl(twombly.draw_get_preserve, args=[DrawingType, c_bool]),
     set_line_width=_method_decl(twombly.draw_set_line_width,
                                 args=[DrawingType, c_double]),
     get_line_width=_method_decl(twombly.draw_get_line_width, c_double),
@@ -162,6 +163,9 @@ _METHODS = dict(
                            args=[DrawingType, c_uint8, c_uint8, c_uint8, c_uint8]),
     fill=_method_decl(twombly.draw_fill),
     stroke=_method_decl(twombly.draw_stroke),
+    stroke_color=_method_decl(twombly.draw_stroke_color, args=[DrawingType, POINTER(c_float)]),
+    fill_color=_method_decl(twombly.draw_fill_color, args=[DrawingType, POINTER(c_float)]),
+    dash_color=_method_decl(twombly.draw_stroke_color, args=[DrawingType, POINTER(c_float), c_double, c_double]),
     dash=_method_decl(
         twombly.draw_dash, args=[DrawingType, c_double, c_double]),
     paint=_method_decl(twombly.draw_paint),
@@ -317,16 +321,6 @@ class Gradient(object):
             _gradient_free(pointer(self._gradient))
             self._gradient = None
 
-
-_HAS_SYMPY = False
-try:
-    import sympy as sym
-    from sympy import geometry as geo
-    from sympy.utilities import lambdify
-    _HAS_SYMPY = True
-except import_error:
-    pass
-
 def as_uint8(arr):
     return [c_uint8(int(i)) for i in arr]
 
@@ -355,6 +349,8 @@ class Color(ndarray):
         self[1] = green
         self[2] = blue
         self[3] = alpha
+
+        _as_parameter_ = (c_float * 4)(*self)
 
     def as_uint8(self):
         ''' convert red, green, blue, alpha to chars 0-255 '''
@@ -393,7 +389,7 @@ class Drawing(object):
                                                            arr.shape[2], arr.ravel().ctypes.data)
         else:
             self._drawing = None
-            raise value_error("bad image type")
+            raise ValueError("bad image type")
 
         self._as_parameter_ = self._drawing
 
@@ -450,60 +446,8 @@ class Drawing(object):
             self._free(pointer(self._drawing))
             self._drawing = None
 
-    def add_geometry(self, g, move_to=False, step=1):
-        ''' draw sympy equations '''
-        if not _HAS_SYMPY:
-            raise Exception("Not implemented, sympy not installed")
-
-        if isinstance(g, geo.Ellipse):
-            self.ellipse(g.center.x, g.center.y, g.hradius, g.vradius)
-        elif hasattr(g, 'vertices'):
-            try:
-                if move_to:
-                    self.move_to(g.vertices[0].x, g.vertices[0].y)
-                else:
-                    self.line_to(g.vertices[0].x, g.vertices[0].y)
-                for vertex in g.vertices[1:]:
-                    self.line_to(vertex.x, vertex.y)
-            except attribute_error:
-                if move_to:
-                    self.move_to(g.vertices[0][0], g.vertices[0][1])
-                else:
-                    self.line_to(g.vertices[0][0], g.vertices[0][1])
-                for vertex in g.vertices[1:]:
-                    self.line_to(vertex[0], vertex[1])
-        elif hasattr(g, 'points'):
-            if move_to:
-                self.move_to(g.points[0].x, g.points[0].y)
-            else:
-                self.line_to(g.points[0].x, g.points[0].y)
-            for point in g.points[1:]:
-                self.line_to(point.x, point.y)
-        elif hasattr(g, 'x') and hasattr(g, 'y'):
-            if move_to:
-                self.move_to(g.x, g.y)
-            else:
-                self.line_to(g.x, g.y)
-        elif hasattr(g, 'p1') and hasattr(g, 'p2'):
-            if move_to:
-                self.move_to(g.p1.x, g.py.y)
-            else:
-                self.line_to(g.p1.x, g.p1.y)
-        elif hasattr(g, 'functions'):
-            has_tried_move = False
-            for x_pos in arange(g.limits[1], g.limits[2]+1, step):
-                if not has_tried_move:
-                    has_tried_move = True
-                    if move_to:
-                        self.move_to(g.functions[0].subs(g.limits[0], x_pos),
-                                     g.functions[1].subs(g.limits[0], x_pos))
-                        continue
-                self.line_to(g.functions[0].subs(g.limits[0], x_pos),
-                             g.functions[1].subs(g.limits[0], x_pos))
-
     def matrix(self):
         return TransformMatrix(_transform_matrix_get(self))
-
 
 def draw(arr, *args, **kwargs):
     return Drawing(arr, *args, **kwargs)

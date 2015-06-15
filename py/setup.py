@@ -6,5 +6,5 @@ setup(name='twombly',
       author='Zach Shipko',
       author_email ='zachshipko@gmail.com',
       url='https://github.com/zshipko/libtwombly',
-      py_modules=['twombly', 'twombly_colors']
+      packages=['twombly']
 )

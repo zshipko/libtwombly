@@ -11,10 +11,9 @@ int main(int argc, char *argv[]){
     d.antialias(false);
 
     for (size_t i = 0; i < 255; i += 20){
-        d.new_path();
         d.ellipse(SIZE/2, SIZE/2, (SIZE/2)-10 - i, (SIZE/2)-10 - i);
-        d.set_color(i, 0, 255 - i / 2);
-        d.fill();
+        d.fill(Color(i, 0, 255 - i / 2));
+        d.paint();
     }
 
     imwrite("circles.tiff", im);

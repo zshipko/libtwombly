@@ -7,17 +7,15 @@ int main(int argc, char *argv[]){
 
     auto ctx = draw(im);
 
-    ctx.new_path();
-    ctx.set_color(0, 0, 255);
     ctx.rect(10, 20, 210, 120);
-    ctx.fill();
+    ctx.fill(Color(0, 0, 255));
 
     ctx.new_path();
-    ctx.set_color(200, 0, 255);
     ctx.line_width(10);
     ctx.move_to(50, 50);
     ctx.arc_to(70, 50, 10, 10, 0.3);
-    ctx.stroke();
+    ctx.stroke(Color(200, 0, 255));
+    ctx.paint();
 
     imwrite("rect_arc.tiff", im);
     return 0;

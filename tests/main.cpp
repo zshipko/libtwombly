@@ -59,6 +59,7 @@ const lest::test drawing_test[] = {
     CASE ( "Path" ) {
         Mat3b im(500, 500);
         auto d = draw(im);
+        d.preserve(true);
         d.new_path();
         d.set_color(255, 255, 255);
         d.move_to(10, 10);
@@ -90,6 +91,7 @@ const lest::test drawing_test[] = {
 
         d.active_path(pathid);
         d.stroke();
+        d.preserve(false);
 
         try{
             namedWindow("Path test");

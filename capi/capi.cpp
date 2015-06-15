@@ -10,6 +10,8 @@ static agg::path_storage _get_path(drawing d){
 }
 #endif
 
+
+
 drawing draw_create_path(){
     drawing d;
     d.handle = new Drawing<rgba32>();
@@ -129,6 +131,14 @@ void draw_free(drawing *d){
     }
 
     d->handle = NULL;
+}
+
+bool draw_get_preserve(drawing d){
+    DRAWING(d, preserve);
+}
+
+void draw_set_preserve(drawing d, bool p){
+    DRAWING(d, preserve, p);
 }
 
 bool draw_get_antialias(drawing d){
@@ -337,8 +347,16 @@ void draw_set_color(drawing d, uint8_t r, uint8_t g, uint8_t b, uint8_t a){
     DRAWING(d, set_color, r, g, b, a);
 }
 
+void draw_fill_color(drawing d, Pixel p){
+    DRAWING(d, fill, Color(p[0], p[1], p[2], p[3]));
+}
+
 void draw_fill(drawing d){
     DRAWING(d, fill);
+}
+
+void draw_stroke_color(drawing d, Pixel p){
+    DRAWING(d, stroke, Color(p[0], p[1], p[2], p[3]));
 }
 
 void draw_stroke(drawing d){
@@ -347,6 +365,10 @@ void draw_stroke(drawing d){
 
 void draw_dash(drawing d, double a, double b){
     DRAWING(d, dash, a, b);
+}
+
+void draw_dash_color(drawing d, Pixel p, double x, double y){
+    DRAWING(d, dash, Color(p[0], p[1], p[2], p[3]), x, y);
 }
 
 void draw_paint(drawing d){

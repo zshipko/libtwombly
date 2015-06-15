@@ -36,6 +36,7 @@ struct drawing {
 typedef struct drawing drawing;
 
 #define draw_frombimage(im) (im.depth == u16 ? draw_create16(im.width, im.height, im.channels, im.u16) : draw_create(im.width, im.height, im.channels, im.u8))
+#define TWOMBLY_LOG(s, ...) if(TWOMBLY_SET_LOG) fprintf(stderr, s,  __VA_ARGS__)
 
 typedef float* Pixel; //  __attribute__ ((vector_size (16)));
 
@@ -47,6 +48,8 @@ drawing draw_create_path();
 
 void draw_free(drawing *d);
 
+bool draw_get_preserve(drawing);
+void draw_set_preserve(drawing, bool);
 bool draw_get_antialias(drawing);
 void draw_set_antialias(drawing, bool);
 void draw_set_line_width(drawing, double);
@@ -101,8 +104,11 @@ double draw_text(drawing, double, double, const char *, const char *, double, do
 #endif
 void draw_set_color(drawing, uint8_t, uint8_t, uint8_t, uint8_t);
 void draw_fill(drawing);
+void draw_fill_color(drawing, Pixel);
 void draw_stroke(drawing);
+void draw_stroke_color(drawing, Pixel);
 void draw_dash(drawing, double, double);
+void draw_dash_color(drawing, Pixel, double, double);
 void draw_paint(drawing);
 void draw_auto_close(drawing, bool);
 bool draw_in_path(drawing, double, double);
@@ -176,7 +182,8 @@ void draw_stroke_gradient16(drawing d, gradient grad, int s, int x, gradient_typ
         else if(d.bits_per_channel == 16) return d.is_bgr ? ((Drawing<bgra64>*)d.handle)-> fn (__VA_ARGS__) : ((Drawing<rgba64>*)d.handle)-> fn (__VA_ARGS__); \
         break; \
     }\
-    throw std::runtime_error("bad drawing"); } while(0)
+    TWOMBLY_LOG("%s:%d bad drawing\n", __FILE__, __LINE__);
+} while(0)
 
 #ifdef __cplusplus
 }
