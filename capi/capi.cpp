@@ -10,8 +10,6 @@ static agg::path_storage _get_path(drawing d){
 }
 #endif
 
-
-
 drawing draw_create_path(){
     drawing d;
     d.handle = new Drawing<rgba32>();
@@ -135,6 +133,9 @@ void draw_free(drawing *d){
 
 bool draw_get_preserve(drawing d){
     DRAWING(d, preserve);
+
+    // default
+    return false;
 }
 
 void draw_set_preserve(drawing d, bool p){
@@ -143,6 +144,9 @@ void draw_set_preserve(drawing d, bool p){
 
 bool draw_get_antialias(drawing d){
     DRAWING(d, antialias);
+
+    // default
+    return false;
 }
 
 void draw_set_antialias(drawing d, bool a){
@@ -155,6 +159,9 @@ void draw_set_line_width(drawing d, double w){
 
 double draw_get_line_width(drawing d){
     DRAWING(d, line_width);
+
+    // default
+    return -1;
 }
 
 void draw_set_miter_limit(drawing d, double m){
@@ -163,6 +170,9 @@ void draw_set_miter_limit(drawing d, double m){
 
 double draw_get_miter_limit(drawing d){
     DRAWING(d, miter_limit);
+
+    // default
+    return -1;
 }
 
 void draw_set_line_join(drawing d, line_join_style lj){
@@ -171,6 +181,8 @@ void draw_set_line_join(drawing d, line_join_style lj){
 
 line_join_style draw_get_line_join(drawing d){
     DRAWING(d, line_join);
+
+    return miter_join;
 }
 
 void draw_set_line_cap(drawing d, line_cap_style lc){
@@ -179,6 +191,8 @@ void draw_set_line_cap(drawing d, line_cap_style lc){
 
 line_cap_style draw_get_line_cap(drawing d){
     DRAWING(d, line_cap);
+
+    return butt_cap;
 }
 
 void draw_set_active_path(drawing d, unsigned int p){
@@ -187,10 +201,14 @@ void draw_set_active_path(drawing d, unsigned int p){
 
 unsigned int draw_get_active_path(drawing d){
     DRAWING(d, active_path);
+
+    return 0;
 }
 
 unsigned int draw_new_path(drawing d){
     DRAWING(d, new_path);
+
+    return 0;
 }
 
 void draw_rotate(drawing d, double angle){
@@ -218,11 +236,11 @@ void draw_clear_transforms(drawing d){
 }
 
 void draw_close_polygon(drawing d){
-    DRAWING(d, close_polygon);
+    _get_path(d).close_polygon();
 }
 
 void draw_end_polygon(drawing d){
-    DRAWING(d, end_polygon);
+    _get_path(d).end_poly();
 }
 
 void draw_invert_polygon(drawing d){
@@ -238,7 +256,7 @@ void draw_clear(drawing d, uint8_t r, uint8_t g, uint8_t b, uint8_t a){
 }
 
 void draw_remove_all(drawing d){
-    DRAWING(d, remove_all);
+    _get_path(d).remove_all();
 }
 
 void draw_ellipse(drawing d, double a, double b, double c, double e){
@@ -258,47 +276,55 @@ void draw_reset_clip(drawing d){
 }
 
 double draw_last_x(drawing d){
-    DRAWING(d, last_x);
+    if (!d.handle){
+        return -1;
+    }
+
+    return _get_path(d).last_x();
 }
 
 double draw_last_y(drawing d){
-    DRAWING(d, last_y);
+    if (!d.handle){
+        return -1;
+    }
+
+    return _get_path(d).last_y();
 }
 
 void draw_rel_to_abs(drawing d, double *x, double *y){
-    DRAWING(d, rel_to_abs, x, y);
+    _get_path(d).rel_to_abs(x, y);
 }
 
 void draw_move_to(drawing d, double x, double y){
-    DRAWING(d, move_to, x, y);
+    _get_path(d).move_to(x, y);
 }
 
 void draw_move_rel(drawing d, double x, double y){
-    DRAWING(d, move_rel, x, y);
+    _get_path(d).move_rel(x, y);
 }
 
 void draw_line_to(drawing d, double x, double y){
-    DRAWING(d, line_to, x, y);
+    _get_path(d).line_to(x, y);
 }
 
 void draw_line_rel(drawing d, double x, double y){
-    DRAWING(d, line_rel, x, y);
+    _get_path(d).line_rel(x, y);
 }
 
 void draw_hline_to(drawing d, double a){
-    DRAWING(d, hline_to, a);
+    _get_path(d).hline_to(a);
 }
 
 void draw_hline_rel(drawing d, double a){
-    DRAWING(d, hline_rel, a);
+    _get_path(d).hline_rel(a);
 }
 
 void draw_vline_to(drawing d, double a){
-    DRAWING(d, vline_to, a);
+    _get_path(d).vline_to(a);
 }
 
 void draw_vline_rel(drawing d, double a){
-    DRAWING(d, vline_rel, a);
+    _get_path(d).vline_rel(a);
 }
 
 void draw_curve_to2(drawing d, double x, double y){
@@ -335,11 +361,15 @@ void draw_arc_rel(drawing d, double x, double y, double x1, double y1, double a)
 
 double draw_text_simple(drawing d, double x, double y, const char *str, int size, double width, const char *font){
     DRAWING(d, text_simple, x, y, str, size, width, font);
+
+    return -1;
 }
 
 #ifndef NO_FREETYPE
 double draw_text(drawing d, double x, double y, const char *str, const char * font, double w, double h){
     DRAWING(d, text, x, y, str, font, w, h);
+
+    return -1;
 }
 #endif
 
@@ -381,26 +411,38 @@ void draw_auto_close(drawing d, bool c){
 
 bool draw_in_path(drawing d, double x, double y){
     DRAWING(d, in_path, x, y);
+
+    return false;
 }
 
 unsigned int draw_get_vertex(drawing d, unsigned int idx, double *x, double *y){
     DRAWING(d, vertex, idx, x, y);
+
+    return 0;
 }
 
 unsigned int draw_next_vertex(drawing d, double *x, double *y){
     DRAWING(d, vertex, x, y);
+
+    return 0;
 }
 
 unsigned int draw_get_command(drawing d, unsigned int idx){
     DRAWING(d, command, idx);
+
+    return 0;
 }
 
 unsigned int draw_last_vertex(drawing d, double *x, double *y){
     DRAWING(d, last_vertex, x, y);
+
+    return 0;
 }
 
 unsigned int draw_prev_vertex(drawing d, double *x, double *y){
     DRAWING(d, prev_vertex, x, y);
+
+    return 0;
 }
 
 void draw_modify_vertex(drawing d, unsigned int idx, double x, double y, unsigned int cmd){
@@ -409,6 +451,8 @@ void draw_modify_vertex(drawing d, unsigned int idx, double x, double y, unsigne
 
 unsigned int draw_total_vertices(drawing d){
     DRAWING(d, total_vertices);
+
+    return 0;
 }
 
 void draw_join(drawing a, drawing b){
@@ -435,12 +479,18 @@ void draw_alpha_mask_fill(drawing a, uint8_t v){
 
 uint8_t draw_alpha_mask_get(drawing a, int32_t x, int32_t y){
     DRAWING(a, alpha_mask_get, x, y);
+
+    return 0;
 }
 
 uint8_t *draw_alpha_mask_ptr(drawing a){
     DRAWING(a, alpha_mask_ptr);
+
+    return nullptr;
 }
 
 uint8_t *draw_alpha_mask_ptr_offs(drawing a, int32_t x, int32_t y){
     DRAWING(a, alpha_mask_ptr_offs, x, y);
+
+    return nullptr;
 }

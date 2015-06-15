@@ -5,6 +5,10 @@
 
 #include "draw.hpp"
 
+#ifndef TWOMBLY_SET_LOG
+#define TWOMBLY_SET_LOG 1
+#endif
+
 #ifdef __cplusplus
 using namespace tw;
 extern "C" {
@@ -182,7 +186,6 @@ void draw_stroke_gradient16(drawing d, gradient grad, int s, int x, gradient_typ
         else if(d.bits_per_channel == 16) return d.is_bgr ? ((Drawing<bgra64>*)d.handle)-> fn (__VA_ARGS__) : ((Drawing<rgba64>*)d.handle)-> fn (__VA_ARGS__); \
         break; \
     }\
-    TWOMBLY_LOG("%s:%d bad drawing\n", __FILE__, __LINE__);
 } while(0)
 
 #ifdef __cplusplus
