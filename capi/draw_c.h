@@ -42,7 +42,7 @@ typedef struct drawing drawing;
 #define draw_frombimage(im) (im.depth == u16 ? draw_create16(im.width, im.height, im.channels, im.u16) : draw_create(im.width, im.height, im.channels, im.u8))
 #define TWOMBLY_LOG(s, ...) if(TWOMBLY_SET_LOG) fprintf(stderr, s,  __VA_ARGS__)
 
-typedef float* Pixel; //  __attribute__ ((vector_size (16)));
+typedef float* Pixel;
 
 drawing draw_create(int64_t width, int64_t height, int channels, uint8_t *data);
 drawing draw_create_bgr(int64_t width, int64_t height, int channels, uint8_t *data);
