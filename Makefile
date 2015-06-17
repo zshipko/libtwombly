@@ -43,6 +43,7 @@ UNAME=$(shell uname)
 freetype?=yes
 bimage?=no
 FREETYPE_PKG?=freetype2
+svg=no
 
 HAS_COMPILER=$(shell $(CXX) -v || printf "NO";)
 ifeq ($(HAS_COMPILER)X,NOX)
@@ -58,6 +59,14 @@ ifeq ($(HAS_FREETYPE)X$(freetype)X,0XyesX)
 else
 	FREETYPE_PKG=
 	incl+= -DNO_FREETYPE
+endif
+
+ifeq ($(svg)X,yesX)
+	agg_src+= ./agg/examples/svg_viewer/agg_svg_path_renderer.cpp ./agg/examples/svg_viewer/agg_svg_path_tokenizer.cpp ./agg/examples/svg_viewer/agg_svg_parser.cpp
+	agg_hdrs+= ./agg/examples/svg_viewer/*.h
+	libs+= -lexpat
+else
+	incl+= -fno-exceptions
 endif
 
 agg_obj=$(agg_src:.cpp=.o)
@@ -103,7 +112,7 @@ clean-libs:
 	rm -f libtwombly.so libtwombly.a libagg.so libagg.a
 
 %.o: %.cpp
-	$(CXX) -O3 -fno-exceptions -std=c++11 -c -fPIC $*.cpp -I. $(incl) -o $@
+	$(CXX) -O3  -std=c++11 -c -fPIC $*.cpp -I. $(incl) -o $@
 
 %.o: %.c
 	$(CC) -O3 -c -fPIC $*.c $(incl) -o $@

@@ -149,12 +149,6 @@ class Drawing : public agg::path_storage {
     line_cap_style _linecap;
     line_join_style _linejoin;
 
-    // rendering
-    agg::renderer_scanline_aa_solid<agg::renderer_base<DrawingType>> render_aa;
-    agg::renderer_scanline_bin_solid<agg::renderer_base<DrawingType>> render_bin;
-    agg::renderer_base<DrawingType> base;
-    agg::scanline32_p8 *sl;
-
     unsigned pathid; // stores current path
     Color current_color;
 
@@ -165,6 +159,12 @@ public:
     } size;
 
     DrawingType pix;
+
+    // rendering
+    agg::renderer_scanline_aa_solid<agg::renderer_base<DrawingType>> render_aa;
+    agg::renderer_scanline_bin_solid<agg::renderer_base<DrawingType>> render_bin;
+    agg::renderer_base<DrawingType> base;
+    agg::scanline32_p8 *sl;
     agg::rendering_buffer buffer;
     agg::rasterizer_scanline_aa<> *raster;
 

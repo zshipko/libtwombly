@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.3
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -23,8 +23,8 @@
 #include "agg_svg_path_tokenizer.h"
 
 
-namespace agg 
-{ 
+namespace agg
+{
 namespace svg
 {
 
@@ -56,7 +56,7 @@ namespace svg
     void path_tokenizer::init_char_mask(char* mask, const char* char_set)
     {
         memset(mask, 0, 256/8);
-        while(*char_set) 
+        while(*char_set)
         {
             unsigned c = unsigned(*char_set++) & 0xFF;
             mask[c >> 3] |= 1 << (c & 7);
@@ -70,7 +70,7 @@ namespace svg
         if(m_path == 0) return false;
 
         // Skip all white spaces and other garbage
-        while(*m_path && !is_command(*m_path) && !is_numeric(*m_path)) 
+        while(*m_path && !is_command(*m_path) && !is_numeric(*m_path))
         {
             if(!is_separator(*m_path))
             {
@@ -120,7 +120,7 @@ namespace svg
         char* buf_ptr = buf;
 
         // Copy all sign characters
-        while(buf_ptr < buf+255 && *m_path == '-' || *m_path == '+')
+        while((buf_ptr < buf+255 && *m_path == '-') || *m_path == '+')
         {
             *buf_ptr++ = *m_path++;
         }

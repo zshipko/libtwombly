@@ -2,8 +2,8 @@
 // Anti-Grain Geometry - Version 2.3
 // Copyright (C) 2002-2005 Maxim Shemanarev (http://www.antigrain.com)
 //
-// Permission to copy, use, modify, sell and distribute this software 
-// is granted provided this copyright notice appears in all copies. 
+// Permission to copy, use, modify, sell and distribute this software
+// is granted provided this copyright notice appears in all copies.
 // This software is provided "as is" without express or implied
 // warranty, and with no claim as to its suitability for any purpose.
 //
@@ -33,7 +33,7 @@ namespace svg
         int8u r, g, b, a;
     };
 
-    named_color colors[] = 
+    named_color colors[] =
     {
         { "aliceblue",240,248,255, 255 },
         { "antiquewhite",250,235,215, 255 },
@@ -183,7 +183,7 @@ namespace svg
         { "yellow",255,255,0, 255 },
         { "yellowgreen",154,205,50, 255 },
         { "zzzzzzzzzzz",0,0,0, 0 }
-    }; 
+    };
 
 
     //------------------------------------------------------------------------
@@ -217,7 +217,7 @@ namespace svg
     {
         char msg[1024];
 	    XML_Parser p = XML_ParserCreate(NULL);
-	    if(p == 0) 
+	    if(p == 0)
 	    {
 		    throw exception("Couldn't allocate memory for parser");
 	    }
@@ -241,7 +241,7 @@ namespace svg
             if(!XML_Parse(p, m_buf, len, done))
             {
                 sprintf(msg,
-                    "%s at line %d\n",
+                    "%s at line %ld\n",
                     XML_ErrorString(XML_GetErrorCode(p)),
                     XML_GetCurrentLineNumber(p));
                 throw exception(msg);
@@ -288,31 +288,31 @@ namespace svg
             self.m_path_flag = true;
         }
         else
-        if(strcmp(el, "rect") == 0) 
+        if(strcmp(el, "rect") == 0)
         {
             self.parse_rect(attr);
         }
         else
-        if(strcmp(el, "line") == 0) 
+        if(strcmp(el, "line") == 0)
         {
             self.parse_line(attr);
         }
         else
-        if(strcmp(el, "polyline") == 0) 
+        if(strcmp(el, "polyline") == 0)
         {
             self.parse_poly(attr, false);
         }
         else
-        if(strcmp(el, "polygon") == 0) 
+        if(strcmp(el, "polygon") == 0)
         {
             self.parse_poly(attr, true);
         }
         //else
-        //if(strcmp(el, "<OTHER_ELEMENTS>") == 0) 
+        //if(strcmp(el, "<OTHER_ELEMENTS>") == 0)
         //{
         //}
         // . . .
-    } 
+    }
 
 
     //------------------------------------------------------------------------
@@ -335,7 +335,7 @@ namespace svg
             self.m_path_flag = false;
         }
         //else
-        //if(strcmp(el, "<OTHER_ELEMENTS>") == 0) 
+        //if(strcmp(el, "<OTHER_ELEMENTS>") == 0)
         //{
         //}
         // . . .
@@ -352,7 +352,7 @@ namespace svg
         if(self.m_title_flag)
         {
             if(len + self.m_title_len > 255) len = 255 - self.m_title_len;
-            if(len > 0) 
+            if(len > 0)
             {
                 memcpy(self.m_title + self.m_title_len, s, len);
                 self.m_title_len += len;
@@ -386,9 +386,9 @@ namespace svg
 
         for(i = 0; attr[i]; i += 2)
         {
-            // The <path> tag can consist of the path itself ("d=") 
+            // The <path> tag can consist of the path itself ("d=")
             // as well as of other parameters like "style=", "transform=", etc.
-            // In the last case we simply rely on the function of parsing 
+            // In the last case we simply rely on the function of parsing
             // attributes (see 'else' branch).
             if(strcmp(attr[i], "d") == 0)
             {
@@ -435,10 +435,10 @@ namespace svg
                 throw exception("parse_color: Invalid color name '%s'", str);
             }
             strcpy(c.name, str);
-            const void* p = bsearch(&c, 
-                                    colors, 
-                                    sizeof(colors) / sizeof(colors[0]), 
-                                    sizeof(colors[0]), 
+            const void* p = bsearch(&c,
+                                    colors,
+                                    sizeof(colors) / sizeof(colors[0]),
+                                    sizeof(colors[0]),
                                     cmp_color);
             if(p == 0)
             {
@@ -528,7 +528,7 @@ namespace svg
             parse_transform(value);
         }
         //else
-        //if(strcmp(el, "<OTHER_ATTRIBUTES>") == 0) 
+        //if(strcmp(el, "<OTHER_ATTRIBUTES>") == 0)
         //{
         //}
         // . . .
@@ -581,14 +581,14 @@ namespace svg
         const char* val = str;
 
         // Right Trim
-        while(str > nv_start && 
+        while(str > nv_start &&
             (*str == ':' || isspace(*str))) --str;
         ++str;
 
         copy_name(nv_start, str);
 
         while(val < nv_end && (*val == ':' || isspace(*val))) ++val;
-        
+
         copy_value(val, nv_end);
         return parse_attr(m_attr_name, m_attr_value);
     }
@@ -607,7 +607,7 @@ namespace svg
             const char* nv_end = str;
 
             // Right Trim
-            while(nv_end > nv_start && 
+            while(nv_end > nv_start &&
                 (*nv_end == ';' || isspace(*nv_end))) --nv_end;
             ++nv_end;
 
@@ -636,7 +636,7 @@ namespace svg
                 if(strcmp(attr[i], "y") == 0)      y = parse_double(attr[i + 1]);
                 if(strcmp(attr[i], "width") == 0)  w = parse_double(attr[i + 1]);
                 if(strcmp(attr[i], "height") == 0) h = parse_double(attr[i + 1]);
-                // rx - to be implemented 
+                // rx - to be implemented
                 // ry - to be implemented
             }
         }
@@ -696,7 +696,7 @@ namespace svg
         {
             if(!parse_attr(attr[i], attr[i + 1]))
             {
-                if(strcmp(attr[i], "points") == 0) 
+                if(strcmp(attr[i], "points") == 0)
                 {
                     m_tokenizer.set_path_str(attr[i + 1]);
                     if(!m_tokenizer.next())
@@ -723,7 +723,7 @@ namespace svg
                 }
             }
         }
-        if(close_flag) 
+        if(close_flag)
         {
             m_path.close_subpath();
         }
@@ -737,11 +737,11 @@ namespace svg
         {
             if(islower(*str))
             {
-                if(strncmp(str, "matrix", 6) == 0)    str += parse_matrix(str);    else 
-                if(strncmp(str, "translate", 9) == 0) str += parse_translate(str); else 
-                if(strncmp(str, "rotate", 6) == 0)    str += parse_rotate(str);    else 
-                if(strncmp(str, "scale", 5) == 0)     str += parse_scale(str);     else 
-                if(strncmp(str, "skewX", 5) == 0)     str += parse_skew_x(str);    else 
+                if(strncmp(str, "matrix", 6) == 0)    str += parse_matrix(str);    else
+                if(strncmp(str, "translate", 9) == 0) str += parse_translate(str); else
+                if(strncmp(str, "rotate", 6) == 0)    str += parse_rotate(str);    else
+                if(strncmp(str, "scale", 5) == 0)     str += parse_scale(str);     else
+                if(strncmp(str, "skewX", 5) == 0)     str += parse_skew_x(str);    else
                 if(strncmp(str, "skewY", 5) == 0)     str += parse_skew_y(str);    else
                 {
                     ++str;
@@ -762,9 +762,9 @@ namespace svg
     }
 
     //-------------------------------------------------------------
-    static unsigned parse_transform_args(const char* str, 
-                                         double* args, 
-                                         unsigned max_na, 
+    static unsigned parse_transform_args(const char* str,
+                                         double* args,
+                                         unsigned max_na,
                                          unsigned* na)
     {
         *na = 0;
@@ -831,7 +831,7 @@ namespace svg
         double args[3];
         unsigned na = 0;
         unsigned len = parse_transform_args(str, args, 3, &na);
-        if(na == 1) 
+        if(na == 1)
         {
             m_path.transform().premultiply(trans_affine_rotation(deg2rad(args[0])));
         }
