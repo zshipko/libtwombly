@@ -1,6 +1,6 @@
 from ctypes import *
 from numpy import zeros, arange, ndarray, asarray
-from twombly.colors import _colors
+from colors import _colors
 
 twombly = cdll.LoadLibrary("libtwombly.so")
 
