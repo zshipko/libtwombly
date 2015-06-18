@@ -1,4 +1,4 @@
-from twombly.drawing import TransformMatrix, _transform_matrix_get
+from drawing import TransformMatrix, _transform_matrix_get
 from numpy import arange
 import sympy as sym
 from sympy import geometry as geo
