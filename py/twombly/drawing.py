@@ -427,7 +427,10 @@ class Drawing(object):
         _METHODS["clear"](self._drawing, *Color(r, g, b, a).as_uint8())
 
     def set_color(self, r, g=None, b=None, a=255):
-        _METHODS["set_color"](self._drawing, *Color(r, g, b, a).as_uint8())
+        if isinstance(r, Color):
+            _METHODS["set_color"](self._drawing, *r.as_uint8())
+        else:
+            _METHODS["set_color"](self._drawing, *Color(r, g, b, a).as_uint8())
 
     def curve_to(self, a, b, c=None, d=None, e=None, f=None):
         if c is None or d is None:

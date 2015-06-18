@@ -1,5 +1,5 @@
-import drawing
-import colors
+from drawing import *
+from colors import *
 
 try:
     import twombly.sym
