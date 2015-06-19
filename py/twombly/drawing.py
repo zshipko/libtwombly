@@ -339,7 +339,7 @@ class Color(ndarray):
             red, green, blue, alpha = _colors.get(red.lower().replace(' ', ''), [0, 0, 0, alpha])
         elif green is None or blue is None:
             green = blue = red
-        elif hasattr(red, '__getitem__'):
+        elif hasattr(red, '__getitem__') and hasattr(red, '__len__'):
             arr = red
             if len(red) == 3:
                 red.append(alpha)
