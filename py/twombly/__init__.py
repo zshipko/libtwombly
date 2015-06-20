@@ -2,6 +2,6 @@ from drawing import *
 from colors import *
 
 try:
-    import sym
+    from sym import *
 except ImportError:
     pass
