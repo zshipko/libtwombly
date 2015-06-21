@@ -51,6 +51,7 @@ enum gradient_type {
 #define TW_POLY_SIZE(p) (sizeof(p) / (sizeof(*p) * 2))
 
 #ifdef __cplusplus
+#include <vector>
 
 #include "image.hpp"
 
@@ -178,7 +179,7 @@ public:
         alloc();
     }
 
-#ifndef NO_OPECV
+#ifndef NO_OPENCV
     // Creates a drawing context from standard open_cV Mat types
     Drawing(Mat3b &im, uint8_t *_alpha_mask=nullptr) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels()), pix(buffer), _antialias(true), _preserve(false), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.cols, im.rows, im.channels()),  alpha_mask(_alpha_mask) {
         alloc();
@@ -970,7 +971,7 @@ typedef Drawing<bgr24> DrawingBGR24;
 typedef Drawing<bgra64> DrawingBGRA64;
 typedef Drawing<bgr48> DrawingBGR48;
 
-#ifndef NO_OPECV
+#ifndef NO_OPENCV
 Drawing<bgra32> draw(Mat4b& im, uint8_t* alpha_mask=nullptr);
 Drawing<bgr24>draw(Mat3b& im, uint8_t* alpha_mask=nullptr);
 Drawing<bgra64> draw(Mat4w& im, uint8_t* alpha_mask=nullptr);
