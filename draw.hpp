@@ -143,16 +143,9 @@ public:
 // Drawing type
 template <typename DrawingType>
 class Drawing : public agg::path_storage {
-    // render settings
-    bool _antialias, _preserve;
-    double _width, _miterlimit;
-    line_cap_style _linecap;
-    line_join_style _linejoin;
-
-    unsigned pathid; // stores current path
-    Color current_color;
-
 public:
+    agg::trans_affine mtx;
+    uint8_t *alpha_mask;
     struct size {
         size(int32_t _x, int32_t _y, int32_t _c) : x(_x), y(_y), c(_c){}
         int32_t x, y, c;
@@ -168,8 +161,7 @@ public:
     agg::rendering_buffer buffer;
     agg::rasterizer_scanline_aa<> *raster;
 
-    agg::trans_affine mtx;
-    uint8_t *alpha_mask;
+
 
     Drawing() : pix(buffer), size(0, 0, 0), sl(nullptr), raster(nullptr), alpha_mask(nullptr) {
         base = agg::renderer_base<DrawingType>(pix);
@@ -414,6 +406,7 @@ public:
     void reset(){
         _width = 1;
         _miterlimit = 1;
+        _preserve = false;
         raster->reset();
         reset_clip();
         clear_transforms();
@@ -676,7 +669,8 @@ public:
 
     void fill(){
         agg::conv_curve<agg::path_storage> pth(*this);
-        paint(pth);
+        agg::conv_transform<agg::conv_curve<agg::path_storage>> m(pth, mtx);
+        paint(m);
     }
 
     inline void stroke(Color c){
@@ -944,6 +938,16 @@ public:
 
         return false;
     }
+
+private:
+    // render settings
+    bool _antialias, _preserve;
+    double _width, _miterlimit;
+    line_cap_style _linecap;
+    line_join_style _linejoin;
+
+    unsigned pathid; // stores current path
+    Color current_color;
 };
 
 typedef agg::pixfmt_rgba32 rgba32;

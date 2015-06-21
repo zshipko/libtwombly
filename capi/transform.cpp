@@ -16,7 +16,7 @@ void draw_transform_matrix_reset(transform_matrix mtx){
 
 transform_matrix draw_get_transform_matrix(drawing d){
     transform_matrix mtx;
-    mtx.handle = (void*)&((Drawing<rgb24>*)d.handle)->mtx;
+    mtx.handle = (&((Drawing<rgb24>*)d.handle)->mtx);
     return mtx;
 }
 
