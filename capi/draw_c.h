@@ -39,7 +39,12 @@ struct drawing {
 };
 typedef struct drawing drawing;
 
-#define draw_frombimage(im) (im.depth == u16 ? draw_create16(im.width, im.height, im.channels, im.u16) : draw_create(im.width, im.height, im.channels, im.u8))
+// bimage
+#define draw_frombimage(im) ((im)->depth == u16 ? draw_create16((im)->width, (im)->height, (im)->channels, (im)->u16) : draw_create((im)->width, (im)->height, (im)->channels, (im)->u8))
+
+// leptonica
+#define draw_frompix(im) draw_create(im->w, im->h, im->d/8, (unint8_t*)im->data)
+
 #define TWOMBLY_LOG(s, ...) if(TWOMBLY_SET_LOG) fprintf(stderr, s,  __VA_ARGS__)
 
 typedef float* Pixel;
