@@ -1,5 +1,9 @@
 var searchData=
 [
-  ['line_5fcap_5fstyle',['line_cap_style',['../draw_8hpp.html#abc59092cafe00d040d52d914d3704715',1,'draw.hpp']]],
-  ['line_5fjoin_5fstyle',['line_join_style',['../draw_8hpp.html#a83ecfd8909d45a892c49ac7bd0cae1c4',1,'draw.hpp']]]
+  ['clipping_5fflags_5fe',['clipping_flags_e',['../namespaceagg.html#a8a04939df4f7797ca0b111056f4a1917',1,'agg']]],
+  ['comp_5fop_5fe',['comp_op_e',['../namespaceagg.html#abfd3c522b2e8b848d68725a4808762eb',1,'agg']]],
+  ['coord_5fscale_5fe',['coord_scale_e',['../structagg_1_1vertex__integer.html#a464cc3482b7a7cc361d4a400f965341e',1,'agg::vertex_integer']]],
+  ['cover_5fscale_5fe',['cover_scale_e',['../classagg_1_1alpha__mask__u8.html#ac66e78939395b535e9ad2517ba983bb7',1,'agg::alpha_mask_u8::cover_scale_e()'],['../classagg_1_1amask__no__clip__u8.html#ab284215e96d4f622d5f1246eaade620c',1,'agg::amask_no_clip_u8::cover_scale_e()'],['../structagg_1_1sbool__intersect__spans__aa.html#a89e601532ffa6335ef187e9d8edae23c',1,'agg::sbool_intersect_spans_aa::cover_scale_e()'],['../structagg_1_1sbool__unite__spans__aa.html#ab454d3a6580e7a37091c1e61c93ece6a',1,'agg::sbool_unite_spans_aa::cover_scale_e()'],['../structagg_1_1sbool__xor__formula__linear.html#aea8df7acc658324b3781cc704c81ee5e',1,'agg::sbool_xor_formula_linear::cover_scale_e()'],['../structagg_1_1sbool__xor__formula__saddle.html#aedc38169716ee8d88e309f715ae95e2e',1,'agg::sbool_xor_formula_saddle::cover_scale_e()'],['../structagg_1_1sbool__xor__spans__aa.html#a0608e143436ace0066cb5bfe5d2a6bd3',1,'agg::sbool_xor_spans_aa::cover_scale_e()'],['../structagg_1_1sbool__subtract__spans__aa.html#a1c30005a214caf7366fd68f7b4a1594f',1,'agg::sbool_subtract_spans_aa::cover_scale_e()'],['../namespaceagg.html#adf91ca47d81e39251720503e9c0b3de0',1,'agg::cover_scale_e()']]],
+  ['curve_5fapproximation_5fmethod_5fe',['curve_approximation_method_e',['../namespaceagg.html#a4593f089523f19c5757bac8bf10869fc',1,'agg']]],
+  ['curve_5frecursion_5flimit_5fe',['curve_recursion_limit_e',['../namespaceagg.html#a43542650f2095ec4aaf079d40734144d',1,'agg']]]
 ];

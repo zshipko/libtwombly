@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['round_5fcap',['round_cap',['../draw_8hpp.html#abc59092cafe00d040d52d914d3704715a092502f08f694c5ded6584b5870ca5a1',1,'draw.hpp']]],
-  ['round_5fjoin',['round_join',['../draw_8hpp.html#a83ecfd8909d45a892c49ac7bd0cae1c4a396d6e1788b140dc0e92f4e5e91ef769',1,'draw.hpp']]]
+  ['fill_5feven_5fodd',['fill_even_odd',['../draw_8hpp.html#af3e45aa619911100dcd2142ed8c20883a1410f4069d3d4ae9b7c678deb8d937ea',1,'fill_even_odd():&#160;draw.hpp'],['../namespaceagg.html#afed98fcb6e27bd6667abd5f6a1a587c3a3200d5b4d1425ef6ebbe1fec746321b4',1,'agg::fill_even_odd()']]],
+  ['fill_5fnon_5fzero',['fill_non_zero',['../draw_8hpp.html#af3e45aa619911100dcd2142ed8c20883ae80311830445683319c0d5107796ee09',1,'fill_non_zero():&#160;draw.hpp'],['../namespaceagg.html#afed98fcb6e27bd6667abd5f6a1a587c3a39764d24a08a13a158468d4fac9269c8',1,'agg::fill_non_zero()']]]
 ];

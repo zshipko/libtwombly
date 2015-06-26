@@ -126,31 +126,31 @@ $(document).ready(function(){initNavTree('draw_8cpp_source.html','');});
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">template</span> <span class="keyword">class </span><a class="code" href="classtw_1_1_gradient.html">Gradient&lt;Color&gt;</a>;</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">template</span> <span class="keyword">class </span><a class="code" href="classtw_1_1_gradient.html">Gradient&lt;Color16&gt;</a>;</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
-<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="namespacetw.html#aee59f5d25859eeed42e12e8dabf9bfb9">   14</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="namespacetw.html#a2df379f708cb72ac49bb1a93aaa43c66">Color</a> <a class="code" href="namespacetw.html#aee59f5d25859eeed42e12e8dabf9bfb9">rgba</a>(uint8_t r, uint8_t g, uint8_t b, uint8_t a){</div>
+<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="namespacetw.html#aee59f5d25859eeed42e12e8dabf9bfb9">   14</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="structagg_1_1rgba8.html">Color</a> <a class="code" href="namespacetw.html#aee59f5d25859eeed42e12e8dabf9bfb9">rgba</a>(uint8_t r, uint8_t g, uint8_t b, uint8_t a){</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespacetw.html#a2df379f708cb72ac49bb1a93aaa43c66">Color</a>(r, g, b, a);</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;}</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#ifndef NO_OPENCV</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="namespacetw.html#a3fa8f77cc076ee05c41901406c90a7d2">   20</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="namespacetw.html#a2df379f708cb72ac49bb1a93aaa43c66">Color</a> <a class="code" href="namespacetw.html#aee59f5d25859eeed42e12e8dabf9bfb9">rgba</a>(Scalar s){</div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="namespacetw.html#a3fa8f77cc076ee05c41901406c90a7d2">   20</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="structagg_1_1rgba8.html">Color</a> <a class="code" href="namespacetw.html#aee59f5d25859eeed42e12e8dabf9bfb9">rgba</a>(Scalar s){</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespacetw.html#a2df379f708cb72ac49bb1a93aaa43c66">Color</a>(s[2], s[1], s[0], s[3]);</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;}</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
-<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="namespacetw.html#ab3d3078870e2e277f57558d3cb1ef814">   24</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="namespacetw.html#a970c0eb5a6c3074c8dd72af1e9b0db11">Color16</a> <a class="code" href="namespacetw.html#ab3d3078870e2e277f57558d3cb1ef814">rgba_16</a>(Scalar s){</div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="namespacetw.html#ab3d3078870e2e277f57558d3cb1ef814">   24</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="structagg_1_1rgba16.html">Color16</a> <a class="code" href="namespacetw.html#ab3d3078870e2e277f57558d3cb1ef814">rgba_16</a>(Scalar s){</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespacetw.html#a970c0eb5a6c3074c8dd72af1e9b0db11">Color16</a>(s[2], s[1], s[0], s[3]);</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;}</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="namespacetw.html#aae87ed49ff0f070baa5f7cff521e1576">   30</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="namespacetw.html#a2df379f708cb72ac49bb1a93aaa43c66">Color</a> <a class="code" href="namespacetw.html#aae87ed49ff0f070baa5f7cff521e1576">rgb</a>(uint8_t r, uint8_t g, uint8_t b){</div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="namespacetw.html#aae87ed49ff0f070baa5f7cff521e1576">   30</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="structagg_1_1rgba8.html">Color</a> <a class="code" href="namespacetw.html#aae87ed49ff0f070baa5f7cff521e1576">rgb</a>(uint8_t r, uint8_t g, uint8_t b){</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespacetw.html#a2df379f708cb72ac49bb1a93aaa43c66">Color</a>(r, g, b, 255);</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;}</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="namespacetw.html#a807af943c8203f5cd19d17e78e1d3478">   34</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="namespacetw.html#a970c0eb5a6c3074c8dd72af1e9b0db11">Color16</a> <a class="code" href="namespacetw.html#ab3d3078870e2e277f57558d3cb1ef814">rgba_16</a>(uint8_t r, uint8_t g, uint8_t b, uint8_t a){</div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="namespacetw.html#a807af943c8203f5cd19d17e78e1d3478">   34</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="structagg_1_1rgba16.html">Color16</a> <a class="code" href="namespacetw.html#ab3d3078870e2e277f57558d3cb1ef814">rgba_16</a>(uint8_t r, uint8_t g, uint8_t b, uint8_t a){</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespacetw.html#a970c0eb5a6c3074c8dd72af1e9b0db11">Color16</a>(r, g, b, a);</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;}</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="namespacetw.html#a1bd90637a636d7333589018f32ed9928">   38</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="namespacetw.html#a970c0eb5a6c3074c8dd72af1e9b0db11">Color16</a> <a class="code" href="namespacetw.html#a1bd90637a636d7333589018f32ed9928">rgb_16</a>(uint8_t r, uint8_t g, uint8_t b){</div>
+<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="namespacetw.html#a1bd90637a636d7333589018f32ed9928">   38</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="structagg_1_1rgba16.html">Color16</a> <a class="code" href="namespacetw.html#a1bd90637a636d7333589018f32ed9928">rgb_16</a>(uint8_t r, uint8_t g, uint8_t b){</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespacetw.html#a970c0eb5a6c3074c8dd72af1e9b0db11">Color16</a>(r, g, b, 255);</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;}</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
@@ -182,7 +182,9 @@ $(document).ready(function(){initNavTree('draw_8cpp_source.html','');});
 <div class="ttc" id="namespacetw_html_ab3d3078870e2e277f57558d3cb1ef814"><div class="ttname"><a href="namespacetw.html#ab3d3078870e2e277f57558d3cb1ef814">tw::rgba_16</a></div><div class="ttdeci">Color16 rgba_16(Scalar s)</div><div class="ttdef"><b>Definition:</b> <a href="draw_8cpp_source.html#l00024">draw.cpp:24</a></div></div>
 <div class="ttc" id="namespacetw_html_aae87ed49ff0f070baa5f7cff521e1576"><div class="ttname"><a href="namespacetw.html#aae87ed49ff0f070baa5f7cff521e1576">tw::rgb</a></div><div class="ttdeci">Color rgb(uint8_t r, uint8_t g, uint8_t b)</div><div class="ttdef"><b>Definition:</b> <a href="draw_8cpp_source.html#l00030">draw.cpp:30</a></div></div>
 <div class="ttc" id="namespacetw_html_a2df379f708cb72ac49bb1a93aaa43c66"><div class="ttname"><a href="namespacetw.html#a2df379f708cb72ac49bb1a93aaa43c66">tw::Color</a></div><div class="ttdeci">agg::rgba8 Color</div><div class="ttdef"><b>Definition:</b> <a href="draw_8hpp_source.html#l00102">draw.hpp:102</a></div></div>
+<div class="ttc" id="structagg_1_1rgba8_html"><div class="ttname"><a href="structagg_1_1rgba8.html">agg::rgba8</a></div><div class="ttdef"><b>Definition:</b> <a href="agg__color__rgba_8h_source.html#l00223">agg_color_rgba.h:223</a></div></div>
 <div class="ttc" id="namespacetw_html"><div class="ttname"><a href="namespacetw.html">tw</a></div><div class="ttdef"><b>Definition:</b> <a href="draw_8cpp_source.html#l00003">draw.cpp:3</a></div></div>
+<div class="ttc" id="structagg_1_1rgba16_html"><div class="ttname"><a href="structagg_1_1rgba16.html">agg::rgba16</a></div><div class="ttdef"><b>Definition:</b> <a href="agg__color__rgba_8h_source.html#l00483">agg_color_rgba.h:483</a></div></div>
 <div class="ttc" id="classtw_1_1_gradient_html"><div class="ttname"><a href="classtw_1_1_gradient.html">tw::Gradient</a></div><div class="ttdef"><b>Definition:</b> <a href="draw_8hpp_source.html#l00116">draw.hpp:116</a></div></div>
 <div class="ttc" id="namespacetw_html_adcd571aa16c44254156d3f2cc1da8476"><div class="ttname"><a href="namespacetw.html#adcd571aa16c44254156d3f2cc1da8476">tw::draw</a></div><div class="ttdeci">Drawing&lt; bgra32 &gt; draw(Mat4b &amp;im, uint8_t *alpha_buf)</div><div class="ttdef"><b>Definition:</b> <a href="draw_8cpp_source.html#l00043">draw.cpp:43</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
@@ -192,7 +194,7 @@ $(document).ready(function(){initNavTree('draw_8cpp_source.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="draw_8cpp.html">draw.cpp</a></li>
-    <li class="footer">Generated on Fri Jun 26 2015 16:35:39 for libtwombly by doxygen
+    <li class="footer">Generated on Fri Jun 26 2015 16:38:21 for libtwombly by doxygen
     </li>
   </ul>
 </div>

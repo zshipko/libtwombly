@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['x',['x',['../structtw_1_1_drawing_1_1size.html#a74db124d4be9f668fff5a3176b73bb63',1,'tw::Drawing::size::x()'],['../classtw_1_1_point.html#ac69b103162205f82aea5cee22d46dec0',1,'tw::Point::x()'],['../classtw_1_1_rectangle.html#a78fda66c860ff84993abe3d093f3272e',1,'tw::Rectangle::x()']]]
+  ['num_5fspans',['num_spans',['../structagg_1_1scanline__storage__aa_1_1scanline__data.html#a7974593731266b4620b39fbdcf2cc96d',1,'agg::scanline_storage_aa::scanline_data::num_spans()'],['../structagg_1_1scanline__storage__bin_1_1scanline__data.html#a1a718ad54f3683e7b67a9c319392fc97',1,'agg::scanline_storage_bin::scanline_data::num_spans()']]]
 ];

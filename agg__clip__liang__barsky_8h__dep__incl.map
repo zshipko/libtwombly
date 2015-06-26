@@ -1,0 +1,12 @@
+<map id="agg/include/agg_clip_liang_barsky.h" name="agg/include/agg_clip_liang_barsky.h">
+<area shape="rect" id="node2" href="$agg__rasterizer__sl__clip_8h.html" title="agg/include/agg_rasterizer\l_sl_clip.h" alt="" coords="205,92,384,131"/>
+<area shape="rect" id="node7" href="$agg__renderer__outline__aa_8h.html" title="agg/include/agg_renderer\l_outline_aa.h" alt="" coords="408,92,581,131"/>
+<area shape="rect" id="node9" href="$agg__renderer__outline__image_8h.html" title="agg/include/agg_renderer\l_outline_image.h" alt="" coords="605,92,779,131"/>
+<area shape="rect" id="node10" href="$agg__vpgen__clip__polygon_8cpp.html" title="agg/src/agg_vpgen_clip\l_polygon.cpp" alt="" coords="803,92,965,131"/>
+<area shape="rect" id="node11" href="$agg__vpgen__clip__polyline_8cpp.html" title="agg/src/agg_vpgen_clip\l_polyline.cpp" alt="" coords="989,92,1152,131"/>
+<area shape="rect" id="node3" href="$agg__rasterizer__compound__aa_8h.html" title="agg/include/agg_rasterizer\l_compound_aa.h" alt="" coords="5,179,184,217"/>
+<area shape="rect" id="node4" href="$agg__rasterizer__scanline__aa_8h.html" title="agg/include/agg_rasterizer\l_scanline_aa.h" alt="" coords="208,179,386,217"/>
+<area shape="rect" id="node5" href="$draw_8hpp.html" title="draw.hpp" alt="" coords="260,265,335,291"/>
+<area shape="rect" id="node6" href="$draw_8cpp.html" title="draw.cpp" alt="" coords="260,339,335,364"/>
+<area shape="rect" id="node8" href="$agg__line__profile__aa_8cpp.html" title="agg/src/agg_line_profile\l_aa.cpp" alt="" coords="413,179,576,217"/>
+</map>

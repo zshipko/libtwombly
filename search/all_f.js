@@ -1,14 +1,11 @@
 var searchData=
 [
-  ['scale',['scale',['../classtw_1_1_drawing.html#a407f6db2f8a114c9c087347fe5deb2d3',1,'tw::Drawing::scale(double n)'],['../classtw_1_1_drawing.html#ac561bad9cad3ff778e1afc609f5bba73',1,'tw::Drawing::scale(double n, double m)']]],
-  ['set_5fcolor',['set_color',['../classtw_1_1_drawing.html#a830bae783e53c2ebea90fd3b49b4b4ed',1,'tw::Drawing::set_color(Color c)'],['../classtw_1_1_drawing.html#a30f37960bad8282fa037523a5d893fe5',1,'tw::Drawing::set_color(uint8_t r, uint8_t g, uint8_t b, uint8_t a=255)']]],
-  ['set_5fdata',['set_data',['../classtw_1_1_drawing.html#a760fa83678d8033f4dc27e018dc547b2',1,'tw::Drawing']]],
-  ['size',['size',['../structtw_1_1_drawing_1_1size.html',1,'tw::Drawing']]],
-  ['size',['size',['../classtw_1_1_drawing.html#a044a729734c7498fda51bbf999a27450',1,'tw::Drawing::size()'],['../structtw_1_1_drawing_1_1size.html#a5289342339186f2d757fa7a65da1505a',1,'tw::Drawing::size::size()']]],
-  ['skew',['skew',['../classtw_1_1_drawing.html#aa430dfadc0d8c14dddcf613257a4e5a1',1,'tw::Drawing']]],
-  ['sl',['sl',['../classtw_1_1_drawing.html#a64dcc24c821c04757b9a271492c065b3',1,'tw::Drawing']]],
-  ['square_5fcap',['square_cap',['../draw_8hpp.html#abc59092cafe00d040d52d914d3704715a7741e0bd65fa95927e6cc1972311f3cc',1,'draw.hpp']]],
-  ['stroke',['stroke',['../classtw_1_1_drawing.html#acb054f339cb11252fbcd4c0b0028b70f',1,'tw::Drawing::stroke(Color c)'],['../classtw_1_1_drawing.html#a33eab2342e59e2d568a08b5401898d39',1,'tw::Drawing::stroke()']]],
-  ['stroke_5fgradient',['stroke_gradient',['../classtw_1_1_drawing.html#a7dc8b4b7a3dc2934d826deae5da159b7',1,'tw::Drawing::stroke_gradient(Gradient&lt; ColorType &gt; grad, int s, int x)'],['../classtw_1_1_drawing.html#ad3157eb3ab3b60d7f53ee8869cc8aaa3',1,'tw::Drawing::stroke_gradient(Gradient&lt; ColorType &gt; grad, int s, int x, gradient_type grad_type)'],['../classtw_1_1_drawing.html#a3f29953b162edf163a9043e9bfbc07e5',1,'tw::Drawing::stroke_gradient(agg::pod_auto_array&lt; ColorType, 256 &gt; color_array, int s, int x, agg::trans_affine _mtx=agg::trans_affine())']]],
-  ['stroke_5fpattern',['stroke_pattern',['../classtw_1_1_drawing.html#ac5a91c693aa6e3d07a87bd0ec47302bb',1,'tw::Drawing']]]
+  ['qsort_5fcells',['qsort_cells',['../namespaceagg.html#afd2f6d7eaf306e2799f6e8c41057951d',1,'agg']]],
+  ['qsort_5fthreshold',['qsort_threshold',['../namespaceagg.html#ac891d512a130c24e3f2e46213bbac902a0159e1178933fbfbe56974eb111f7bfa',1,'agg']]],
+  ['quad_5fto_5fquad',['quad_to_quad',['../classagg_1_1span__interpolator__persp__exact.html#aa8bb958a062eb1a2e8e9833c52b7eb23',1,'agg::span_interpolator_persp_exact::quad_to_quad()'],['../classagg_1_1span__interpolator__persp__lerp.html#a9af6e6c52f962e699228d2d98eb3892a',1,'agg::span_interpolator_persp_lerp::quad_to_quad()'],['../classagg_1_1trans__bilinear.html#aef33fa555bef4697ff2487b9fa2d793d',1,'agg::trans_bilinear::quad_to_quad()'],['../structagg_1_1trans__perspective.html#a29549d198a378c207c5246d09debfe4c',1,'agg::trans_perspective::quad_to_quad()']]],
+  ['quad_5fto_5frect',['quad_to_rect',['../classagg_1_1span__interpolator__persp__exact.html#abcc20c3e899df3f8d1791a1701902f3f',1,'agg::span_interpolator_persp_exact::quad_to_rect()'],['../classagg_1_1span__interpolator__persp__lerp.html#ab270c845485d9514cc30a139cac5a71b',1,'agg::span_interpolator_persp_lerp::quad_to_rect()'],['../classagg_1_1trans__bilinear.html#a95e0b46a833996e582e75bfcc4f3934a',1,'agg::trans_bilinear::quad_to_rect()'],['../structagg_1_1trans__perspective.html#a030b79cacd5321bb774e62331b7afb54',1,'agg::trans_perspective::quad_to_rect()']]],
+  ['quad_5fto_5fsquare',['quad_to_square',['../structagg_1_1trans__perspective.html#a1edeeb022ec15b2bfdee5586899f7868',1,'agg::trans_perspective']]],
+  ['quick_5fsort',['quick_sort',['../namespaceagg.html#a78c6f2e62ba2874ca4dd5bf4263fa8fa',1,'agg']]],
+  ['quick_5fsort_5fthreshold',['quick_sort_threshold',['../namespaceagg.html#af67911e854242476b24e004c81b18b48a706bca6121b12915c5c9750836213043',1,'agg']]],
+  ['quick_5fsort_5fthreshold_5fe',['quick_sort_threshold_e',['../namespaceagg.html#af67911e854242476b24e004c81b18b48',1,'agg']]]
 ];
