@@ -107,13 +107,36 @@ $(document).ready(function(){initNavTree('index.html','');});
 <div class="title">libtwombly Documentation</div>  </div>
 </div><!--header-->
 <div class="contents">
-</div><!-- contents -->
+<div class="textblock"><p><a href="https://travis-ci.org/zshipko/libtwombly">![Build Status](https://travis-ci.org/zshipko/libtwombly.svg?branch=master)</a></p>
+<p>libtwombly is a basic 2d graphics library for C99 and C++11. Once the interface stabilizes it will provide a somewhat familiar interface for drawing on images using paths, transforms, strokes, fills, gradients, text, images, etc..</p>
+<p>It it based on a lightly modified version of the <a href="http://www.antigrain.com/">Anti-Grain Geometry</a> library (version 2.4) and is meant to provide an API similar to cairo or HTML5 canvas.</p>
+<p>Tested on OSX, Linux, FreeBSD and OpenBSD</p>
+<h2>Dependencies</h2>
+<ul>
+<li>C++11 compiler (g++/clang++)</li>
+<li><a href="https://www.opencv.org/">opencv</a> (optional)</li>
+<li><a href="https://github.com/zshipko/bimage">bimage</a> (optional)</li>
+<li><a href="http://www.freetype.org/">freetype</a> (optional)</li>
+</ul>
+<h2>Building</h2>
+<p>GNU Make is required</p>
+<p>For the default configuration just run, all dependencies(except libtiff) must be available via pkg-config: </p><pre class="fragment">make
+make install
+</pre><p>To disable FreeType: </p><pre class="fragment">make freetype=no
+</pre><p>To disable OpenCV: </p><pre class="fragment">make opencv=no
+</pre><p>Building will compile both <code>libtwombly</code> and <code>libagg</code> libraries.</p>
+<p>To install the python ctypes wrapper: </p><pre class="fragment">cd py
+python setup.py install
+</pre><h2>Usage</h2>
+<p>See the <a href="https://github.com/zshipko/libtwombly/tree/master/examples">examples/</a> folder for now.</p>
+<p>To build and run an example: </p><pre class="fragment">cd examples
+make circles-run</pre> </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen 1.8.9.1-->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Jun 26 2015 16:20:12 for libtwombly by doxygen
+    <li class="footer">Generated on Fri Jun 26 2015 16:24:09 for libtwombly by doxygen
     </li>
   </ul>
 </div>
