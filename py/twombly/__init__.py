@@ -1,7 +1,6 @@
-from drawing import *
-from colors import *
+from twombly.drawing import *
 
 try:
-    from sym import *
+    from twombly.sym import *
 except ImportError:
     pass
