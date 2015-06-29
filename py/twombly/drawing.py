@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from ctypes import *
 from numpy import zeros, arange, ndarray, asarray
 from twombly.colors import _colors
