@@ -31,11 +31,12 @@ agg_hdrs=agg/include/*.h agg/include/util/*.h
 tw_hdrs=image.hpp draw.hpp twombly.hpp capi/draw_c.h
 opencv?=yes
 ifeq ($(opencv)X,noX)
-	libs = -L/usr/local/lib
+	libs= -L/usr/local/lib
+	flags= -DNO_OPENCV
 else
 	libs=-L/usr/local/lib -lopencv_core -lopencv_highgui -lopencv_imgproc
 endif
-incl=-I./agg/include -I./agg/font_freetype -I./twombly -I/usr/local/include
+incl=-I./agg/include -I./agg/font_freetype -I./twombly -I/usr/local/include $(flags)
 dest?=/usr/local
 VERSION=0.1
 RELEASE_DIR=./libtwombly-$(VERSION)-`uname`_`uname -m`
