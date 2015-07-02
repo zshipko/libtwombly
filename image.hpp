@@ -15,13 +15,14 @@ namespace tw {
 
 
 #if defined(NO_OPENCV) || !defined(CV_8U)
-class Point {
-public:
+struct Point {
+    Point(double _x, double _y) : x(_x), y(_y) {}
     double x, y;
 };
 
-class Rectangle {
-public:
+struct Rectangle {
+    Rectangle(double _x, double _y, double _w, double _h) :
+         x(_x), y(_y), width(_w), height(_h) {}
     double x, y, width, height;
 };
 #else // opencv is included
