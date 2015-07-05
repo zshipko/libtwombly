@@ -77,7 +77,7 @@ var searchData=
   ['pod_5fvector_3c_20sorted_5fy_20_3e',['pod_vector&lt; sorted_y &gt;',['../classagg_1_1pod__vector.html',1,'agg']]],
   ['pod_5fvector_3c_20style_5finfo_20_3e',['pod_vector&lt; style_info &gt;',['../classagg_1_1pod__vector.html',1,'agg']]],
   ['pod_5fvector_3c_20unsigned_20_3e',['pod_vector&lt; unsigned &gt;',['../classagg_1_1pod__vector.html',1,'agg']]],
-  ['point',['Point',['../classtw_1_1_point.html',1,'tw']]],
+  ['point',['Point',['../structtw_1_1_point.html',1,'tw']]],
   ['point_5fbase',['point_base',['../structagg_1_1point__base.html',1,'agg']]],
   ['poly_5fcontainer_5fadaptor',['poly_container_adaptor',['../classagg_1_1poly__container__adaptor.html',1,'agg']]],
   ['poly_5fcontainer_5freverse_5fadaptor',['poly_container_reverse_adaptor',['../classagg_1_1poly__container__reverse__adaptor.html',1,'agg']]],

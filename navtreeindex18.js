@@ -1,13 +1,5 @@
 var NAVTREEINDEX18 =
 {
-"structagg_1_1blender__rgb555__pre.html#a9affffe24b0d2ed8c0a2cfdcc2afe7a2":[1,0,0,24,2],
-"structagg_1_1blender__rgb555__pre.html#abf446c3cc552870642e599f880c5cd44":[1,0,0,24,3],
-"structagg_1_1blender__rgb555__pre.html#ae15d074c33934b777bc40a088634e00c":[1,0,0,24,1],
-"structagg_1_1blender__rgb565.html":[1,0,0,25],
-"structagg_1_1blender__rgb565.html#a005d8a08a90f8a3feb7ac68553efc101":[1,0,0,25,3],
-"structagg_1_1blender__rgb565.html#a1f995b709b9693059f8b1b6d057faa64":[1,0,0,25,0],
-"structagg_1_1blender__rgb565.html#a289f1adfca2fdedc75b13447e3658cd2":[1,0,0,25,1],
-"structagg_1_1blender__rgb565.html#a69503257d07f5cd55c2bf321f0dcea9b":[1,0,0,25,2],
 "structagg_1_1blender__rgb565__pre.html":[1,0,0,27],
 "structagg_1_1blender__rgb565__pre.html#a05cbf8849d9573df0c5c049565379f40":[1,0,0,27,2],
 "structagg_1_1blender__rgb565__pre.html#a0fc7d78dd8c1f674d7994528cf7d6fc0":[1,0,0,27,3],
@@ -249,5 +241,13 @@ var NAVTREEINDEX18 =
 "structagg_1_1comp__op__rgba__hard__light.html#a2e2fb8988d68c15131f9a8fde1d937b1":[1,0,0,90,5],
 "structagg_1_1comp__op__rgba__hard__light.html#a2e2fb8988d68c15131f9a8fde1d937b1a22ae8d2cbd59fc1e726bb54215bb685d":[1,0,0,90,5,1],
 "structagg_1_1comp__op__rgba__hard__light.html#a2e2fb8988d68c15131f9a8fde1d937b1aca917a5b830fe0c7f776164c6ef5cacc":[1,0,0,90,5,0],
-"structagg_1_1comp__op__rgba__hard__light.html#a3f737efe2c00069f0b66c09aebb5a3eb":[1,0,0,90,1]
+"structagg_1_1comp__op__rgba__hard__light.html#a3f737efe2c00069f0b66c09aebb5a3eb":[1,0,0,90,1],
+"structagg_1_1comp__op__rgba__hard__light.html#a9c49e1ea64aa32bb42c79b1871644811":[1,0,0,90,3],
+"structagg_1_1comp__op__rgba__invert.html":[1,0,0,91],
+"structagg_1_1comp__op__rgba__invert.html#a23358f8fea637db66d0069a4559cfb33":[1,0,0,91,3],
+"structagg_1_1comp__op__rgba__invert.html#a28f206bd95a278659ef846833a49dfc3":[1,0,0,91,5],
+"structagg_1_1comp__op__rgba__invert.html#a28f206bd95a278659ef846833a49dfc3a55a2807d83303556658d2a818f9bd580":[1,0,0,91,5,1],
+"structagg_1_1comp__op__rgba__invert.html#a28f206bd95a278659ef846833a49dfc3aeb7e0b1120063efb72790b58078feec4":[1,0,0,91,5,0],
+"structagg_1_1comp__op__rgba__invert.html#a646f48d7453c5bd2c7af3ad8703c12b3":[1,0,0,91,2],
+"structagg_1_1comp__op__rgba__invert.html#a99b7392c8affda6e11f87276f5ef50cd":[1,0,0,91,1]
 };

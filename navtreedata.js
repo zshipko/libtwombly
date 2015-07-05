@@ -57,12 +57,12 @@ var NAVTREEINDEX =
 "classagg_1_1span__image__resample.html#abcbf22de5f61a84fe5c2b8642544778d",
 "classagg_1_1span__pattern__rgba.html#a5e2a4bc837486b5141fe5d75e6909ed4",
 "classagg_1_1vertex__block__storage.html#a0d40ffac32e63c6ca0c0a8268f912828a729dbbb2f1007e4e7564caf94dd5b85e",
-"draw_8hpp.html#a2df379f708cb72ac49bb1a93aaa43c66",
-"structagg_1_1blender__rgb555__pre.html#a9affffe24b0d2ed8c0a2cfdcc2afe7a2",
-"structagg_1_1comp__op__rgba__hard__light.html#a9c49e1ea64aa32bb42c79b1871644811",
-"structagg_1_1glyph__raster__bin_1_1glyph__rect.html#af2805c2923cb29fa2c0e580729c5db72",
-"structagg_1_1rgba.html#a9a64684415b622e0ee08306d6df3d387",
-"structagg_1_1trans__affine.html#ab996e7c1ddba94209374ed2172364cf7"
+"draw_8hpp.html#a60d0e6cb6001d37d76a54f4a8d6467c8",
+"structagg_1_1blender__rgb565__pre.html",
+"structagg_1_1comp__op__rgba__invert.html#adcbcedaaee0f9a4a16ce7297347ce74f",
+"structagg_1_1gradient__alpha__x__u8.html#a293014fe8aa62791f2f52e6674dc0135",
+"structagg_1_1rgba16.html#a1de2fe3f5cf76c95a67ecb531df01f8e",
+"structagg_1_1trans__affine.html#add570b23a994e8665baed8a0e45608d2"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -1,7 +1,4 @@
-from drawing import *
-from colors import *
+from __future__ import absolute_import
 
-try:
-    from sym import *
-except ImportError:
-    pass
+from twombly.drawing import *
+

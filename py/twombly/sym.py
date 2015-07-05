@@ -41,7 +41,7 @@ def add_geometry(drawing, g, move_to=False, step=1):
         else:
             drawing.line_to(g.p1.x, g.p1.y)
     elif hasattr(g, 'functions'):
-        has_tried_move = False
+        has_tried_move = not move_to
         for x_pos in arange(g.limits[1], g.limits[2]+1, step):
             if not has_tried_move:
                 has_tried_move = True

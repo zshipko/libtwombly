@@ -28,14 +28,19 @@ agg/src/agg_vpgen_clip_polyline.cpp \
 agg/src/agg_vpgen_segmentator.cpp
 tw_src=draw.cpp capi/capi.cpp capi/gradient.cpp capi/transform.cpp
 agg_hdrs=agg/include/*.h agg/include/util/*.h
-tw_hdrs=image.hpp draw.hpp twombly.hpp capi/draw_c.h
-opencv?=yes
+tw_hdrs=image.hpp draw.hpp twombly.hpp capi/draw_c.h config.h
+
+CONFIG_CV=
+CONFIG_FT=
+
+opencv?=$(shell PKG_CONFIG_PATH=/usr/local/pkgconfig pkg-config --cflags --libs opencv || printf "no";)
 ifeq ($(opencv)X,noX)
-	libs = -L/usr/local/lib
+	libs= -L/usr/local/lib
+	CONFIG_CV+= "\#define NO_OPENCV"
 else
 	libs=-L/usr/local/lib -lopencv_core -lopencv_highgui -lopencv_imgproc
 endif
-incl=-I./agg/include -I./agg/font_freetype -I./twombly -I/usr/local/include
+incl=-I./agg/include -I./agg/font_freetype -I./twombly -I/usr/local/include $(flags)
 dest?=/usr/local
 VERSION=0.1
 RELEASE_DIR=./libtwombly-$(VERSION)-`uname`_`uname -m`
@@ -58,7 +63,7 @@ ifeq ($(HAS_FREETYPE)X$(freetype)X,0XyesX)
 	incl+= `pkg-config --cflags $(FREETYPE_PKG)`
 else
 	FREETYPE_PKG=
-	incl+= -DNO_FREETYPE
+	CONFIG_FT+= "\#define NO_FREETYPE"
 endif
 
 ifeq ($(svg)X,yesX)
@@ -74,7 +79,14 @@ tw_obj=$(tw_src:.cpp=.o)
 
 all: agg-static agg-shared tw-static tw-shared
 
-compile: $(agg_obj) $(tw_obj)
+conf:
+	@echo '#ifndef TWOMBLY_CONFIG_HEADER' > config.h
+	@echo '#define TWOMBLY_CONFIG_HEADER' >> config.h
+	echo $(CONFIG_CV) >> config.h
+	echo $(CONFIG_FT) >> config.h
+	@echo '#endif' >> config.h
+
+compile: conf $(agg_obj) $(tw_obj)
 
 agg-static: compile
 	ar rcs libagg.a $(agg_obj)

@@ -1,13 +1,5 @@
 var NAVTREEINDEX19 =
 {
-"structagg_1_1comp__op__rgba__hard__light.html#a9c49e1ea64aa32bb42c79b1871644811":[1,0,0,90,3],
-"structagg_1_1comp__op__rgba__invert.html":[1,0,0,91],
-"structagg_1_1comp__op__rgba__invert.html#a23358f8fea637db66d0069a4559cfb33":[1,0,0,91,3],
-"structagg_1_1comp__op__rgba__invert.html#a28f206bd95a278659ef846833a49dfc3":[1,0,0,91,5],
-"structagg_1_1comp__op__rgba__invert.html#a28f206bd95a278659ef846833a49dfc3a55a2807d83303556658d2a818f9bd580":[1,0,0,91,5,1],
-"structagg_1_1comp__op__rgba__invert.html#a28f206bd95a278659ef846833a49dfc3aeb7e0b1120063efb72790b58078feec4":[1,0,0,91,5,0],
-"structagg_1_1comp__op__rgba__invert.html#a646f48d7453c5bd2c7af3ad8703c12b3":[1,0,0,91,2],
-"structagg_1_1comp__op__rgba__invert.html#a99b7392c8affda6e11f87276f5ef50cd":[1,0,0,91,1],
 "structagg_1_1comp__op__rgba__invert.html#adcbcedaaee0f9a4a16ce7297347ce74f":[1,0,0,91,0],
 "structagg_1_1comp__op__rgba__invert.html#aec4dd2b01dfe3a7c42641943e1517191":[1,0,0,91,4],
 "structagg_1_1comp__op__rgba__invert__rgb.html":[1,0,0,92],
@@ -249,5 +241,13 @@ var NAVTREEINDEX19 =
 "structagg_1_1glyph__raster__bin_1_1glyph__rect.html#a0febbcf7ac8ca9fcfa708383ea2dace6":[1,0,0,155,0,2],
 "structagg_1_1glyph__raster__bin_1_1glyph__rect.html#a18c218f3360eaf4c30885c0c7b4da49f":[1,0,0,155,0,3],
 "structagg_1_1glyph__raster__bin_1_1glyph__rect.html#a19c8e491c215ee8e376d1abf0d693e35":[1,0,0,155,0,0],
-"structagg_1_1glyph__raster__bin_1_1glyph__rect.html#a49bf3fb7f0d50f1cd9f114c232671bde":[1,0,0,155,0,5]
+"structagg_1_1glyph__raster__bin_1_1glyph__rect.html#a49bf3fb7f0d50f1cd9f114c232671bde":[1,0,0,155,0,5],
+"structagg_1_1glyph__raster__bin_1_1glyph__rect.html#af2805c2923cb29fa2c0e580729c5db72":[1,0,0,155,0,1],
+"structagg_1_1gradient__alpha__one__munus__x__u8.html":[1,0,0,156],
+"structagg_1_1gradient__alpha__one__munus__x__u8.html#a5bf9a04e5aa4b378a2d14eee17c2571a":[1,0,0,156,0],
+"structagg_1_1gradient__alpha__one__munus__x__u8.html#ab306fbef8614e62856661b33f2e4bfa5":[1,0,0,156,1],
+"structagg_1_1gradient__alpha__x.html":[1,0,0,157],
+"structagg_1_1gradient__alpha__x.html#a185c48949830733ce3bf9ad9de5f4f88":[1,0,0,157,0],
+"structagg_1_1gradient__alpha__x.html#abfdfc603efa9ce96402585c49027a663":[1,0,0,157,1],
+"structagg_1_1gradient__alpha__x__u8.html":[1,0,0,158]
 };

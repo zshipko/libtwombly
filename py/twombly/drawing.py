@@ -1,6 +1,7 @@
+from __future__ import absolute_import
 from ctypes import *
 from numpy import zeros, arange, ndarray, asarray
-from colors import _colors
+from twombly.colors import _colors
 
 twombly = cdll.LoadLibrary("libtwombly.so")
 
@@ -424,7 +425,10 @@ class Drawing(object):
         return [x_ptr[0], y_ptr[0], cmd]
 
     def clear(self, r, g=None, b=None, a=255):
-        _METHODS["clear"](self._drawing, *Color(r, g, b, a).as_uint8())
+        if isinstance(r, Color):
+            _METHODS["clear"](self._drawing, *r.as_uint8())
+        else:
+            _METHODS["clear"](self._drawing, *Color(r, g, b, a).as_uint8())
 
     def set_color(self, r, g=None, b=None, a=255):
         if isinstance(r, Color):
