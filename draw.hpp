@@ -202,12 +202,18 @@ public:
     }
 #endif
 
-#ifdef bimage_header_file
+#if defined(bimage_header_file) && !defined(BIMAGE_CXX_HEADER)
     Drawing (bimage im,  uint8_t *_alpha_mask=nullptr) : buffer((uint8_t*)im.ptr, im.width, im.height, im.width * im.channels * (im.depth == u16 ? 2 : 1)), pix(buffer), _antialias(true), _preserve(false), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.width, im.height, im.channels),  alpha_mask(_alpha_mask) {
         alloc();
     }
 
     Drawing (bimage *im, uint8_t *_alpha_mask=nullptr) : buffer((uint8_t*)im->ptr, im->width, im->height, im->width * im->channels * (im->depth == u16 ? 2 : 1)), pix(buffer), _antialias(true), _preserve(false), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im->width, im->height, im->channels), alpha_mask(_alpha_mask) {
+        alloc();
+    }
+#endif
+
+#ifdef BIMAGE_CXX_HEADER
+    Drawing (bimg::image const &im, uint8_t *_alpha_mask=nullptr): buffer((uint8_t*)im._im->ptr, im.width(), im.height(), im.width() * im.channels() * (im.type() == bimg::u16 ? 2 : 1)), pix(buffer), _antialias(true), _preserve(false), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.width(), im.height(), im.channels()), alpha_mask(_alpha_mask) {
         alloc();
     }
 #endif
