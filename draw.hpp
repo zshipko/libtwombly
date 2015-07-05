@@ -979,9 +979,16 @@ typedef Drawing<bgr48> DrawingBGR48;
 
 #ifndef NO_OPENCV
 Drawing<bgra32> draw(Mat4b& im, uint8_t* alpha_mask=nullptr);
-Drawing<bgr24>draw(Mat3b& im, uint8_t* alpha_mask=nullptr);
+Drawing<bgr24> draw(Mat3b& im, uint8_t* alpha_mask=nullptr);
 Drawing<bgra64> draw(Mat4w& im, uint8_t* alpha_mask=nullptr);
 Drawing<bgr48> draw(Mat3w& im, uint8_t* alpha_mask=nullptr);
+#endif
+
+#ifdef BIMAGE_CXX_HEADER
+template<typename DrawingType>
+Drawing<DrawingType> draw(bimg::image const &im, uint8_t *alpha=nullptr){
+    return Drawing<DrawingType>(im, alpha);
+}
 #endif
 
 #endif // cplusplus

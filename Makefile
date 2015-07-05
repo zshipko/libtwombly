@@ -30,13 +30,13 @@ tw_src=draw.cpp capi/capi.cpp capi/gradient.cpp capi/transform.cpp
 agg_hdrs=agg/include/*.h agg/include/util/*.h
 tw_hdrs=image.hpp draw.hpp twombly.hpp capi/draw_c.h config.h
 
-CONFIG=
+CONFIG_CV=
+CONFIG_FT=
 
 opencv?=$(shell PKG_CONFIG_PATH=/usr/local/pkgconfig pkg-config --cflags --libs opencv || printf "no";)
 ifeq ($(opencv)X,noX)
 	libs= -L/usr/local/lib
-	flags= -DNO_OPENCV
-	config+= "#define NO_OPENCV\n"
+	CONFIG_CV+= "\#define NO_OPENCV"
 else
 	libs=-L/usr/local/lib -lopencv_core -lopencv_highgui -lopencv_imgproc
 endif
@@ -63,8 +63,7 @@ ifeq ($(HAS_FREETYPE)X$(freetype)X,0XyesX)
 	incl+= `pkg-config --cflags $(FREETYPE_PKG)`
 else
 	FREETYPE_PKG=
-	incl+= -DNO_FREETYPE
-	config+= "#define NO_FREETYPE"
+	CONFIG_FT+= "\#define NO_FREETYPE"
 endif
 
 ifeq ($(svg)X,yesX)
@@ -81,8 +80,11 @@ tw_obj=$(tw_src:.cpp=.o)
 all: agg-static agg-shared tw-static tw-shared
 
 conf:
-	@echo "#pragma once" > config.h
-	@echo $(CONFIG) >> config.h
+	@echo '#ifndef TWOMBLY_CONFIG_HEADER' > config.h
+	@echo '#define TWOMBLY_CONFIG_HEADER' >> config.h
+	echo $(CONFIG_CV) >> config.h
+	echo $(CONFIG_FT) >> config.h
+	@echo '#endif' >> config.h
 
 compile: conf $(agg_obj) $(tw_obj)
 
