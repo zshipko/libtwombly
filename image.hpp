@@ -1,6 +1,7 @@
 #ifndef TWOMBLY_IMAGE_HEADER
 #define TWOMBLY_IMAGE_HEADER
 
+#include "config.h"
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
