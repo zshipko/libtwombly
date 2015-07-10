@@ -1,5 +1,47 @@
 #include "draw.hpp"
 
+#ifndef NO_FREETYPE
+#include "agg_font_freetype.h"
+#endif
+
+
+#ifndef NO_FREETYPE
+template <typename T>
+double tw::Drawing<T>::text(double x, double y, const char *txt, const char *font, double width, double height){
+    agg::glyph_rendering font_ren = agg::glyph_ren_outline;
+    agg::font_engine_freetype_int32 font_engine;
+    agg::font_cache_manager< agg::font_engine_freetype_int32> font_manager(font_engine);
+    const char *ptr = txt;
+    double start_x = x;
+
+    // load font
+    if (font_engine.load_font(font, 0, font_ren)){
+
+        // apply settings
+        font_engine.width(width);
+        font_engine.height(height);
+        font_engine.flip_y(true);
+        font_engine.hinting(true);
+
+        // draw each character
+        while(*ptr){
+            const agg::glyph_cache* glyph = font_manager.glyph( (unsigned int)*ptr );
+            if (glyph != nullptr){
+                font_manager.add_kerning(&x, &y);
+                font_manager.init_embedded_adaptors(glyph, x, y);
+                auto a = font_manager.path_adaptor();
+                agg::conv_curve<agg::font_cache_manager< agg::font_engine_freetype_int32>::path_adaptor_type> curves(a);
+                concat_path(curves);
+            }
+            x += glyph->advance_x;
+            y += glyph->advance_y;
+            ptr++;
+        }
+    }
+    return x-start_x;
+}
+#endif // NO_FREETYPE
+
 namespace tw {
 
 template class Drawing<rgba32>;
