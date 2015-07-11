@@ -32,6 +32,7 @@ tw_hdrs=image.hpp draw.hpp twombly.hpp capi/draw_c.h config.h
 
 CONFIG_CV=
 CONFIG_FT=
+suffix?=so
 
 opencv?=$(shell PKG_CONFIG_PATH=/usr/local/pkgconfig pkg-config --cflags --libs opencv || printf "no";)
 ifeq ($(opencv)X,noX)
@@ -92,13 +93,13 @@ agg-static: compile
 	ar rcs libagg.a $(agg_obj)
 
 agg-shared: compile
-	$(CXX) -shared -o libagg.so $(agg_obj) $(libs)
+	$(CXX) -shared -o libagg.$(suffix) $(agg_obj) $(libs)
 
 tw-static: compile
 	ar rcs libtwombly.a $(agg_obj) $(tw_obj)
 
 tw-shared: compile
-	$(CXX) -shared -o libtwombly.so $(agg_obj) $(tw_obj) $(libs)
+	$(CXX) -shared -o libtwombly.$(suffix) $(agg_obj) $(tw_obj) $(libs)
 
 .PHONY: install
 install:
@@ -121,7 +122,7 @@ clean:
 	rm -f $(agg_obj) $(tw_obj)
 
 clean-libs:
-	rm -f libtwombly.so libtwombly.a libagg.so libagg.a
+	rm -f libtwombly.$(suffix) libtwombly.a libagg.$(suffix) libagg.a
 
 %.o: %.cpp
 	$(CXX) -O3  -std=c++11 -c -fPIC $*.cpp -I. $(incl) -o $@
