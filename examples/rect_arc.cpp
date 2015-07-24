@@ -13,7 +13,7 @@ int main(int argc, char *argv[]){
     ctx.new_path();
     ctx.line_width(10);
     ctx.move_to(50, 50);
-    ctx.arc_to(70, 50, 10, 10, 0.3);
+    ctx.arc_to(10, 10, 70, 50, 0.3);
     ctx.stroke(Color(200, 0, 255));
     ctx.paint();
 
