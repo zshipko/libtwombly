@@ -481,11 +481,14 @@ public:
         curve4_rel(a, b, c, d, x, y);
     }
 
-    inline void arc_to(double x, double y, double rx, double ry, double angle, bool large = false, bool sweep = false){
+    inline void arc_to(double rx, double ry, double x, double y, double angle, bool large = false, bool sweep = false){
+        if (angle == 0)
+            return;
+
         agg::path_storage::arc_to(rx, ry, angle, large, sweep, x, y);
     }
 
-    inline void arc_rel(double x, double y, double rx, double ry, double angle, bool large = false, bool sweep = false){
+    inline void arc_rel( double rx, double ry, double x, double y, double angle, bool large = false, bool sweep = false){
         agg::path_storage::arc_rel(rx, ry, angle, large, sweep, x, y);
     }
 

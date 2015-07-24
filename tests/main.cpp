@@ -93,6 +93,7 @@ const lest::test drawing_test[] = {
         d.stroke();
         d.preserve(false);
 
+#ifndef NO_SHOW
         try{
             namedWindow("Path test");
             imshow("Path test", im);
@@ -101,6 +102,7 @@ const lest::test drawing_test[] = {
         } catch(std::exception &exc){
 
         }
+#endif
     },
 
     CASE ( "Curve" ) {
@@ -113,6 +115,7 @@ const lest::test drawing_test[] = {
         d.curve_to(400, 400, 100, 320);
         d.stroke();
 
+#ifndef NO_SHOW
         try {
             namedWindow("Curve test");
             imshow("Curve test", im2);
@@ -120,6 +123,7 @@ const lest::test drawing_test[] = {
         } catch (std::exception &exc){
 
         }
+#endif
 
         d.new_path();
         d.clear(255, 255, 255);
@@ -128,6 +132,7 @@ const lest::test drawing_test[] = {
         d.curve_to(400, 400, 150, 320);
         d.stroke();
 
+#ifndef NO_SHOW
         try{
             imshow("Curve test", im2);
             waitKey(0);
@@ -135,6 +140,7 @@ const lest::test drawing_test[] = {
         } catch(std::exception &exc){
 
         }
+#endif
     },
 
     CASE ( "Gradient" ) {
@@ -158,6 +164,7 @@ const lest::test drawing_test[] = {
         d.fill_gradient(g, 0, 300, gradient_type_y);
         EXPECT((im2.at<Scalar>(250, 250)[0] > 0));
 
+#ifndef NO_SHOW
         try{
             imshow("Gradient test", im2);
             waitKey(0);
@@ -165,6 +172,30 @@ const lest::test drawing_test[] = {
         } catch(std::exception &exc){
 
         }
+#endif
+    },
+
+    CASE( "cairo-arc-infinite-loop"){
+        Mat3b im2(8, 8);
+        auto d = draw(im2);
+        d.clear(255, 255, 255);
+
+        d.move_to(0, 0);
+        d.arc_to(0, 0, 1, 1024 / DBL_EPSILON * M_PI, 0);
+        d.arc_to(0, 0, 1, 0, 1024 / DBL_EPSILON * M_PI);
+
+        d.set_color(255, 0, 0);
+        d.stroke();
+
+#ifndef NO_SHOW
+        try{
+            imshow("infinte loop", im2);
+            waitKey(0);
+            destroyAllWindows();
+        } catch(std::exception &exc){
+
+        }
+#endif
     }
 };
 

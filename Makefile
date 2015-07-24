@@ -140,7 +140,7 @@ release:
 	tar czf $(RELEASE_DIR).tar.gz $(RELEASE_DIR)
 
 test:
-	cd tests && CXX=$(CXX) freetype=$(freetype) $(MAKE)
+	cd tests && CXX=$(CXX) freetype=$(freetype) $(MAKE) show=$(show)
 	tests/run
 
 parser:
