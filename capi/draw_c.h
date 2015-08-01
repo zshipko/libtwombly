@@ -36,6 +36,7 @@ struct drawing {
     int channels;
     int bits_per_channel;
     bool is_bgr;
+    void *user_data;
 };
 typedef struct drawing drawing;
 

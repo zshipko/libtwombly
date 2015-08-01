@@ -21,6 +21,7 @@ drawing draw_create_path(){
 drawing draw_create(int64_t width, int64_t height, int channels, uint8_t *data){
     drawing d;
     d.handle = NULL;
+    d.user_data = NULL;
     d.is_bgr = false;
 
     if (channels == 1){
