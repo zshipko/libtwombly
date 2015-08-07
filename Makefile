@@ -32,15 +32,11 @@ tw_hdrs=image.hpp draw.hpp twombly.hpp capi/draw_c.h config.h
 
 CONFIG_CV=
 CONFIG_FT=
+
+suffix_Darwin=dylib
+suffix?=$(suffix_$(shell uname))
 suffix?=so
 
-opencv?=$(shell PKG_CONFIG_PATH=/usr/local/pkgconfig pkg-config --cflags --libs opencv || printf "no";)
-ifeq ($(opencv)X,noX)
-	libs= -L/usr/local/lib
-	CONFIG_CV+= "\#define NO_OPENCV"
-else
-	libs=-L/usr/local/lib -lopencv_core -lopencv_highgui -lopencv_imgproc
-endif
 incl=-I./agg/include -I./agg/font_freetype -I./twombly -I/usr/local/include $(flags)
 dest?=/usr/local
 VERSION=0.1
@@ -50,6 +46,14 @@ freetype?=yes
 bimage?=no
 FREETYPE_PKG?=freetype2
 svg=no
+
+opencv?=$(shell PKG_CONFIG_PATH=/usr/local/pkgconfig pkg-config --cflags --libs opencv || printf "no";)
+ifeq ($(opencv)X,noX)
+	libs= -L/usr/local/lib
+	CONFIG_CV+= "\#define NO_OPENCV"
+else
+	libs=-L/usr/local/lib -lopencv_core -lopencv_highgui -lopencv_imgproc
+endif
 
 HAS_COMPILER=$(shell $(CXX) -v || printf "NO";)
 ifeq ($(HAS_COMPILER)X,NOX)
