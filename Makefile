@@ -35,7 +35,9 @@ CONFIG_FT=
 
 suffix_Darwin=dylib
 suffix?=$(suffix_$(shell uname))
-suffix?=so
+ifeq ($(suffix)X,X)
+	suffix=so
+endif
 
 incl=-I./agg/include -I./agg/font_freetype -I./twombly -I/usr/local/include $(flags)
 dest?=/usr/local
