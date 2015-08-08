@@ -175,6 +175,30 @@ const lest::test drawing_test[] = {
 #endif
     },
 
+    CASE("linear gradient many stops"){
+        Mat3b im2(800, 800);
+        auto d = draw(im2);
+
+        Gradient<Color> g;
+
+        for(int i = 0; i < 255; i++){
+            g.add_stop(Color(i, 255-i, 255 * rand(), 255 * rand()));
+        }
+
+        d.rect(0, 0, 800, 800);
+        d.fill_gradient(g, 0, 800, gradient_type_x);
+
+#ifndef NO_SHOW
+        try{
+            imshow("Gradient test many stops", im2);
+            waitKey(0);
+            destroyAllWindows();
+        } catch(std::exception &exc){
+
+        }
+#endif
+    },
+
     CASE( "cairo-arc-infinite-loop"){
         Mat3b im2(8, 8);
         auto d = draw(im2);
@@ -187,9 +211,88 @@ const lest::test drawing_test[] = {
         d.set_color(255, 0, 0);
         d.stroke();
 
+    },
+
+    CASE( "mask"){
+        Mat4b im2(8, 8);
+        auto d = draw(im2);
+
+        d.antialias(false);
+        d.alpha_mask_init();
+
+        d.rect(0, 0, 8, 8);
+        d.set_color(255, 0, 0, 255);
+        d.alpha_mask_get(5, 5) = 0;
+        d.fill();
+
+        imwrite("test1.jpg", im2);
+
+        EXPECT((int)(im2.at<Vec4b>(5, 5)[2]) <  255);
+        EXPECT(((int)im2.at<Vec4b>(4, 4)[2]) == 255);
+
+    },
+
+    CASE("Matrix rotation, scaling, translation, "){
+        int PAT_WIDTH = 120, PAT_HEIGHT = 120, PAD = 2;
+        Mat4b im2(((PAT_WIDTH*2) + 8), ((PAT_WIDTH*2) + 8));
+        auto d = draw(im2);
+
+        d.clear(0, 0, 0);
+
+        d.translate(-PAT_WIDTH/2.0, -PAT_WIDTH/2.0);
+        d.rotate(1.57079633);
+        d.translate(PAT_WIDTH/2.0 + PAD, PAT_WIDTH/2.0-PAD);
+        d.mtx.invert();
+
+        d.scale(2, 2);
+
+        d.set_color(255, 0, 255, 127);
+        d.rect(PAT_WIDTH/6.0, PAT_HEIGHT/6.0, PAT_WIDTH/6.0 + PAT_WIDTH/4.0, PAT_WIDTH/6.0 + PAT_HEIGHT/4.0);
+        d.fill();
+
+        d.set_color (0, 255, 255, 127);
+        d.rect(PAT_WIDTH/2.0, PAT_HEIGHT/2.0, PAT_WIDTH/2.0 + PAT_WIDTH/4.0,  PAT_WIDTH/2.0 + PAT_HEIGHT/4.0);
+        d.fill();
+
+        d.line_width(1);
+        d.move_to(PAT_WIDTH/6.0, 0);
+        d.line_to(0, 0);
+        d.line_to(0, PAT_HEIGHT/6.0);
+        d.set_color(255, 0, 0);
+        d.stroke();
+
+        d.move_to(PAT_WIDTH/6.0, PAT_HEIGHT);
+        d.line_to(0, PAT_HEIGHT);
+        d.line_to(0, 5 * PAT_HEIGHT/6.0);
+        d.set_color(0, 0, 255, 255);
+        d.stroke();
+
+        d.move_to (5*PAT_WIDTH/6.0, 0);
+        d.line_to (PAT_WIDTH, 0);
+        d.line_to (PAT_WIDTH, PAT_HEIGHT/6.0);
+        d.set_color (0, 0, 255, 255);
+        d.stroke ();
+
+        d.move_to (5*PAT_WIDTH/6.0, PAT_HEIGHT);
+        d.line_to (PAT_WIDTH, PAT_HEIGHT);
+        d.line_to (PAT_WIDTH, 5*PAT_HEIGHT/6.0);
+        d.set_color (255, 255, 0, 255);
+        d.stroke ();
+
+        d.set_color (127, 127, 127);
+        d.line_width (PAT_WIDTH/10.0);
+
+        d.move_to (0,         PAT_HEIGHT/4.0);
+        d.line_to (PAT_WIDTH, PAT_HEIGHT/4.0);
+        d.stroke ();
+
+        d.move_to (PAT_WIDTH/4.0,         0);
+        d.line_to (PAT_WIDTH/4.0, PAT_WIDTH);
+        d.stroke ();
+
 #ifndef NO_SHOW
         try{
-            imshow("infinte loop", im2);
+            imshow("Test Matrix", im2);
             waitKey(0);
             destroyAllWindows();
         } catch(std::exception &exc){
