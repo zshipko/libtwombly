@@ -402,10 +402,11 @@ class Drawing(object):
         self._as_parameter_ = self._drawing
 
     def __getattr__(self, key):
-        def wrapper(*args):
-            ''' get method by name'''
-            return _METHODS[key](self._drawing, *args)
-        return wrapper
+        if key in _METHODS:
+            def wrapper(*args):
+                ''' get method by name'''
+                return _METHODS[key](self._drawing, *args)
+            return wrapper
 
     def get_vertices(self):
         return [self.get_vertex(i) for i in range(0, self.total_vertices())]
