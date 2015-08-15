@@ -40,7 +40,7 @@ To install the python ctypes wrapper:
 
 ## Usage
 
-See the [examples/](https://github.com/zshipko/libtwombly/tree/master/examples) folder for now.
+See the [examples](https://github.com/zshipko/libtwombly/tree/master/examples) or [https://zshipko.github.io/libtwombly](https://zshipko.github.io/libtwombly) for more detailed information.
 
 To build and run an example:
 
