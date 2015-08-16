@@ -106,6 +106,7 @@ tw-static: compile
 
 tw-shared: compile
 	$(CXX) -shared -o libtwombly.$(suffix) $(agg_obj) $(tw_obj) $(libs)
+	$(CXX) -shared -o libtwombly.$(VERSION).$(suffix) $(agg_obj) $(tw_obj) $(libs)
 
 .PHONY: install
 install:

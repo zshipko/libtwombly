@@ -161,8 +161,7 @@ public:
     agg::scanline32_p8 *sl;
     agg::rendering_buffer buffer;
     agg::rasterizer_scanline_aa<> *raster;
-
-
+    std::vector<unsigned> all_paths;
 
     Drawing() : pix(buffer), size(0, 0, 0), sl(nullptr), raster(nullptr), alpha_mask(nullptr) {
         base = agg::renderer_base<DrawingType>(pix);
@@ -358,6 +357,7 @@ public:
     unsigned new_path(){
         raster->reset();
         pathid = start_new_path();
+        all_paths.push_back(pathid);
         return pathid;
     }
 
