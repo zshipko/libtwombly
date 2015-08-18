@@ -432,7 +432,7 @@ public:
     // Create shape objects
     void ellipse(double x, double y, double rx, double ry, int n = 100){
         agg::ellipse ell(x, y, rx, ry, n);
-        join_path<agg::ellipse>(ell);
+        concat_path<agg::ellipse>(ell);
     }
 
     inline void rect(double x, double y, double x1, double y1, double border_radius=0){
