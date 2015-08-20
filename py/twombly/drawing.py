@@ -407,6 +407,7 @@ class Drawing(object):
                 ''' get method by name'''
                 return _METHODS[key](self._drawing, *args)
             return wrapper
+        raise AttributeError
 
     def get_vertices(self):
         return [self.get_vertex(i) for i in range(0, self.total_vertices())]
