@@ -625,7 +625,7 @@ public:
             agg::renderer_base<alpha_adaptor_type> alpha_base(alpha_mask_adaptor);
             agg::render_scanlines_aa(*raster, *sl, alpha_base, sa, sg);
          } else {
-            agg::render_scanlines_bin(*raster, *sl, base, sa, sg);
+            agg::render_scanlines_aa(*raster, *sl, base, sa, sg);
          }
 
         if (!_preserve)
