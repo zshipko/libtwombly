@@ -628,8 +628,10 @@ public:
             agg::render_scanlines_aa(*raster, *sl, base, sa, sg);
          }
 
-        if (!_preserve)
+        if (!_preserve){
             remove_all();
+            clear_transforms();
+        }
     }
 
     template <typename ColorType>
@@ -668,8 +670,10 @@ public:
             agg::render_scanlines_aa(*raster, *sl, base, sa, sg);
          }
 
-        if (!_preserve)
+        if (!_preserve){
             remove_all();
+            clear_transforms();
+        }
     }
 
     inline void fill(Color c){
@@ -842,8 +846,10 @@ public:
             agg::render_scanlines(*raster, *sl, ren_gradient);
         };
 
-        if (!_preserve)
+        if (!_preserve){
             remove_all();
+            clear_transforms();
+        }
     }
 
 
@@ -888,8 +894,10 @@ public:
             agg::render_scanlines(*raster, *sl, ren_gradient);
         };
 
-        if (!_preserve)
+        if (!_preserve){
             remove_all();
+            clear_transforms();
+        }
 
     }
 
@@ -923,8 +931,10 @@ public:
             }
         }
 
-        if (!_preserve)
+        if (!_preserve){
             remove_all();
+            clear_transforms();
+        }
     }
 
     inline void auto_close(bool c){
