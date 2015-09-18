@@ -15,11 +15,10 @@ def image_to_svg(im, distance=20, canny_sigma=None, canny_low=None, canny_high=N
     '''finds image contours and converts them to a primitive SVG string'''
     if contours is None:
         contours = image_get_contours(im, level, canny_sigma, canny_low, canny_high, fully_connected)
-
     pathstr='''<path
          d="M {A},{B} {points}  "
          id="path3006"
-         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />'''
+         style="fill:#000000;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />'''
 
     paths = []
     for a in contours:
