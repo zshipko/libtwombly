@@ -11,7 +11,7 @@ def image_get_contours(im, level=0, canny_sigma=None, canny_low=None, canny_high
         tmp = canny(tmp, canny_sigma, canny_low, canny_high)
     return find_contours(tmp, level, fully_connected=fully_connected)
 
-def image_to_svg(im, distance=20, canny_sigma=None, canny_low=None, canny_high=None, fully_connected='high', contours=None, level=0):
+def image_to_svg(im, distance=20, canny_sigma=None, canny_low=None, canny_high=None, fully_connected='high', contours=None, level=0, line=True):
     '''finds image contours and converts them to a primitive SVG string'''
     if contours is None:
         contours = image_get_contours(im, level, canny_sigma, canny_low, canny_high, fully_connected)
@@ -24,7 +24,9 @@ def image_to_svg(im, distance=20, canny_sigma=None, canny_low=None, canny_high=N
     paths = []
     for a in contours:
         tmp = []
-        for b in a[:len(a)/2:distance]:
+        if line:
+            a = a[:len(a)/2:distance]
+        for b in a:
             tmp.append('{0},{1}'.format(b[1], b[0]))
         paths.append(pathstr.format(A=a[0][1], B=a[0][0], points=' '.join(tmp)))
 
@@ -61,7 +63,7 @@ def image_to_svg(im, distance=20, canny_sigma=None, canny_low=None, canny_high=N
     '''.format(width=im.shape[1], height=im.shape[0], \
                         paths='\n'.join(paths))
 
-def image_to_drawing(im, distance=20, canny_sigma=None, canny_low=None, canny_high=None, fully_connected='high', contours=None, level=0):
+def image_to_drawing(im, distance=20, canny_sigma=None, canny_low=None, canny_high=None, fully_connected='high', contours=None, level=0, line=True):
     '''find image contours and draws them using a twombly Drawing'''
     if contours is None:
         contours = image_get_contours(im, level, canny_sigma, canny_low, canny_high, fully_connected)
@@ -70,6 +72,8 @@ def image_to_drawing(im, distance=20, canny_sigma=None, canny_low=None, canny_hi
     ctx = draw(tmp)
     for a in contours:
         ctx.move_to(a[0][1], a[0][0])
-        for b in a[:len(a)/2:distance]:
+        if line:
+            a = a[:len(a)/2:distance]
+        for b in a:
             ctx.line_to(b[1], b[0])
     return tmp, ctx
