@@ -24,7 +24,7 @@ def image_to_svg(im, distance=20, canny_sigma=None, canny_low=None, canny_high=N
     tmp = []
     i = 0
     for a in contours:
-        if i > 0:
+        if i > 1:
             tmp = []
             i = 0
 
