@@ -11,14 +11,14 @@ def image_get_contours(im, level=0, canny_sigma=None, canny_low=None, canny_high
         tmp = canny(tmp, canny_sigma, canny_low, canny_high)
     return find_contours(tmp, level, fully_connected=fully_connected)
 
-def image_to_svg(im, distance=20, canny_sigma=None, canny_low=None, canny_high=None, fully_connected='high', contours=None, level=0, line=True):
+def image_to_svg(im, distance=20, canny_sigma=None, canny_low=None, canny_high=None, fully_connected='high', contours=None, level=0, line=True, fill='none'):
     '''finds image contours and converts them to a primitive SVG string'''
     if contours is None:
         contours = image_get_contours(im, level, canny_sigma, canny_low, canny_high, fully_connected)
     pathstr='''<path
          d="M {A},{B} {points}  "
          id="path3006"
-         style="fill:#000000;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />'''
+         style="fill:{fill};stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />'''
 
     paths = []
     tmp = []
@@ -32,7 +32,7 @@ def image_to_svg(im, distance=20, canny_sigma=None, canny_low=None, canny_high=N
             a = a[:len(a)/2:distance]
         for b in a:
             tmp.append('{0},{1}'.format(b[1], b[0]))
-        paths.append(pathstr.format(A=a[0][1], B=a[0][0], points=' '.join(tmp)))
+        paths.append(pathstr.format(fill=fill, A=a[0][1], B=a[0][0], points=' '.join(tmp)))
         i += 1
 
     return '''<?xml version="1.0" encoding="UTF-8" standalone="no"?>
