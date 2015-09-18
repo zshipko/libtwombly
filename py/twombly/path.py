@@ -21,13 +21,19 @@ def image_to_svg(im, distance=20, canny_sigma=None, canny_low=None, canny_high=N
          style="fill:#000000;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />'''
 
     paths = []
+    tmp = []
+    i = 0
     for a in contours:
-        tmp = []
+        if i > 0:
+            tmp = []
+            i = 0
+
         if line:
             a = a[:len(a)/2:distance]
         for b in a:
             tmp.append('{0},{1}'.format(b[1], b[0]))
         paths.append(pathstr.format(A=a[0][1], B=a[0][0], points=' '.join(tmp)))
+        i += 1
 
     return '''<?xml version="1.0" encoding="UTF-8" standalone="no"?>
     <svg
