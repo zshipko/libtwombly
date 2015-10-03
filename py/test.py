@@ -1,5 +1,6 @@
 import unittest
 from twombly import *
+from skimage.io import imsave
 
 class TestDrawing(unittest.TestCase):
     def setUp(self):
@@ -48,6 +49,21 @@ class TestDrawing(unittest.TestCase):
         self.drawing.set_line_width(10)
         self.drawing.fill_gradient(g, 0, 800, GRADIENT_Y)
         self.assertEqual(self.image[11, 11][0], 248, 10)
+
+    def test_alpha(self):
+        self.drawing.clear(0, 0, 0, 255)
+        self.drawing.alpha_mask_init()
+        self.drawing.set_antialias(False)
+
+        for i in range(20, 40):
+            for j in range(20, 40):
+                self.drawing.alpha_mask_ptr_offs(i, j)[0] = 0
+
+        self.drawing.rect(0, 0, 100, 100)
+        self.drawing.set_color(255, 0, 0, 255)
+        self.drawing.fill()
+
+        self.assertTrue((self.image[30, 30] == [0, 0, 0]).all())
 
 
 if __name__ == '__main__':
