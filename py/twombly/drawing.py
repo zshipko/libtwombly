@@ -305,6 +305,8 @@ class Gradient(object):
     ''' Gradient Class '''
     def __init__(self, *args, **kw):
         self.depth = kw.get('depth', 8)
+        self._gradient= None
+
         if  self.depth == 16:
             self._gradient = _gradient_create16()
         else:
@@ -325,7 +327,7 @@ class Gradient(object):
         return TransformMatrix(_gradient_get_matrix(self._gradient))
 
     def __del__(self):
-        if self._gradient is not None:
+        if hasattr(self, "_gradient") and self._gradient is not None:
             _gradient_free(pointer(self._gradient))
             self._gradient = None
 
