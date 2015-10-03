@@ -1,12 +1,12 @@
-# libtwombly - 2d graphics library
+# Twombly - Vector Graphics
 
 [![Build Status](https://travis-ci.org/zshipko/libtwombly.svg?branch=master)](https://travis-ci.org/zshipko/libtwombly)
 
-libtwombly is a basic 2d graphics library for C99 and C++11. Once the interface stabilizes it will provide a somewhat familiar interface for drawing on images using paths, transforms, strokes, fills, gradients, text, images,  etc..
+**libtwombly** is a basic 2d vector graphics library for C99 and C++11. It provides a familiar interface for drawing on images using paths, transforms, strokes, fills, gradients, text, images,  etc...
 
 It it based on a lightly modified version of the [Anti-Grain Geometry](http://www.antigrain.com/) library (version 2.4) and is meant to provide an API similar to cairo or HTML5 canvas.
 
-Tested on OSX, Linux, FreeBSD and OpenBSD
+`libtwombly` is actively tested on OSX, Linus, FreeBSD and OpenBSD.
 
 ## Dependencies
 

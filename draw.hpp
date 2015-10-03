@@ -264,9 +264,10 @@ public:
 
     void alpha_mask_init(){
         if (alpha_mask == nullptr){
-            alpha_mask = new uint8_t[size.x * size.y];
+            alpha_mask = new uint8_t[size.x * size.y]();
             memset(alpha_mask, 255, size.x * size.y);
         }
+
     }
 
     void alpha_mask_fill(uint8_t a){
@@ -275,11 +276,23 @@ public:
         }
     }
 
-    uint8_t &alpha_mask_get(int32_t x, int32_t y){
+    void alpha_mask_set(int32_t x, int32_t y, uint8_t val){
+        if (alpha_mask && x < size.x && y < size.y && x >= 0 && y >= 0){
+            alpha_mask[(y * size.x) + x] = val;
+        }
+    }
+
+    uint8_t alpha_mask_get(int32_t x, int32_t y){
+        if (!alpha_mask){
+            return 0;
+        }
         return alpha_mask[(y * size.x) + x];
     }
 
     uint8_t *alpha_mask_ptr_offs(int32_t x, int32_t y){
+        if (!alpha_mask){
+            return nullptr;
+        }
         return alpha_mask + (y * size.x) + x;
     }
 
@@ -599,79 +612,6 @@ public:
         set_color(Color(r, g, b, a));
     }
 
-    // Fill/stroke path with another drawing
-    template<typename ColorType>
-    void fill_pattern (Drawing<DrawingType> &d) {
-        typedef agg::wrap_mode_repeat wrap_x_type;
-        typedef agg::wrap_mode_repeat wrap_y_type;
-        typedef agg::image_accessor_wrap<DrawingType, wrap_x_type, wrap_y_type> img_source_type;
-        typedef agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_adaptor_type;
-
-        agg::conv_curve<agg::path_storage> pth(*this);
-        agg::span_allocator<ColorType> sa;
-
-        // set up image
-        img_source_type img_src (d.pix);
-        agg::span_pattern_rgb<img_source_type> sg ( img_src, d.size.x, d.size.y);
-
-        // apply transforms
-        agg::conv_transform<agg::conv_curve<agg::path_storage>> m(pth, mtx);
-        raster->add_path(m, pathid);
-
-        if (alpha_mask != nullptr){
-            agg::rendering_buffer alpha_mask_rbuf(alpha_mask, size.x, size.y, size.x);
-            agg::amask_no_clip_gray8 alpha_mask(alpha_mask_rbuf);
-            alpha_adaptor_type alpha_mask_adaptor(pix, alpha_mask);
-            agg::renderer_base<alpha_adaptor_type> alpha_base(alpha_mask_adaptor);
-            agg::render_scanlines_aa(*raster, *sl, alpha_base, sa, sg);
-         } else {
-            agg::render_scanlines_bin(*raster, *sl, base, sa, sg);
-         }
-
-        if (!_preserve)
-            remove_all();
-    }
-
-    template <typename ColorType>
-    void stroke_pattern (Drawing<DrawingType> &d) {
-        typedef agg::wrap_mode_repeat wrap_x_type;
-        typedef agg::wrap_mode_repeat wrap_y_type;
-        typedef agg::image_accessor_wrap<DrawingType, wrap_x_type, wrap_y_type> img_source_type;
-        typedef agg::span_pattern_rgb<img_source_type> span_gen_type;
-        typedef agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_adaptor_type;
-
-        agg::conv_curve<agg::path_storage> p(*this);
-        agg::conv_stroke<agg::conv_curve<agg::path_storage>> pth(p);
-        agg::span_allocator<ColorType> sa;
-
-        // get image set up
-        img_source_type img_src (d.pix);
-        span_gen_type sg ( img_src, d.size.x, d.size.y);
-
-        // apply settings
-        pth.width(_width);
-        pth.line_cap((agg::line_cap_e)_linecap);
-        pth.line_join((agg::line_join_e)_linejoin);
-        pth.miter_limit(_miterlimit);
-
-        // apply transforms
-        agg::conv_transform<agg::conv_stroke<agg::conv_curve<agg::path_storage>>> m(pth, mtx);
-        raster->add_path(m, pathid);
-
-        if (alpha_mask != nullptr){
-            agg::rendering_buffer alpha_mask_rbuf(alpha_mask, size.x, size.y, size.x);
-            agg::amask_no_clip_gray8 alpha_mask(alpha_mask_rbuf);
-            alpha_adaptor_type alpha_mask_adaptor(pix, alpha_mask);
-            agg::renderer_base<alpha_adaptor_type> alpha_base(alpha_mask_adaptor);
-            agg::render_scanlines_aa(*raster, *sl, alpha_base, sa, sg);
-         } else {
-            agg::render_scanlines_aa(*raster, *sl, base, sa, sg);
-         }
-
-        if (!_preserve)
-            remove_all();
-    }
-
     inline void fill(Color c){
         set_color(c);
         fill();
@@ -815,6 +755,7 @@ public:
         typedef agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_adaptor_type;
         typedef agg::renderer_base<alpha_adaptor_type> renderer_base_type;
         typedef agg::renderer_scanline_aa<renderer_base_type, span_allocator_type, span_gradient_type> renderer_gradient_type;
+        typedef agg::renderer_scanline_bin<renderer_base_type, span_allocator_type, span_gradient_type> renderer_gradient_type_bin;
 
         GradientType  gradient_func;
         interpolator_type   span_interpolator(_mtx);
@@ -835,15 +776,28 @@ public:
             agg::amask_no_clip_gray8 alpha_mask(alpha_mask_rbuf);
             alpha_adaptor_type alpha_mask_adaptor(pix, alpha_mask);
             agg::renderer_base<alpha_adaptor_type> alpha_base(alpha_mask_adaptor);
-            renderer_gradient_type ren_gradient(alpha_base, span_allocator, span_gradient);
-            agg::render_scanlines(*raster, *sl, ren_gradient);
+
+            if (_antialias){
+                renderer_gradient_type ren_gradient(alpha_base, span_allocator, span_gradient);
+                agg::render_scanlines(*raster, *sl, ren_gradient);
+            } else {
+                renderer_gradient_type_bin ren_gradient(alpha_base, span_allocator, span_gradient);
+                agg::render_scanlines(*raster, *sl, ren_gradient);
+            }
          } else {
-            agg::renderer_scanline_aa<agg::renderer_base<DrawingType>, span_allocator_type, span_gradient_type> ren_gradient(base, span_allocator, span_gradient);
-            agg::render_scanlines(*raster, *sl, ren_gradient);
+            if (_antialias){
+                agg::renderer_scanline_aa<agg::renderer_base<DrawingType>, span_allocator_type, span_gradient_type> ren_gradient(base, span_allocator, span_gradient);
+                agg::render_scanlines(*raster, *sl, ren_gradient);
+            } else {
+                agg::renderer_scanline_bin<agg::renderer_base<DrawingType>, span_allocator_type, span_gradient_type> ren_gradient(base, span_allocator, span_gradient);
+                agg::render_scanlines(*raster, *sl, ren_gradient);
+            }
         };
 
-        if (!_preserve)
+        if (!_preserve){
             remove_all();
+            clear_transforms();
+        }
     }
 
 
@@ -856,6 +810,7 @@ public:
         typedef agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_adaptor_type;
         typedef agg::renderer_base<alpha_adaptor_type> renderer_base_type;
         typedef agg::renderer_scanline_aa<renderer_base_type, span_allocator_type, span_gradient_type> renderer_gradient_type;
+        typedef agg::renderer_scanline_bin<renderer_base_type, span_allocator_type, span_gradient_type> renderer_gradient_type_bin;
 
         GradientType gradient_func;
         interpolator_type span_interpolator(_mtx);
@@ -881,15 +836,28 @@ public:
             agg::amask_no_clip_gray8 alpha_mask(alpha_mask_rbuf);
             alpha_adaptor_type alpha_mask_adaptor(pix, alpha_mask);
             agg::renderer_base<alpha_adaptor_type> alpha_base(alpha_mask_adaptor);
-            renderer_gradient_type ren_gradient(alpha_base, span_allocator, span_gradient);
-            agg::render_scanlines(*raster, *sl, ren_gradient);
+
+            if (_antialias){
+                renderer_gradient_type ren_gradient(alpha_base, span_allocator, span_gradient);
+                agg::render_scanlines(*raster, *sl, ren_gradient);
+            } else {
+                renderer_gradient_type_bin ren_gradient(alpha_base, span_allocator, span_gradient);
+                agg::render_scanlines(*raster, *sl, ren_gradient);
+            }
          } else {
-            agg::renderer_scanline_aa<agg::renderer_base<DrawingType>, span_allocator_type, span_gradient_type> ren_gradient(base, span_allocator, span_gradient);
-            agg::render_scanlines(*raster, *sl, ren_gradient);
+            if (_antialias){
+                agg::renderer_scanline_aa<agg::renderer_base<DrawingType>, span_allocator_type, span_gradient_type> ren_gradient(base, span_allocator, span_gradient);
+                agg::render_scanlines(*raster, *sl, ren_gradient);
+            } else {
+                agg::renderer_scanline_bin<agg::renderer_base<DrawingType>, span_allocator_type, span_gradient_type> ren_gradient(base, span_allocator, span_gradient);
+                agg::render_scanlines(*raster, *sl, ren_gradient);
+            }
         };
 
-        if (!_preserve)
+        if (!_preserve){
             remove_all();
+            clear_transforms();
+        }
 
     }
 
@@ -911,7 +879,7 @@ public:
                 alpha_ren.color(current_color);
                 agg::render_scanlines(*raster, *sl, alpha_ren);
             } else {
-                agg::renderer_scanline_aa_solid<agg::renderer_base<alpha_adaptor_type>> alpha_ren(alpha_base);
+                agg::renderer_scanline_bin_solid<agg::renderer_base<alpha_adaptor_type>> alpha_ren(alpha_base);
                 alpha_ren.color(current_color);
                 agg::render_scanlines(*raster, *sl, alpha_ren);
             }
@@ -923,8 +891,10 @@ public:
             }
         }
 
-        if (!_preserve)
+        if (!_preserve){
             remove_all();
+            clear_transforms();
+        }
     }
 
     inline void auto_close(bool c){

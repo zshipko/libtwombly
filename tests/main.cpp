@@ -1,6 +1,7 @@
 #include "lest.hpp"
 
 #include "../twombly.hpp"
+#define NO_SHOW
 
 #include <iostream>
 
@@ -205,100 +206,37 @@ const lest::test drawing_test[] = {
         d.clear(255, 255, 255);
 
         d.move_to(0, 0);
-        d.arc_to(0, 0, 1, 1024 / DBL_EPSILON * M_PI, 0);
-        d.arc_to(0, 0, 1, 0, 1024 / DBL_EPSILON * M_PI);
+        d.arc_to(0, 0, 1, 1024.0 / DBL_EPSILON * M_PI, 0);
+        d.arc_to(0, 0, 1, 0, 1024.0 / DBL_EPSILON * M_PI);
 
         d.set_color(255, 0, 0);
         d.stroke();
 
+        EXPECT((im2.at<Vec3b>(0, 0)[2] == 255 &&
+                    im2.at<Vec3b>(0, 0)[2] > im2.at<Vec3b>(0, 0)[1] &&
+                    im2.at<Vec3b>(0, 0)[2] > im2.at<Vec3b>(0, 0)[0]));
     },
 
     CASE( "mask"){
-        Mat4b im2(8, 8);
+        Mat3b im2(80, 80);
+        memset(im2.data, 0,  80 * 80 * 3);
+
         auto d = draw(im2);
 
         d.antialias(false);
         d.alpha_mask_init();
 
-        d.rect(0, 0, 8, 8);
+        d.rect(0, 0, 80, 80);
         d.set_color(255, 0, 0, 255);
-        d.alpha_mask_get(5, 5) = 0;
-        d.fill();
-
-        imwrite("test1.jpg", im2);
-
-        EXPECT((int)(im2.at<Vec4b>(5, 5)[2]) <  255);
-        EXPECT(((int)im2.at<Vec4b>(4, 4)[2]) == 255);
-
-    },
-
-    CASE("Matrix rotation, scaling, translation, "){
-        int PAT_WIDTH = 120, PAT_HEIGHT = 120, PAD = 2;
-        Mat4b im2(((PAT_WIDTH*2) + 8), ((PAT_WIDTH*2) + 8));
-        auto d = draw(im2);
-
-        d.clear(0, 0, 0);
-
-        d.translate(-PAT_WIDTH/2.0, -PAT_WIDTH/2.0);
-        d.rotate(1.57079633);
-        d.translate(PAT_WIDTH/2.0 + PAD, PAT_WIDTH/2.0-PAD);
-        d.mtx.invert();
-
-        d.scale(2, 2);
-
-        d.set_color(255, 0, 255, 127);
-        d.rect(PAT_WIDTH/6.0, PAT_HEIGHT/6.0, PAT_WIDTH/6.0 + PAT_WIDTH/4.0, PAT_WIDTH/6.0 + PAT_HEIGHT/4.0);
-        d.fill();
-
-        d.set_color (0, 255, 255, 127);
-        d.rect(PAT_WIDTH/2.0, PAT_HEIGHT/2.0, PAT_WIDTH/2.0 + PAT_WIDTH/4.0,  PAT_WIDTH/2.0 + PAT_HEIGHT/4.0);
-        d.fill();
-
-        d.line_width(1);
-        d.move_to(PAT_WIDTH/6.0, 0);
-        d.line_to(0, 0);
-        d.line_to(0, PAT_HEIGHT/6.0);
-        d.set_color(255, 0, 0);
-        d.stroke();
-
-        d.move_to(PAT_WIDTH/6.0, PAT_HEIGHT);
-        d.line_to(0, PAT_HEIGHT);
-        d.line_to(0, 5 * PAT_HEIGHT/6.0);
-        d.set_color(0, 0, 255, 255);
-        d.stroke();
-
-        d.move_to (5*PAT_WIDTH/6.0, 0);
-        d.line_to (PAT_WIDTH, 0);
-        d.line_to (PAT_WIDTH, PAT_HEIGHT/6.0);
-        d.set_color (0, 0, 255, 255);
-        d.stroke ();
-
-        d.move_to (5*PAT_WIDTH/6.0, PAT_HEIGHT);
-        d.line_to (PAT_WIDTH, PAT_HEIGHT);
-        d.line_to (PAT_WIDTH, 5*PAT_HEIGHT/6.0);
-        d.set_color (255, 255, 0, 255);
-        d.stroke ();
-
-        d.set_color (127, 127, 127);
-        d.line_width (PAT_WIDTH/10.0);
-
-        d.move_to (0,         PAT_HEIGHT/4.0);
-        d.line_to (PAT_WIDTH, PAT_HEIGHT/4.0);
-        d.stroke ();
-
-        d.move_to (PAT_WIDTH/4.0,         0);
-        d.line_to (PAT_WIDTH/4.0, PAT_WIDTH);
-        d.stroke ();
-
-#ifndef NO_SHOW
-        try{
-            imshow("Test Matrix", im2);
-            waitKey(0);
-            destroyAllWindows();
-        } catch(std::exception &exc){
-
+        for (int i = 20; i < 40; i++){
+            for(int j = 20; j < 40; j++){
+                d.alpha_mask_set(i, j, 0);
+            }
         }
-#endif
+        d.fill();
+        EXPECT((im2.at<Vec3b>(30, 30)[2] == 0 &&
+                    (im2.at<Vec3b>(30, 30)[1]) == 0 &&
+                    (im2.at<Vec3b>(30, 30)[0]) == 0));
     }
 };
 

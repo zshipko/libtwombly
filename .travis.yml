@@ -9,7 +9,6 @@ sudo: required
 
 os:
   - linux
-  - osx
 
 matrix:
   include:

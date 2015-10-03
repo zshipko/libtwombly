@@ -134,14 +134,13 @@ unsigned int draw_total_vertices(drawing);
 void draw_alpha_mask_init(drawing a);
 void draw_alpha_mask_free(drawing a);
 void draw_alpha_mask_fill(drawing a, uint8_t v);
+void draw_alpha_mask_set(drawing a, int32_t x, int32_t y, uint8_t val);
 uint8_t draw_alpha_mask_get(drawing a, int32_t x, int32_t y);
 uint8_t *draw_alpha_mask_ptr(drawing a);
 uint8_t *draw_alpha_mask_ptr_offs(drawing a, int32_t x, int32_t y);
 
 void draw_join(drawing, drawing);
 void draw_concat(drawing, drawing);
-void draw_fill_pattern (drawing d, drawing e);
-void draw_stroke_pattern (drawing d, drawing e);
 
 typedef struct transform_matrix {
     void *handle;
