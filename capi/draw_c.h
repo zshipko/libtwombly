@@ -140,8 +140,6 @@ uint8_t *draw_alpha_mask_ptr_offs(drawing a, int32_t x, int32_t y);
 
 void draw_join(drawing, drawing);
 void draw_concat(drawing, drawing);
-void draw_fill_pattern (drawing d, drawing e);
-void draw_stroke_pattern (drawing d, drawing e);
 
 typedef struct transform_matrix {
     void *handle;

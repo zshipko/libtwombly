@@ -198,12 +198,6 @@ _METHODS = dict(
                       args=[DrawingType, DrawingType]),
     concat=_method_decl(twombly.draw_concat,
                         args=[DrawingType, DrawingType]),
-
-    # pattern
-    fill_pattern=_method_decl(twombly.draw_fill_pattern,
-                              args=[DrawingType, DrawingType]),
-    stroke_pattern=_method_decl(twombly.draw_fill_pattern,
-                                args=[DrawingType, DrawingType]),
     # alpha mask
     alpha_mask_init=_method_decl(twombly.draw_alpha_mask_init),
     alpha_mask_free=_method_decl(twombly.draw_alpha_mask_free),

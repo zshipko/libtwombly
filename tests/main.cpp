@@ -1,6 +1,7 @@
 #include "lest.hpp"
 
 #include "../twombly.hpp"
+#define NO_SHOW
 
 #include <iostream>
 
@@ -214,22 +215,26 @@ const lest::test drawing_test[] = {
     },
 
     CASE( "mask"){
-        Mat4b im2(8, 8);
+        Mat3b im2(80, 80);
+        memset(im2.data, 0,  80 * 80 * 3);
+
         auto d = draw(im2);
 
         d.antialias(false);
         d.alpha_mask_init();
 
-        d.rect(0, 0, 8, 8);
+        d.rect(0, 0, 80, 80);
         d.set_color(255, 0, 0, 255);
-        d.alpha_mask_get(5, 5) = 0;
+        for (int i = 20; i < 40; i++){
+            for(int j = 20; j < 40; j++){
+                d.alpha_mask_get(i, j) = 0;
+            }
+        }
         d.fill();
 
         imwrite("test1.jpg", im2);
 
-        EXPECT((int)(im2.at<Vec4b>(5, 5)[2]) <  255);
-        EXPECT(((int)im2.at<Vec4b>(4, 4)[2]) == 255);
-
+        EXPECT((int)(im2.at<Vec3b>(30, 30)[2]) < 255);
     },
 
     CASE("Matrix rotation, scaling, translation, "){
