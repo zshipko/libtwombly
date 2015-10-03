@@ -6,7 +6,7 @@
 
 It it based on a lightly modified version of the [Anti-Grain Geometry](http://www.antigrain.com/) library (version 2.4) and is meant to provide an API similar to cairo or HTML5 canvas.
 
-`libtwombly` is actively tested on OSX, Linus, FreeBSD and OpenBSD.
+`libtwombly` is actively tested on OSX, Linux, FreeBSD and OpenBSD.
 
 ## Dependencies
 
