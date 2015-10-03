@@ -484,6 +484,10 @@ void draw_alpha_mask_fill(drawing a, uint8_t v){
     DRAWING(a, alpha_mask_fill, v);
 }
 
+void draw_alpha_mask_set(drawing a, int32_t x, int32_t y, uint8_t val){
+    DRAWING(a, alpha_mask_set, x, y, val);
+}
+
 uint8_t draw_alpha_mask_get(drawing a, int32_t x, int32_t y){
     DRAWING(a, alpha_mask_get, x, y);
 

@@ -265,8 +265,9 @@ public:
     void alpha_mask_init(){
         if (alpha_mask == nullptr){
             alpha_mask = new uint8_t[size.x * size.y]();
+            memset(alpha_mask, 255, size.x * size.y);
         }
-        memset(alpha_mask, 255, size.x * size.y);
+
     }
 
     void alpha_mask_fill(uint8_t a){
@@ -275,11 +276,23 @@ public:
         }
     }
 
-    uint8_t &alpha_mask_get(int32_t x, int32_t y){
+    void alpha_mask_set(int32_t x, int32_t y, uint8_t val){
+        if (alpha_mask && x < size.x && y < size.y && x >= 0 && y >= 0){
+            alpha_mask[(y * size.x) + x] = val;
+        }
+    }
+
+    uint8_t alpha_mask_get(int32_t x, int32_t y){
+        if (!alpha_mask){
+            return 0;
+        }
         return alpha_mask[(y * size.x) + x];
     }
 
     uint8_t *alpha_mask_ptr_offs(int32_t x, int32_t y){
+        if (!alpha_mask){
+            return nullptr;
+        }
         return alpha_mask + (y * size.x) + x;
     }
 

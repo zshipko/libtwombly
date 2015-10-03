@@ -203,8 +203,10 @@ _METHODS = dict(
     alpha_mask_free=_method_decl(twombly.draw_alpha_mask_free),
     alpha_mask_fill=_method_decl(twombly.draw_alpha_mask_fill,
                                   args=[DrawingType, c_uint8]),
-    alpha_mask=_method_decl(twombly.draw_alpha_mask_get, c_uint8,
+    alpha_mask_get=_method_decl(twombly.draw_alpha_mask_get, c_uint8,
                                  args=[DrawingType, c_int32, c_int32]),
+    alpha_mask_set=_method_decl(twombly.draw_alpha_mask_set,
+                                 args=[DrawingType, c_int32, c_int32, c_uint8]),
     alpha_mask_ptr_offs=_method_decl(twombly.draw_alpha_mask_ptr_offs, POINTER(c_uint8),
                                           args=[DrawingType, c_int32, c_int32]),
     alpha_mask_ptr=_method_decl(twombly.draw_alpha_mask_ptr, POINTER(c_uint8)),
@@ -458,6 +460,14 @@ class Drawing(object):
 
     def matrix(self):
         return TransformMatrix(_transform_matrix_get(self))
+
+    def alpha(self, x=0, y=0, val=None):
+        self.alpha_mask_init()
+
+        if val is None:
+            return self.alpha_mask_ptr_offs(x, y)[0]
+        else:
+            self.alpha_mask_set(x, y, val)
 
 def draw(arr, *args, **kwargs):
     return Drawing(arr, *args, **kwargs)
