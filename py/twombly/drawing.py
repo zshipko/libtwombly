@@ -2,12 +2,13 @@ from __future__ import absolute_import
 from ctypes import *
 from numpy import zeros, arange, ndarray, asarray
 from twombly.colors import _colors
-import platform
+import platform, os
 
 if platform.system() == "Darwin":
     ext = "dylib"
 else:
     ext = "so"
+
 twombly = cdll.LoadLibrary("libtwombly." + ext)
 
 PATH_CMD_STOP = 0
