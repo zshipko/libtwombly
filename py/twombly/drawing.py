@@ -164,8 +164,6 @@ _METHODS = dict(
                          args=[DrawingType, c_double, c_double, c_double, c_double, c_double]),
     text_simple=_method_decl(twombly.draw_text_simple, c_double,
                                  args=[DrawingType, c_double, c_double, c_char_p, c_int, c_double, c_char_p]),
-    text=_method_decl(twombly.draw_text, c_double,
-                          args=[DrawingType, c_double, c_double, c_char_p, c_char_p, c_double, c_double]),
     set_color=_method_decl(twombly.draw_set_color,
                            args=[DrawingType, c_uint8, c_uint8, c_uint8, c_uint8]),
     fill=_method_decl(twombly.draw_fill),
@@ -218,6 +216,12 @@ _METHODS = dict(
     stroke_gradient=_method_decl(twombly.draw_stroke_gradient,
                                  args=[DrawingType, GradientType, c_int, c_int, c_int]),
 )
+
+try:
+    _METHODS['text']= _method_decl(twombly.draw_text, c_double,
+                          args=[DrawingType, c_double, c_double, c_char_p, c_char_p, c_double, c_double])
+except:
+    pass
 
 _transform_matrix_create = _method_decl(twombly.draw_transform_matrix_create, TransformType, args=[])
 _transform_matrix_free = _method_decl(twombly.draw_transform_matrix_free, args=[POINTER(TransformType)])
