@@ -35,8 +35,11 @@ Building will compile both `libtwombly` and `libagg` libraries.
 
 To install the python ctypes wrapper:
 
-    cd py
     python setup.py install
+
+or
+
+    pip install git+https://github.com/zshipko/libtwombly.git
 
 ## Usage
 
