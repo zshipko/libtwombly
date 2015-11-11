@@ -6,7 +6,7 @@ make = 'make'
 ext = 'so'
 if platform.system() == 'Darwin':
     ext = 'dylib'
-elif platform.system().contains('BSD'):
+elif 'BSD' in platform.system():
     make = 'gmake'
 
 class Build(DistutilsBuild):
