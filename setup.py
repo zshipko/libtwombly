@@ -11,7 +11,8 @@ elif 'BSD' in platform.system():
 
 class Build(DistutilsBuild):
     def run(self):
-        os.system(make)
+        if not os.path.isfile('libtwombly.' + ext):
+            os.system(make)
         DistutilsBuild.run(self)
 
 setup(name='twombly',
