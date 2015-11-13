@@ -15,30 +15,30 @@ class TestDrawing(unittest.TestCase):
         self.assertIsInstance(self.drawing, Drawing)
 
     def test_draw_line(self):
-        self.drawing.set_antialias(False)
-        self.drawing.set_color(255, 0, 255)
+        self.drawing.antialias = False
+        self.drawing.color = Color(255, 0, 255)
         self.drawing.move_to(10, 10)
         self.drawing.line_to(120, 80)
-        self.drawing.set_line_width(10)
+        self.drawing.line_width = 10
         self.drawing.stroke()
         self.assertEqual(self.image[11, 11][0], 255)
         self.assertEqual(self.image[79, 119][0], 255)
         self.assertEqual(self.image[79, 119][0], 255)
 
     def test_draw_rect(self):
-        self.drawing.set_color(0, 255, 0)
+        self.drawing.color = Color(0, 255, 0)
         self.drawing.rect(150, 120, 180, 170)
         self.drawing.fill()
         self.assertEqual(self.image[150, 150][1], 255)
         self.assertEqual(self.image[150, 150][0], self.image[150, 150][2])
 
     def test_transform_matrix(self):
-        m = self.drawing.matrix()
+        m = self.drawing.matrix
         arr = m.array()
         arr *= 0
         arr += 10
         m.array(arr)
-        self.assertEqual(self.drawing.matrix().array()[0], 10)
+        self.assertEqual(self.drawing.matrix.array()[0], 10)
 
     def test_gradient(self):
         g = Gradient()
@@ -46,7 +46,7 @@ class TestDrawing(unittest.TestCase):
         g.add_stop(Color(0, 255, 0, 255))
         g.add_stop(Color(0, 0, 255, 255))
         self.drawing.rect(10, 10, 20, 20)
-        self.drawing.set_line_width(10)
+        self.drawing.line_width = 10
         self.drawing.fill_gradient(g, 0, 800, GRADIENT_Y)
         self.assertEqual(self.image[11, 11][0], 248, 10)
 
@@ -60,7 +60,7 @@ class TestDrawing(unittest.TestCase):
                 self.drawing.alpha_mask_ptr_offs(i, j)[0] = 0
 
         self.drawing.rect(0, 0, 100, 100)
-        self.drawing.set_color(255, 0, 0, 255)
+        self.drawing.color = Color(255, 0, 0, 255)
         self.drawing.fill()
 
         self.assertTrue((self.image[30, 30] == [0, 0, 0]).all())

@@ -375,6 +375,7 @@ class Drawing(object):
     ''' python wrapper for libtwombly Drawing class '''
     def __init__(self, arr=None, bgr=False, width=None, height=None):
         self._free = _METHODS["free"]
+        self._color = Color(0, 0, 0, 0)
 
         if arr is None:
             self._drawing = _METHODS["create_path"]()
@@ -412,20 +413,17 @@ class Drawing(object):
             return wrapper
         raise AttributeError
 
-    def get_vertices(self):
+    @property
+    def vertices(self):
         return [self.get_vertex(i) for i in range(0, self.total_vertices())]
 
-    def set_vertices(self, arr):
+    @vertices.setter
+    def vertices(self, arr):
         for index, vertex in enumerate(arr):
             self.set_vertex(index, vertex[0], vertex[1], vertex[2])
 
-    def set_vertex(self, index, x, y, cmd=None):
-        if cmd is None:
-            cmd = self.get_command(index)
-
-        self.modify_vertex(index, x, y, cmd)
-
-    def get_vertex(self, index):
+    @property
+    def vertex(self, index):
         if index >= self.total_vertices():
             raise Exception("out of bounds")
         x_ptr = pointer(c_double(0))
@@ -434,17 +432,31 @@ class Drawing(object):
         cmd = _METHODS["get_command"](self, index)
         return [x_ptr[0], y_ptr[0], cmd]
 
+    @vertex.setter
+    def vertex(self, index, x, y, cmd=None):
+        if cmd is None:
+            cmd = self.get_command(index)
+
+        self.modify_vertex(index, x, y, cmd)
+
     def clear(self, r, g=None, b=None, a=255):
         if isinstance(r, Color):
             _METHODS["clear"](self._drawing, *r.as_uint8())
         else:
             _METHODS["clear"](self._drawing, *Color(r, g, b, a).as_uint8())
 
-    def set_color(self, r, g=None, b=None, a=255):
+    @property
+    def color(self):
+        return self._color
+
+    @color.setter
+    def color(self, r, g=None, b=None, a=255):
         if isinstance(r, Color):
             _METHODS["set_color"](self._drawing, *r.as_uint8())
+            self._color = r.as_uint8()
         else:
             _METHODS["set_color"](self._drawing, *Color(r, g, b, a).as_uint8())
+            self._color = Color(r, g, b, a).as_uint8()
 
     def curve_to(self, a, b, c=None, d=None, e=None, f=None):
         if c is None or d is None:
@@ -465,8 +477,65 @@ class Drawing(object):
             self._free(pointer(self._drawing))
             self._drawing = None
 
+    @property
     def matrix(self):
         return TransformMatrix(_transform_matrix_get(self))
+
+    @property
+    def antialias(self):
+        return self.get_antialias()
+
+    @antialias.setter
+    def antialias(self, aa):
+        self.set_antialias(aa)
+
+    @property
+    def preserve(self):
+        return self.get_preserve()
+
+    @preserve.setter
+    def preserve(self, p):
+        self.set_preserve(p)
+
+    @property
+    def line_width(self):
+        return self.get_line_width()
+
+    @line_width.setter
+    def line_width(self, w):
+        self.set_line_width(w)
+
+    @property
+    def miter_limit(self):
+        return self.get_miter_limit()
+
+    @miter_limit.setter
+    def miter_limit(self, limit):
+        self.set_miter_limit(limit)
+
+    @property
+    def line_join(self):
+        return self.get_line_join()
+
+    @line_join.setter
+    def line_join(self, j):
+        return self.set_line_join(j)
+
+    @property
+    def line_cap(self):
+        return self.get_line_cap()
+
+    @line_cap.setter
+    def line_cap(self, cap):
+        self.set_line_cap(cap)
+
+    @property
+    def path(self):
+        return self.get_active_path()
+
+    @path.setter
+    def path(self, pth):
+        self.set_active_path(pth)
 
     def alpha(self, x=0, y=0, val=None):
         self.alpha_mask_init()
