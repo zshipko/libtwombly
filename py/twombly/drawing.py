@@ -3,6 +3,7 @@ from ctypes import *
 from numpy import zeros, arange, ndarray, asarray
 from twombly.colors import _colors
 import platform, os
+from functools import partial
 
 if platform.system() == "Darwin":
     ext = "dylib"
@@ -19,8 +20,27 @@ PATH_CMD_CURVE4 = 4
 PATH_CMD_CURVEN = 5
 PATH_CMD_CATROM = 6
 PATH_CMD_UBSPLINE = 7
-PATH_CMD_END_POLY = 0xff
-PATH_CMD_MASK = 0xff
+PATH_CMD_END_POLY = 0x0f
+PATH_CMD_MASK = 0x0f
+
+class PathCommand(object):
+    stop = PATH_CMD_STOP
+    move_to = PATH_CMD_MOVE_TO
+    line_to = PATH_CMD_LINE_TO
+    curve3 = PATH_CMD_CURVE3
+    curve4 = PATH_CMD_CURVE4
+    curven = PATH_CMD_CURVEN
+    catrom = PATH_CMD_CATROM
+    ubspline = PATH_CMD_UBSPLINE
+    end_poly = PATH_CMD_END_POLY
+    mask = PATH_CMD_MASK
+
+    class flags(object):
+        none = 0
+        ccw = 0x10
+        cw = 0x20
+        close = 0x40
+        mask = 0xF0
 
 GRADIENT_CIRCLE = 0
 GRADIENT_RADIAL = 1
@@ -42,6 +62,19 @@ JOIN_MITER_REVERT = 1
 JOIN_ROUND = 2
 JOIN_BEVEL = 3
 JOIN_MITER_ROUND = 4
+
+class DrawingStyle(object):
+    class cap(object):
+        butt = CAP_BUTT
+        square = CAP_SQUARE
+        round = CAP_ROUND
+
+    class join(object):
+        miter = JOIN_MITER
+        miter_revert = JOIN_MITER_REVERT
+        round = JOIN_ROUND
+        bevel = JOIN_BEVEL
+        miter_round = JOIN_MITER_ROUND
 
 class DrawingType(Structure):
     ''' C struct for drawing type'''
@@ -305,6 +338,18 @@ _gradient_get_matrix = _method_decl(twombly.draw_gradient_get_matrix, TransformT
 
 class Gradient(object):
     ''' Gradient Class '''
+    circle = GRADIENT_CIRCLE
+    radial = GRADIENT_RADIAL
+    radial_d = GRADIENT_RADIAL_D
+    radial_focus = GRADIENT_RADIAL_FOCUS
+    x = GRADIENT_X
+    y = GRADIENT_Y
+    diamond = GRADIENT_DIAMOND
+    xy = GRADIENT_XY
+    sqrt_xy = GRADIENT_SQRT_XY
+    conic = GRADIENT_CONIC
+
+
     def __init__(self, *args, **kw):
         self.depth = kw.get('depth', 8)
         self._gradient= None
@@ -373,6 +418,41 @@ class Color(ndarray):
         ''' convert red, green, blue, alpha to uint16s 0-65535 '''
         return as_uint16(self)
 
+class Vertex(list):
+    def __init__(self, iterable, update_fn=None):
+        list.__init__(self, iterable)
+        self.update_fn = update_fn
+
+    @property
+    def x(self):
+        return self[0]
+
+    @property
+    def y(self):
+        return self[1]
+
+    @property
+    def command(self):
+        return self[2]
+
+    @command.setter
+    def command(self, cmd):
+        self[2] = cmd
+        if self.update_fn is not None:
+            self.update_fn(*self)
+
+    @x.setter
+    def x(self, val):
+        self[0] = val
+        if self.update_fn is not None:
+            self.update_fn(*self)
+
+    @y.setter
+    def y(self, val):
+        self[1] = val
+        if self.update_fn is not None:
+            self.update_fn(*self)
+
 class Drawing(object):
     ''' python wrapper for libtwombly Drawing class '''
     def __init__(self, arr=None, bgr=False, width=None, height=None):
@@ -398,9 +478,11 @@ class Drawing(object):
         if arr.dtype == 'uint8':
             self._drawing = _METHODS["create" + bgr_str](width, height,
                                                          arr.shape[2], arr.ravel().ctypes.data)
+            self._is_16 = False
         elif arr.dtype == 'uint16':
             self._drawing = _METHODS["create16" + bgr_str](width, height,
                                                            arr.shape[2], arr.ravel().ctypes.data)
+            self._is_16 = True
         else:
             self._drawing = None
             raise ValueError("bad image type")
@@ -416,29 +498,57 @@ class Drawing(object):
         raise AttributeError
 
     @property
+    def total_vertices(self):
+        return _METHODS["total_vertices"](self)
+
+    @property
     def vertices(self):
-        return [self.get_vertex(i) for i in range(0, self.total_vertices())]
+        class Vertices(object):
+            def __init__(_self):
+                _self._index = 0
+
+            def __setitem__(_self, index, val):
+                self.modify_vertex(index, val[0], val[1], val[2])
+
+            def __getitem__(_self, index):
+                return self.get_vertex(index)
+
+            def __len__(_self):
+                return self.total_vertices
+
+            def __iter__(_self):
+                return _self
+
+            def __next__(_self):
+                if _self.index >= self.total_vertices:
+                    raise StopIteration
+
+                result = self.get_vertex(_self.index)
+                _self.index += 1
+                return result
+
+            def __str__(_self):
+                return 'Vertices{%d}' % self.total_vertices
+
+        return Vertices()
 
     @vertices.setter
     def vertices(self, arr):
         for index, vertex in enumerate(arr):
             self.set_vertex(index, vertex[0], vertex[1], vertex[2])
 
-    @property
-    def vertex(self, index):
-        if index >= self.total_vertices():
+    def get_vertex(self, index):
+        if index >= self.total_vertices:
             raise Exception("out of bounds")
         x_ptr = pointer(c_double(0))
         y_ptr = pointer(c_double(0))
         _METHODS["get_vertex"](self, index, x_ptr, y_ptr)
         cmd = _METHODS["get_command"](self, index)
-        return [x_ptr[0], y_ptr[0], cmd]
+        return Vertex([x_ptr[0], y_ptr[0], cmd], update_fn=partial(self.set_vertex, index))
 
-    @vertex.setter
-    def vertex(self, index, x, y, cmd=None):
+    def set_vertex(self, index, x, y, cmd=None):
         if cmd is None:
             cmd = self.get_command(index)
-
         self.modify_vertex(index, x, y, cmd)
 
     def clear(self, r, g=None, b=None, a=255):
@@ -453,6 +563,15 @@ class Drawing(object):
 
     @color.setter
     def color(self, r, g=None, b=None, a=255):
+        if isinstance(r, str):
+            r = Color(r)
+        elif isinstance(r, (tuple, list)) and len(r) >= 3:
+            g = r[1]
+            b = r[2]
+            if len(r) > 3:
+                a = r[3]
+            r = r[0]
+
         if isinstance(r, Color):
             _METHODS["set_color"](self._drawing, *r.as_uint8())
             self._color = r.as_uint8()
