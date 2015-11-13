@@ -34,11 +34,11 @@ class TestDrawing(unittest.TestCase):
 
     def test_transform_matrix(self):
         m = self.drawing.matrix
-        arr = m.array()
+        arr = m.array
         arr *= 0
         arr += 10
-        m.array(arr)
-        self.assertEqual(self.drawing.matrix.array()[0], 10)
+        m.array = arr
+        self.assertEqual(self.drawing.matrix.array[0], 10)
 
     def test_gradient(self):
         g = Gradient()
