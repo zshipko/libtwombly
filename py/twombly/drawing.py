@@ -284,16 +284,17 @@ class TransformMatrix(object):
             _transform_matrix_transform(self._mtx, x_ptr, y_ptr)
         return (x_ptr[0], y_ptr[0])
 
-    def array(self, arr=None):
+    @property
+    def array(self):
         ''' Get and set transformation matrix data using numpy arrays'''
-        if arr is not None:
-            _transform_matrix_from_double(self._mtx, cast(asarray(arr, dtype='double').ctypes.data,
-                                                          POINTER(c_double)))
-            return
-
         arr = zeros(6, dtype="double")
         _transform_matrix_to_double(self._mtx, cast(arr.ctypes.data, POINTER(c_double)))
         return arr
+
+    @array.setter
+    def array(self, arr):
+        _transform_matrix_from_double(self._mtx, cast(asarray(arr, dtype='double').ctypes.data,
+                                                          POINTER(c_double)))
 
 _gradient_create = _method_decl(twombly.draw_gradient_create, GradientType, args=[])
 _gradient_create16 = _method_decl(twombly.draw_gradient_create16, GradientType, args=[])
@@ -324,6 +325,7 @@ class Gradient(object):
         elif self.depth == 16:
             _gradient_add_stop16(self._gradient, (c_float * 4)(*c))
 
+    @property
     def matrix(self):
         return TransformMatrix(_gradient_get_matrix(self._gradient))
 
