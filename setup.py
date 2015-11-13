@@ -6,12 +6,13 @@ make = 'make'
 ext = 'so'
 if platform.system() == 'Darwin':
     ext = 'dylib'
-elif platform.system().contains('BSD'):
+elif 'BSD' in platform.system():
     make = 'gmake'
 
 class Build(DistutilsBuild):
     def run(self):
-        os.system(make)
+        if not os.path.isfile('libtwombly.' + ext):
+            os.system(make)
         DistutilsBuild.run(self)
 
 setup(name='twombly',
