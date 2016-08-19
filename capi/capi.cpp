@@ -18,6 +18,12 @@ drawing draw_create_path(){
     return d;
 }
 
+drawing draw_empty() {
+    drawing d;
+    memset(&d, sizeof(drawing), 0);
+    return d;
+}
+
 drawing draw_create(int64_t width, int64_t height, int channels, uint8_t *data){
     drawing d;
     d.handle = NULL;

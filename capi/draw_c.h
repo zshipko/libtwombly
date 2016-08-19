@@ -40,8 +40,10 @@ struct drawing {
 };
 typedef struct drawing drawing;
 
+
 // bimage
-#define draw_frombimage(im) ((im)->depth == u16 ? draw_create16((im)->width, (im)->height, (im)->channels, (im)->u16) : draw_create((im)->width, (im)->height, (im)->channels, (im)->u8))
+#define draw_frombimage(im) \
+    ((im)->depth == u16 ? draw_create16((im)->width, (im)->height, (im)->channels, (im)->data.u16) : (im)->depth == u8 ? draw_create((im)->width, (im)->height, (im)->channels, (im)->data.u8) : draw_empty())
 
 // leptonica
 #define draw_frompix(im) draw_create(im->w, im->h, im->d/8, (unint8_t*)im->data)
@@ -55,6 +57,7 @@ drawing draw_create_bgr(int64_t width, int64_t height, int channels, uint8_t *da
 drawing draw_create16(int64_t width, int64_t height, int channels, uint16_t *data);
 drawing draw_create16_bgr(int64_t width, int64_t height, int channels, uint16_t *data);
 drawing draw_create_path();
+drawing draw_empty();
 
 void draw_free(drawing *d);
 
@@ -172,9 +175,6 @@ void draw_fill_gradient(drawing d, gradient grad, int s, int x, gradient_type gr
 void draw_stroke_gradient(drawing d, gradient grad, int s, int x, gradient_type grad_type);
 gradient draw_gradient_create16();
 void draw_gradient_add_stop16(gradient grad, Pixel color);
-
-void draw_fill_gradient(drawing d, gradient grad, int s, int x, gradient_type grad_type);
-void draw_stroke_gradient(drawing d, gradient grad, int s, int x, gradient_type grad_type);
 void draw_fill_gradient16(drawing d, gradient grad, int s, int x, gradient_type grad_type);
 void draw_stroke_gradient16(drawing d, gradient grad, int s, int x, gradient_type grad_type);
 
