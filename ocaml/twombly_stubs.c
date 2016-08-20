@@ -13,6 +13,13 @@
 #define Transform_val(v) (*((transform_matrix *) Data_custom_val(v)))
 #define Image_val(v) (*((bimage**) Data_custom_val(v)))
 
+#define TUPLE_D2(dst, _x, _y) \
+    CAMLlocal1(dst); \
+    dst = alloc_tuple(2); \
+    Store_field(dst, 0, copy_double(_x)); \
+    Store_field(dst, 1, copy_double(_y));
+
+
 // Call draw_free when collected by GC
 void finalize_transform_matrix (value v) {
     transform_matrix g = Transform_val(v);
@@ -502,6 +509,68 @@ value _is_drawn(value d, value x, value y){
     CAMLreturn(Val_unit);
 }
 
+value _get_vertex(value d, value idx){
+    CAMLparam2(d, idx);
+    drawing _d = Draw_val(d);
+    double x = 0, y = 0;
+    draw_get_vertex(_d, Int_val(idx), &x, &y);
+    TUPLE_D2(dst, x, y);
+    CAMLreturn(dst);
+}
+
+value _next_vertex(value d){
+    CAMLparam1(d);
+    double x = 0, y = 0;
+    drawing _d = Draw_val(d);
+    draw_next_vertex(_d, &x, &y);
+    TUPLE_D2(dst, x, y);
+    CAMLreturn(dst);
+}
+
+value _get_command (value d, value idx){
+    CAMLparam2(d, idx);
+    drawing _d = Draw_val(d);
+    int cmd = draw_get_command(_d, Int_val(idx));
+    CAMLlocal1(dst);
+    dst = Int_val(cmd);
+    CAMLreturn(dst);
+}
+
+value _last_vertex(value d){
+    CAMLparam1(d);
+    drawing _d = Draw_val(d);
+    double x = 0, y = 0;
+    draw_last_vertex(_d, &x, &y);
+    TUPLE_D2(dst, x, y);
+    CAMLreturn(dst);
+}
+
+value _prev_vertex(value d){
+    CAMLparam1(d);
+    drawing _d = Draw_val(d);
+    double x = 0, y = 0;
+    draw_prev_vertex(_d, &x, &y);
+    TUPLE_D2(dst, x, y);
+    CAMLreturn(dst);
+}
+
+value _modify_vertex(value d, value idx, value x, value y, value cmd){
+    CAMLparam5(d, idx, x, y, cmd);
+    drawing _d = Draw_val(d);
+    draw_modify_vertex(_d, Int_val(idx), Double_val(x), Double_val(y), Int_val(cmd));
+    CAMLreturn(Val_unit);
+}
+
+value _total_vertices(value d){
+    CAMLparam1(d);
+    drawing _d = Draw_val(d);
+
+    CAMLlocal1(dst);
+    dst = Val_int(draw_total_vertices(_d));
+    CAMLreturn(dst);
+}
+
+
 value _alpha_mask_init(value d){
     CAMLparam1(d);
     drawing _d = Draw_val(d);
@@ -607,4 +676,59 @@ value _transform_rotate(value m, value a){
     CAMLreturn(Val_unit);
 }
 
+value _transform_transform(value m, value x, value y) {
+    CAMLparam3(m, x, y);
+    transform_matrix _m = Transform_val(m);
+    double _x = Double_val(x);
+    double _y = Double_val(y);
+    draw_transform_matrix_transform(_m, &_x, &_y);
 
+    TUPLE_D2(dst, _x, _y);
+    CAMLreturn(dst);
+}
+
+value _transform_inverse_transform(value m, value x, value y) {
+    CAMLparam3(m, x, y);
+    transform_matrix _m = Transform_val(m);
+    double _x = Double_val(x);
+    double _y = Double_val(y);
+    draw_transform_matrix_inverse_transform(_m, &_x, &_y);
+
+    TUPLE_D2(dst, _x, _y);
+    CAMLreturn(dst);
+}
+
+value _gradient_create(value unit){
+    CAMLparam1(unit);
+    CAMLlocal1(g);
+    g = alloc_gradient(draw_gradient_create ());
+    CAMLreturn(g);
+}
+
+value _gradient_add_stop(value g, value c){
+    CAMLparam2(g, c);
+    gradient _g = Gradient_val(g);
+    float v[Wosize_val(c)];
+    int i;
+    for(i = 0; i < Wosize_val(c); i++){
+        v[i] = Field(c, i);
+    }
+    draw_gradient_add_stop(_g, v);
+    CAMLreturn(Val_unit);
+}
+
+value _gradient_get_transform_matrix(value g){
+    CAMLparam1(g);
+    gradient _g = Gradient_val(g);
+    CAMLlocal1(m);
+    m = alloc_transform(draw_gradient_get_matrix(_g));
+    CAMLreturn(m);
+}
+
+value _gradient_set_transform_matrix(value g, value m){
+    CAMLparam2(g, m);
+    gradient _g = Gradient_val(g);
+    transform_matrix _m = Transform_val(m);
+    draw_gradient_set_matrix(_g, _m);
+    CAMLreturn(Val_unit);
+}

@@ -8,7 +8,7 @@ type line_cap_style
 type path_type = int
 
 external of_image : Bimage.image -> draw = "_of_image"
-external create : int -> int -> int -> unit = "_drawing"
+external create : int -> int -> int -> draw = "_drawing"
 external preserve : draw -> bool = "_preserve"
 external set_preserve : draw -> bool -> unit = "_set_preserve"
 external antialias : draw -> bool = "_antialias"
@@ -71,13 +71,13 @@ external paint : draw -> unit = "_paint"
 external set_autoclose : draw -> bool -> unit = "_set_autoclose"
 external in_path : draw -> float -> float -> bool = "_in_path"
 external is_drawn : draw -> float -> float -> bool = "_is_drawn"
-(*external get_vertex : draw -> int -> (float * float) = "_get_vertex"
+external get_vertex : draw -> int -> (float * float) = "_get_vertex"
 external next_vertex : draw -> (float * float) = "_next_vertex"
-external get_command : draw -> int = "_get_command"
+external get_command : draw -> int -> int = "_get_command"
 external last_vertex : draw -> (float * float) = "_last_vertex"
 external prev_vertex : draw -> (float * float) = "_prev_vertex"
 external modify_vertex : draw -> int -> float -> float -> int = "_modify_vertex"
-external total_vertices : draw -> int = "_total_vertices"*)
+external total_vertices : draw -> int = "_total_vertices"
 external alpha_mask_init : draw -> unit = "_alpha_mask_init"
 external alpha_mask_free : draw -> unit = "_alpha_mask_free"
 external alpha_mask_fill : draw -> int -> unit = "_alpha_mask_fill"
@@ -94,13 +94,12 @@ module Transform = struct
     external scale : transform_matrix -> float -> float -> unit = "_transform_scale"
     external translate : transform_matrix -> float -> float -> unit = "_transform_translate"
     external rotate : transform_matrix -> float -> unit = "_transform_rotate"
-    (*external inverse_transform : transform_matrix -> float -> float -> (float * float) = "_inverse_transform"
-    external transform : transform_matrix -> float -> float -> (float * float) = "_transform" *)
+    external inverse_transform : transform_matrix -> float -> float -> (float * float) = "_transform_inverse_transform"
+    external transform : transform_matrix -> float -> float -> (float * float) = "_transform_transform"
 end
 
-(*module Gradient = struct
+module Gradient = struct
     external create : unit -> gradient = "_gradient_create"
     external add_stop : gradient -> float array -> unit = "_gradient_add_stop"
     external get_transform_matrix : gradient -> transform_matrix = "_gradient_get_transform_matrix"
-    external set_transform_matrix : gradient -> transform_matrix -> unit = "_gradient_set_transform_matrix"
-end*)
+end
