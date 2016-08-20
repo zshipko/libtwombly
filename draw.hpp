@@ -569,7 +569,9 @@ public:
         double start_x = x;
 
         // load font
-        if (font_engine.load_font(font, 0, font_ren)){
+        font_engine.load_font(font, 0, font_ren);
+
+        {
 
             // apply settings
             font_engine.width(width);

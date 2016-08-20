@@ -732,3 +732,38 @@ value _gradient_set_transform_matrix(value g, value m){
     draw_gradient_set_matrix(_g, _m);
     CAMLreturn(Val_unit);
 }
+
+value _font = NULL;
+
+value _text(value d, value x, value y, value str, value sz){
+    CAMLparam5(d, x, y, str, sz);
+    if (_font == NULL){
+        failwith("No font selected");
+        CAMLreturn(Val_unit);
+    }
+
+    value w = Field(sz, 0);
+    value h = Field(sz, 1);
+
+    drawing _d = Draw_val(d);
+    draw_text(_d, Double_val(x), Double_val(y), String_val(str), String_val(_font), Double_val(w), Double_val(h));
+    CAMLreturn(Val_unit);
+}
+
+value _set_font(value f){
+    CAMLparam1(f);
+    _font = copy_string(String_val(f));
+    CAMLreturn(Val_unit);
+}
+
+value _text_simple(value d, value x, value y, value str, value sz){
+    CAMLparam5(d, x, y, str, sz);
+
+    drawing _d = Draw_val(d);
+
+    value s = Field(sz, 0);
+    value w = Field(sz, 1);
+
+    draw_text_simple(_d, Double_val(x), Double_val(y), String_val(str), Int_val(s), Double_val(w), _font ? String_val(_font) : NULL);
+    CAMLreturn(Val_unit);
+}
