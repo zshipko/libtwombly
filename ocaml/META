@@ -1,4 +1,5 @@
 name="twombly"
 description="OCaml interface to libtwombly"
 version="0.1"
+requires="bimage"
 archive(native)="twombly.cmxa"
