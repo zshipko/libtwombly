@@ -1,5 +1,7 @@
 ccopt=-std=c99 -I /usr/local/include -L/usr/local/lib -lbimage -ltwombly `pkg-config --cflags --libs freetype2`
 
+all: lib.native lib.byte
+
 lib.native:
 	$(CC) $(ccopt) -c -o twombly_stubs.o twombly_stubs.c -I `ocamlc -where`
 	ar rcs libtwombly_stubs.a twombly_stubs.o
