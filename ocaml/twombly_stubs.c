@@ -733,11 +733,11 @@ value _gradient_set_transform_matrix(value g, value m){
     CAMLreturn(Val_unit);
 }
 
-value _font = NULL;
+value _font = 0;
 
 value _text(value d, value x, value y, value str, value sz){
     CAMLparam5(d, x, y, str, sz);
-    if (_font == NULL){
+    if (_font == 0){
         failwith("No font selected");
         CAMLreturn(Val_unit);
     }
