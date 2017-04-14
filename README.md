@@ -11,7 +11,6 @@ It it based on a lightly modified version of the [Anti-Grain Geometry](http://ww
 ## Dependencies
 
 - C++11 compiler (g++/clang++)
-- [opencv](https://www.opencv.org/) (optional)
 - [bimage](https://github.com/zshipko/bimage) (optional)
 - [freetype](http://www.freetype.org/) (optional)
 
@@ -26,10 +25,6 @@ For the default configuration just run, all dependencies(except libtiff) must be
 To disable FreeType:
 
     make freetype=no
-
-To disable OpenCV:
-
-    make opencv=no
 
 Building will compile both `libtwombly` and `libagg` libraries.
 

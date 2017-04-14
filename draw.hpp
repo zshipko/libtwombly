@@ -102,15 +102,21 @@ namespace tw {
 typedef agg::rgba8 Color;
 typedef agg::rgba16 Color16;
 
+typedef agg::pixfmt_rgba32 rgba32;
+typedef agg::pixfmt_rgb24 rgb24;
+typedef agg::pixfmt_bgra32 bgra32;
+typedef agg::pixfmt_bgr24 bgr24;
+typedef agg::pixfmt_gray8 gray8;
+typedef agg::pixfmt_rgba64 rgba64;
+typedef agg::pixfmt_rgb48 rgb48;
+typedef agg::pixfmt_bgra64 bgra64;
+typedef agg::pixfmt_bgr48 bgr48;
+typedef agg::pixfmt_gray16 gray16;
+
 inline Color rgba(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 inline Color rgb(uint8_t r, uint8_t g, uint8_t b);
 inline Color16 rgba_16(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 inline Color16 rgb_16(uint8_t r, uint8_t g, uint8_t b);
-
-#ifndef NO_OPENCV
-inline Color rgba(Scalar s);
-inline Color16 rgba_16(Scalar s);
-#endif
 
 template <typename ColorType, int S=256>
 class Gradient {
@@ -134,7 +140,7 @@ public:
     void generate(){
         unsigned stop_len = arr.size() / (colors.size()-1);
         for(size_t color_index = 0; color_index < colors.size()-1; color_index++){
-            for(int i = 0; i < stop_len; i++){
+            for(unsigned i = 0; i < stop_len; i++){
                 arr[i + color_index*stop_len] = colors[color_index].gradient(colors[color_index+1], (i - stop_len) / double(stop_len));
             }
         }
@@ -144,6 +150,17 @@ public:
 // Drawing type
 template <typename DrawingType>
 class Drawing : public agg::path_storage {
+private:
+    void *data; // buffer data
+    // render settings
+    bool _antialias, _preserve;
+    double _width; // linewidth
+    double _miterlimit;
+    line_cap_style _linecap;
+    line_join_style _linejoin;
+    bool owns_data, owns_alpha; // data ownership information
+    unsigned pathid; // stores current path
+    Color current_color;
 public:
     agg::trans_affine mtx;
     uint8_t *alpha_mask;
@@ -153,7 +170,6 @@ public:
     } size;
 
     DrawingType pix;
-
     // rendering
     agg::renderer_scanline_aa_solid<agg::renderer_base<DrawingType>> render_aa;
     agg::renderer_scanline_bin_solid<agg::renderer_base<DrawingType>> render_bin;
@@ -163,59 +179,22 @@ public:
     agg::rasterizer_scanline_aa<> *raster;
     std::vector<unsigned> all_paths;
 
-    Drawing() : pix(buffer), size(0, 0, 0), sl(nullptr), raster(nullptr), alpha_mask(nullptr) {
+    Drawing() : data(nullptr), pix(buffer), size(0, 0, 0), sl(nullptr), raster(nullptr), alpha_mask(nullptr) {
         base = agg::renderer_base<DrawingType>(pix);
         render_aa = agg::renderer_scanline_aa_solid<agg::renderer_base<DrawingType> >(base);
         render_bin = agg::renderer_scanline_bin_solid<agg::renderer_base<DrawingType> >(base);
     }
 
-    // Creates a drawing context from width, height, channels and data
-    Drawing(int32_t w, int32_t h, int32_t c, uint8_t *d = nullptr, uint8_t *_alpha_mask=nullptr) : buffer(d ? d : new uint8_t[w * h * c](), w, h, w * c), pix(buffer), _antialias(true), _preserve(false), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(w, h, c),  alpha_mask(_alpha_mask) {
+    Drawing<DrawingType>(int32_t w, int32_t h, int c, uint8_t *d=nullptr, uint8_t *_alpha_mask=nullptr) :
+        data(d ? (void*)d : calloc(w * h * c, sizeof(uint8_t))), buffer((uint8_t*)data, w, h, w * c), pix(buffer), _antialias(true), _preserve(false), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(w, h, c),  alpha_mask(_alpha_mask), owns_data(d == nullptr), owns_alpha(_alpha_mask == nullptr) {
         alloc();
     }
 
-    Drawing(int32_t w, int32_t h, int32_t c, uint16_t *d, uint8_t *_alpha_mask=nullptr) : buffer(d ? (uint8_t*)d : (uint8_t*)new uint16_t[w * h * c](), w, h, w * c * 2), pix(buffer), _antialias(true), _preserve(false), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(w, h, c),  alpha_mask(_alpha_mask) {
+    Drawing<DrawingType>(int32_t w, int32_t h, int c, uint16_t *d=nullptr, uint8_t *_alpha_mask=nullptr) :
+        data(d ? (void*)d : calloc(w * h * c, sizeof(uint16_t))), buffer((uint8_t*)data, w, h, w * c * 2), pix(buffer), _antialias(true), _preserve(false), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(w, h, c),  alpha_mask(_alpha_mask), owns_data(d == nullptr), owns_alpha(_alpha_mask == nullptr) {
         alloc();
     }
 
-#ifndef NO_OPENCV
-    // Creates a drawing context from standard open_cV Mat types
-    Drawing(Mat3b &im, uint8_t *_alpha_mask=nullptr) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels()), pix(buffer), _antialias(true), _preserve(false), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.cols, im.rows, im.channels()),  alpha_mask(_alpha_mask) {
-        alloc();
-    }
-
-    Drawing(Mat4b &im, uint8_t *_alpha_mask=nullptr) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels()), pix(buffer), _antialias(true), _preserve(false), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.cols, im.rows, im.channels()),  alpha_mask(_alpha_mask) {
-        alloc();
-    }
-
-    Drawing(Mat3w &im, uint8_t *_alpha_mask=nullptr) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels() * 2),pix(buffer), _antialias(true), _preserve(false), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.cols, im.rows, im.channels()),  alpha_mask(_alpha_mask) {
-        alloc();
-    }
-
-    Drawing(Mat4w &im,  uint8_t *_alpha_mask=nullptr) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels() * 2), pix(buffer), _antialias(true), _preserve(false), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.cols, im.rows, im.channels()),  alpha_mask(_alpha_mask) {
-        alloc();
-    }
-
-    Drawing(Mat &im,  uint8_t *_alpha_mask=nullptr) : buffer((uint8_t*)im.data, im.cols, im.rows, im.cols * im.channels() * sizeof(im.data[0])), pix(buffer), _antialias(true), _preserve(false), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.cols, im.rows, im.channels()),  alpha_mask(_alpha_mask) {
-        alloc();
-    }
-#endif
-
-#if defined(bimage_header_file) && !defined(BIMAGE_CXX_HEADER)
-    Drawing (bimage im,  uint8_t *_alpha_mask=nullptr) : buffer((uint8_t*)im.data.ptr, im.width, im.height, im.width * im.channels * (im.depth == u16 ? 2 : 1)), pix(buffer), _antialias(true), _preserve(false), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.width, im.height, im.channels),  alpha_mask(_alpha_mask) {
-        alloc();
-    }
-
-    Drawing (bimage *im, uint8_t *_alpha_mask=nullptr) : buffer((uint8_t*)im->data.ptr, im->width, im->height, im->width * im->channels * (im->depth == u16 ? 2 : 1)), pix(buffer), _antialias(true), _preserve(false), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im->width, im->height, im->channels), alpha_mask(_alpha_mask) {
-        alloc();
-    }
-#endif
-
-#ifdef BIMAGE_CXX_HEADER
-    Drawing (bimg::image const &im, uint8_t *_alpha_mask=nullptr): buffer((uint8_t*)im._im->data.ptr, im.width(), im.height(), im.width() * im.channels() * (im.type() == bimg::u16 ? 2 : 1)), pix(buffer), _antialias(true), _preserve(false), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(im.width(), im.height(), im.channels()), alpha_mask(_alpha_mask) {
-        alloc();
-    }
-#endif
 
     ~Drawing(){
         if (raster){
@@ -228,7 +207,14 @@ public:
             sl = nullptr;
         }
 
-        alpha_mask_free();
+        if (owns_data){
+            if (data) free(data);
+            data = nullptr;
+        }
+
+        if (owns_alpha){
+            alpha_mask_free();
+        }
     }
 
     // Actually create the image,
@@ -248,18 +234,6 @@ public:
             delete sl;
 
         sl = new agg::scanline32_p8();
-    }
-
-    void set_data(int32_t _width, int32_t _height, int _channels, int depth, uint8_t *data){
-        if ((size.x != 0 && _width != size.x) ||
-            (size.y != 0 && _height != size.y) ||
-            (size.c != 0 && _channels != size.c)){
-            return;
-        }
-
-        buffer = agg::rendering_buffer(data, _width, _height, _width * _height * (depth/8));
-        pix = DrawingType(buffer);
-        alloc();
     }
 
     void alpha_mask_init(){
@@ -302,7 +276,9 @@ public:
 
     void alpha_mask_free(){
         if (alpha_mask){
-            delete[] alpha_mask;
+            if (owns_alpha){
+                delete[] alpha_mask;
+            }
             alpha_mask = nullptr;
         }
     }
@@ -832,7 +808,6 @@ public:
         agg::conv_transform<agg::conv_stroke<agg::conv_curve<agg::path_storage>>> m(q, mtx);
         raster->add_path(m, pathid);
 
-
         if (alpha_mask != nullptr){
             agg::rendering_buffer alpha_mask_rbuf(alpha_mask, size.x, size.y, size.x);
             agg::amask_no_clip_gray8 alpha_mask(alpha_mask_rbuf);
@@ -917,32 +892,11 @@ public:
             if (a == x && b == y)
                 return true;
         }
-
         return false;
     }
-
-private:
-    // render settings
-    bool _antialias, _preserve;
-    double _width, _miterlimit;
-    line_cap_style _linecap;
-    line_join_style _linejoin;
-
-    unsigned pathid; // stores current path
-    Color current_color;
 };
 
-typedef agg::pixfmt_rgba32 rgba32;
-typedef agg::pixfmt_rgb24 rgb24;
-typedef agg::pixfmt_bgra32 bgra32;
-typedef agg::pixfmt_bgr24 bgr24;
-typedef agg::pixfmt_gray8 gray8;
-typedef agg::pixfmt_rgba64 rgba64;
-typedef agg::pixfmt_rgb48 rgb48;
-typedef agg::pixfmt_bgra64 bgra64;
-typedef agg::pixfmt_bgr48 bgr48;
-typedef agg::pixfmt_gray16 gray16;
-
+// Drawing types
 typedef Drawing<rgba32> DrawingRGBA32;
 typedef Drawing<rgb24> DrawingRGB24;
 typedef Drawing<rgba64> DrawingRGBA64;
@@ -952,19 +906,11 @@ typedef Drawing<bgr24> DrawingBGR24;
 typedef Drawing<bgra64> DrawingBGRA64;
 typedef Drawing<bgr48> DrawingBGR48;
 
-#ifndef NO_OPENCV
-Drawing<bgra32> draw(Mat4b& im, uint8_t* alpha_mask=nullptr);
-Drawing<bgr24> draw(Mat3b& im, uint8_t* alpha_mask=nullptr);
-Drawing<bgra64> draw(Mat4w& im, uint8_t* alpha_mask=nullptr);
-Drawing<bgr48> draw(Mat3w& im, uint8_t* alpha_mask=nullptr);
-#endif
+DrawingRGBA32 draw(int32_t w, int32_t h, uint8_t *data);
+DrawingRGBA64 draw(int32_t w, int32_t h, uint16_t *data);
+DrawingRGB24 draw_rgb(int32_t w, int32_t h, uint8_t *data);
+DrawingRGB48 draw_rgb(int32_t w, int32_t h, uint16_t *data);
 
-#ifdef BIMAGE_CXX_HEADER
-template<typename DrawingType>
-Drawing<DrawingType> draw(bimg::image const &im, uint8_t *alpha=nullptr){
-    return Drawing<DrawingType>(im, alpha);
-}
-#endif
 
 #endif // cplusplus
 

@@ -455,14 +455,9 @@ class Vertex(list):
 
 class Drawing(object):
     ''' python wrapper for libtwombly Drawing class '''
-    def __init__(self, arr=None, bgr=False, width=None, height=None):
+    def __init__(self, arr, bgr=False, width=None, height=None):
         self._free = _METHODS["free"]
         self._color = Color(0, 0, 0, 0)
-
-        if arr is None:
-            self._drawing = _METHODS["create_path"]()
-            self._as_parameter_ = self._drawing
-            return
 
         self.array = arr
         bgr_str = ""

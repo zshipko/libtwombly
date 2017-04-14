@@ -28,9 +28,8 @@ agg/src/agg_vpgen_clip_polyline.cpp \
 agg/src/agg_vpgen_segmentator.cpp
 tw_src=draw.cpp capi/capi.cpp capi/gradient.cpp capi/transform.cpp
 agg_hdrs=agg/include/*.h agg/include/util/*.h
-tw_hdrs=image.hpp draw.hpp twombly.hpp capi/draw_c.h config.h
+tw_hdrs=image.hpp draw.hpp twombly.hpp capi/draw.h config.h
 
-CONFIG_CV=
 CONFIG_FT=
 
 suffix_Darwin=dylib
@@ -48,14 +47,6 @@ freetype?=yes
 bimage?=no
 FREETYPE_PKG?=freetype2
 svg=no
-
-opencv?=$(shell PKG_CONFIG_PATH=/usr/local/pkgconfig pkg-config --cflags --libs opencv || printf "no";)
-ifeq ($(opencv)X,noX)
-	libs= -L/usr/local/lib
-	CONFIG_CV+= "\#define NO_OPENCV"
-else
-	libs=-L/usr/local/lib -lopencv_core -lopencv_highgui -lopencv_imgproc
-endif
 
 HAS_COMPILER=$(shell $(CXX) -v || printf "NO";)
 ifeq ($(HAS_COMPILER)X,NOX)
@@ -132,7 +123,7 @@ clean-libs:
 	rm -f libtwombly.$(suffix) libtwombly.a libagg.$(suffix) libagg.a
 
 %.o: %.cpp
-	$(CXX) -O3  -std=c++11 -c -fPIC $*.cpp -I. $(incl) -o $@
+	$(CXX) -O3 -std=c++11 -c -fPIC $*.cpp -I. $(incl) -o $@
 
 %.o: %.c
 	$(CC) -O3 -c -fPIC $*.c $(incl) -o $@

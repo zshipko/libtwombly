@@ -1,11 +1,12 @@
+#include <bimage.h>
 #include "../twombly.hpp"
 
 using namespace tw;
 
 int main(int argc, char *argv[]){
-    Mat3b im(400, 400);
 
-    auto ctx = draw(im);
+    bimage *im = bimageCreate(400, 400, RGBA32);
+    auto ctx = draw(400, 400, (uint8_t*)im->data);
 
     ctx.rect(10, 20, 210, 120);
     ctx.fill(Color(0, 0, 255));
@@ -17,6 +18,7 @@ int main(int argc, char *argv[]){
     ctx.stroke(Color(200, 0, 255));
     ctx.paint();
 
-    imwrite("rect_arc.tiff", im);
+    bimageSave(im, "rect_arc.tiff");
+    bimageDestroy(&im);
     return 0;
 }

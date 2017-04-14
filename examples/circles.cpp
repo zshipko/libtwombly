@@ -1,3 +1,4 @@
+#include <bimage.h>
 #include "../twombly.hpp"
 
 using namespace tw;
@@ -5,8 +6,8 @@ using namespace tw;
 #define SIZE 800
 
 int main(int argc, char *argv[]){
-    Mat4b im(SIZE, SIZE);
-    auto d = draw(im);
+    bimage *im = bimageCreate(SIZE, SIZE, RGBA64);
+    auto d = draw(SIZE, SIZE, (uint16_t*)im->data);
 
     d.antialias(false);
 
@@ -16,6 +17,7 @@ int main(int argc, char *argv[]){
         d.paint();
     }
 
-    imwrite("circles.tiff", im);
+    bimageSave(im, "circles.tiff");
+    bimageDestroy(&im);
     return 0;
 }

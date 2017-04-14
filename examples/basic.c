@@ -11,4 +11,6 @@ int main(int argc, char **argv){
     draw_stroke(d);
     bimageSave(im, "basic.tiff");
     draw_free(&d);
+    bimageDestroy(&im);
+    return 0;
 }

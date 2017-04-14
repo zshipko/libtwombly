@@ -40,10 +40,6 @@ struct drawing {
 };
 typedef struct drawing drawing;
 
-
-// leptonica
-#define draw_frompix(im) draw_create(im->w, im->h, im->d/8, (unint8_t*)im->data)
-
 #define TWOMBLY_LOG(s, ...) if(TWOMBLY_SET_LOG) fprintf(stderr, s,  __VA_ARGS__)
 
 typedef float* Pixel;
@@ -190,10 +186,14 @@ void draw_stroke_gradient16(drawing d, gradient grad, int s, int x, gradient_typ
     }\
 } while(0)
 
+// bimage
 #define draw_frombimage(im) \
     bimageTypeSize(im->type) == 8 ? \
         draw_create(im->width, im->height, bimageTypeChannels(im->type), im->data) : \
         bimageTypeSize(im->type) == 16 ? draw_create16(im->width, im->height, bimageTypeChannels(im->type), im->data) : draw_empty()
+
+// leptonica
+#define draw_frompix(im) draw_create(im->w, im->h, im->d/8, (unint8_t*)im->data)
 
 
 #ifdef __cplusplus

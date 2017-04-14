@@ -1,1 +1,8 @@
 *.o
+config.h
+*.a
+*.so
+*.dylib
+*.core
+*.tiff
+tests/run
