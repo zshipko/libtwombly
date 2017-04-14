@@ -1,3 +1,4 @@
+#include <bimage.h>
 #include "../twombly.hpp"
 
 using namespace tw;
@@ -5,8 +6,8 @@ using namespace tw;
 #define SIZE 800
 
 int main(int argc, char *argv[]){
-    Mat4b im(SIZE, SIZE);
-    auto d = draw(im);
+    bimage *im = bimageCreate(SIZE, SIZE, RGBA32);
+    auto d = draw(SIZE, SIZE, (uint8_t*)im->data);
 
     Gradient<Color> g;
     g.add_stop(Color(255, 0, 0));
@@ -18,5 +19,7 @@ int main(int argc, char *argv[]){
     d.rect(0, 0, SIZE, SIZE);
     d.fill_gradient(g, 0, 800, gradient_type_x);
 
-    imwrite("gradient.tiff", im);
+    bimageSave(im, "gradient.tiff");
+    bimageDestroy(&im);
+    return 0;
 }

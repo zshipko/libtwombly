@@ -1,4 +1,4 @@
-#include "draw_c.h"
+#include "draw.h"
 
 void draw_transform_matrix_scale(transform_matrix mtx, double a, double b){
     (*(agg::trans_affine*)mtx.handle) *= agg::trans_affine_scaling(a, b);

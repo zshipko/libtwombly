@@ -1,64 +1,80 @@
+#include <bimage.h>
 #include "lest.hpp"
 
 #include "../twombly.hpp"
+#define NO_SHOW
 
 #include <iostream>
 
 using namespace tw;
 
-#define RED 2
+#define RED 0
 #define GREEN 1
-#define BLUE 0
+#define BLUE 2
 #define ALPHA 3
 
-int opencv_error_handler(int status, const char* func_name, const char* err_msg,
-                   const char* file_name, int line, void*)
-{
-    return 0;
-}
-
 const lest::test drawing_test[] = {
-    CASE ( "Mat3b drawing" ) {
-        Mat3b im(100, 100);
-        auto d = draw(im);
+    CASE ( "RGB24 drawing" ) {
+        bimage *im = bimageCreate(100, 100, RGB24);
+        auto d = Drawing<rgb24>(100, 100, 3, (uint8_t*)im->data);
         d.clear(255, 0, 0);
-        EXPECT(im.at<Vec3b>(10, 10)[RED] == 255);
-        EXPECT(im.at<Vec3b>(10, 10)[GREEN] == 0);
-        EXPECT(im.at<Vec3b>(10, 10)[BLUE] == 0);
+
+        bpixel px;
+        bimageGetPixel(im, 10, 10, &px);
+
+        EXPECT(px.data[RED] == 255);
+        EXPECT(px.data[GREEN] == 0);
+        EXPECT(px.data[BLUE] == 0);
+        bimageDestroy(&im);
     },
 
-    CASE ( "Mat4b drawing" ) {
-        Mat4b im(100, 100);
-        auto d = draw(im);
+    CASE ( "RGBA32 drawing" ) {
+        bimage *im = bimageCreate(100, 100, RGBA32);
+        auto d = Drawing<rgba32>(100, 100, 4, (uint8_t*)im->data);
         d.clear(255, 0, 0);
-        EXPECT(im.at<Vec4b>(10, 10)[RED] == 255);
-        EXPECT(im.at<Vec4b>(10, 10)[GREEN] == 0);
-        EXPECT(im.at<Vec4b>(10, 10)[BLUE] == 0);
-        EXPECT(im.at<Vec4b>(10, 10)[ALPHA] == 255);
+
+        bpixel px;
+        bimageGetPixel(im, 10, 10, &px);
+
+        EXPECT(px.data[RED] == 255);
+        EXPECT(px.data[GREEN] == 0);
+        EXPECT(px.data[BLUE] == 0);
+        EXPECT(px.data[ALPHA] == 255);
+        bimageDestroy(&im);
     },
 
-    CASE ( "Mat3w drawing" ) {
-        Mat3w im(100, 100);
-        auto d = draw(im);
+    CASE ( "RGB48 drawing" ) {
+        bimage *im = bimageCreate(100, 100, RGB48);
+        auto d = Drawing<rgb48>(100, 100, 3, (uint16_t*)im->data);
         d.clear(255, 0, 0);
-        EXPECT(im.at<Vec3w>(10, 10)[RED] == 65535);
-        EXPECT(im.at<Vec3w>(10, 10)[GREEN] == 0);
-        EXPECT(im.at<Vec3w>(10, 10)[BLUE] == 0);
+
+        bpixel px;
+        bimageGetPixel(im, 10, 10, &px);
+
+        EXPECT(px.data[RED] == 65535);
+        EXPECT(px.data[GREEN] == 0);
+        EXPECT(px.data[BLUE] == 0);
+        bimageDestroy(&im);
     },
 
-    CASE ( "Mat4w drawing" ) {
-        Mat4w im(100, 100);
-        auto d = draw(im);
+    CASE ( "RGBA64 drawing" ) {
+        bimage *im = bimageCreate(100, 100, RGBA64);
+        auto d = Drawing<rgba64>(100, 100, 4, (uint16_t*)im->data);
         d.clear(255, 0, 0);
-        EXPECT(im.at<Vec4w>(10, 10)[RED] == 65535);
-        EXPECT(im.at<Vec4w>(10, 10)[GREEN] == 0);
-        EXPECT(im.at<Vec4w>(10, 10)[BLUE] == 0);
-        EXPECT(im.at<Vec4w>(10, 10)[ALPHA] == 65535);
+
+        bpixel px;
+        bimageGetPixel(im, 10, 10, &px);
+
+        EXPECT(px.data[RED] == 65535);
+        EXPECT(px.data[GREEN] == 0);
+        EXPECT(px.data[BLUE] == 0);
+        EXPECT(px.data[ALPHA] == 65535);
+        bimageDestroy(&im);
     },
 
     CASE ( "Path" ) {
-        Mat3b im(500, 500);
-        auto d = draw(im);
+        bimage *im = bimageCreate(500, 500, RGB24);
+        auto d = Drawing<rgb24>(500, 500, 3, (uint8_t*)im->data);
         d.preserve(true);
         d.new_path();
         d.set_color(255, 255, 255);
@@ -93,54 +109,13 @@ const lest::test drawing_test[] = {
         d.stroke();
         d.preserve(false);
 
-        try{
-            namedWindow("Path test");
-            imshow("Path test", im);
-            waitKey(0);
-            destroyAllWindows();
-        } catch(std::exception &exc){
-
-        }
-    },
-
-    CASE ( "Curve" ) {
-        Mat3b im2(500, 500);
-        im2.setTo(Scalar(255, 255, 255));
-        auto d = draw(im2);
-
-        d.set_color(255, 0, 0);
-        d.move_to(100, 100);
-        d.curve_to(400, 400, 100, 320);
-        d.stroke();
-
-        try {
-            namedWindow("Curve test");
-            imshow("Curve test", im2);
-            waitKey(0);
-        } catch (std::exception &exc){
-
-        }
-
-        d.new_path();
-        d.clear(255, 255, 255);
-        d.set_color(0, 255, 0);
-        d.move_to(100, 100);
-        d.curve_to(400, 400, 150, 320);
-        d.stroke();
-
-        try{
-            imshow("Curve test", im2);
-            waitKey(0);
-            destroyAllWindows();
-        } catch(std::exception &exc){
-
-        }
+        bimageRelease(im);
     },
 
     CASE ( "Gradient" ) {
-        Mat3w im2(500, 500);
-        im2.setTo(Scalar(255, 255, 255));
-        auto d = draw(im2);
+        bimage *im2 = bimageCreate(500, 500, RGB48);
+        memset(im2->data, 65535, im2->width * im2->height * 16 * 3);
+        auto d = Drawing<rgb48>(500, 500, 3, (uint16_t*)im2->data);
 
         d.set_color(255, 0, 0);
         d.move_to(100, 100);
@@ -156,19 +131,34 @@ const lest::test drawing_test[] = {
         g.add_stop(Color16(0, 0, 255<<8, 127<<8));
 
         d.fill_gradient(g, 0, 300, gradient_type_y);
-        EXPECT((im2.at<Scalar>(250, 250)[0] > 0));
 
-        try{
-            imshow("Gradient test", im2);
-            waitKey(0);
-            destroyAllWindows();
-        } catch(std::exception &exc){
+        bpixel px;
+        bimageGetPixel(im2, 250, 250, &px);
+        EXPECT(px.data[0] > 0);
+        bimageRelease(im2);
+    },
 
-        }
+    CASE( "cairo-arc-infinite-loop"){
+        bimage *im = bimageCreate(8, 8, RGB24);
+        auto d = Drawing<rgb24>(8, 8, 3, (uint8_t*)im->data);
+        d.clear(255, 255, 255);
+
+        d.move_to(0, 0);
+        d.arc_to(0, 0, 1, 1024.0 / std::numeric_limits<double>::epsilon() * M_PI, 0);
+        d.arc_to(0, 0, 1, 0, 1024.0 / std::numeric_limits<double>::epsilon() * M_PI);
+
+        d.set_color(255, 0, 0);
+        d.stroke();
+
+        bpixel px;
+        bimageGetPixel(im, 0, 0, &px);
+
+        EXPECT((px.data[0] == 255 && px.data[0] > px.data[1] && px.data[0] > px.data[2]));
+
+        bimageRelease(im);
     }
 };
 
 int main(int argc, char **argv){
-    cv::redirectError(opencv_error_handler);
     lest::run(drawing_test, argc, argv);
 }

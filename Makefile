@@ -28,18 +28,16 @@ agg/src/agg_vpgen_clip_polyline.cpp \
 agg/src/agg_vpgen_segmentator.cpp
 tw_src=draw.cpp capi/capi.cpp capi/gradient.cpp capi/transform.cpp
 agg_hdrs=agg/include/*.h agg/include/util/*.h
-tw_hdrs=image.hpp draw.hpp twombly.hpp capi/draw_c.h config.h
+tw_hdrs=image.hpp draw.hpp twombly.hpp capi/draw.h config.h
 
-CONFIG_CV=
 CONFIG_FT=
 
-opencv?=$(shell PKG_CONFIG_PATH=/usr/local/pkgconfig pkg-config --cflags --libs opencv || printf "no";)
-ifeq ($(opencv)X,noX)
-	libs= -L/usr/local/lib
-	CONFIG_CV+= "\#define NO_OPENCV"
-else
-	libs=-L/usr/local/lib -lopencv_core -lopencv_highgui -lopencv_imgproc
+suffix_Darwin=dylib
+suffix?=$(suffix_$(shell uname))
+ifeq ($(suffix)X,X)
+	suffix=so
 endif
+
 incl=-I./agg/include -I./agg/font_freetype -I./twombly -I/usr/local/include $(flags)
 dest?=/usr/local
 VERSION=0.1
@@ -92,13 +90,14 @@ agg-static: compile
 	ar rcs libagg.a $(agg_obj)
 
 agg-shared: compile
-	$(CXX) -shared -o libagg.so $(agg_obj) $(libs)
+	$(CXX) -shared -o libagg.$(suffix) $(agg_obj) $(libs)
 
 tw-static: compile
 	ar rcs libtwombly.a $(agg_obj) $(tw_obj)
 
 tw-shared: compile
-	$(CXX) -shared -o libtwombly.so $(agg_obj) $(tw_obj) $(libs)
+	$(CXX) -shared -o libtwombly.$(suffix) $(agg_obj) $(tw_obj) $(libs)
+	$(CXX) -shared -o libtwombly.$(VERSION).$(suffix) $(agg_obj) $(tw_obj) $(libs)
 
 .PHONY: install
 install:
@@ -121,10 +120,10 @@ clean:
 	rm -f $(agg_obj) $(tw_obj)
 
 clean-libs:
-	rm -f libtwombly.so libtwombly.a libagg.so libagg.a
+	rm -f libtwombly.$(suffix) libtwombly.a libagg.$(suffix) libagg.a
 
 %.o: %.cpp
-	$(CXX) -O3  -std=c++11 -c -fPIC $*.cpp -I. $(incl) -o $@
+	$(CXX) -O3 -std=c++11 -c -fPIC $*.cpp -I. $(incl) -o $@
 
 %.o: %.c
 	$(CC) -O3 -c -fPIC $*.c $(incl) -o $@
@@ -139,7 +138,7 @@ release:
 	tar czf $(RELEASE_DIR).tar.gz $(RELEASE_DIR)
 
 test:
-	cd tests && CXX=$(CXX) freetype=$(freetype) $(MAKE)
+	cd tests && CXX=$(CXX) freetype=$(freetype) $(MAKE) show=$(show)
 	tests/run
 
 parser:

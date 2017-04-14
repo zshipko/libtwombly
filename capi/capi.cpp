@@ -1,4 +1,4 @@
-#include "draw_c.h"
+#include "draw.h"
 
 #ifdef __cplusplus
 using namespace tw;
@@ -18,9 +18,16 @@ drawing draw_create_path(){
     return d;
 }
 
+drawing draw_empty() {
+    drawing d;
+    memset(&d, sizeof(drawing), 0);
+    return d;
+}
+
 drawing draw_create(int64_t width, int64_t height, int channels, uint8_t *data){
     drawing d;
     d.handle = NULL;
+    d.user_data = NULL;
     d.is_bgr = false;
 
     if (channels == 1){
@@ -481,6 +488,10 @@ void draw_alpha_mask_free(drawing a){
 
 void draw_alpha_mask_fill(drawing a, uint8_t v){
     DRAWING(a, alpha_mask_fill, v);
+}
+
+void draw_alpha_mask_set(drawing a, int32_t x, int32_t y, uint8_t val){
+    DRAWING(a, alpha_mask_set, x, y, val);
 }
 
 uint8_t draw_alpha_mask_get(drawing a, int32_t x, int32_t y){

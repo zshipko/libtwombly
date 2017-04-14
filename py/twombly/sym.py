@@ -1,8 +1,7 @@
-from drawing import TransformMatrix, _transform_matrix_get
+from __future__ import absolute_import
 from numpy import arange
 import sympy as sym
 from sympy import geometry as geo
-from sympy.utilities import lambdify
 
 def add_geometry(drawing, g, move_to=False, step=1):
     ''' draw sympy equations '''

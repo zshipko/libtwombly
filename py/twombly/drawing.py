@@ -2,8 +2,15 @@ from __future__ import absolute_import
 from ctypes import *
 from numpy import zeros, arange, ndarray, asarray
 from twombly.colors import _colors
+import platform, os
+from functools import partial
 
-twombly = cdll.LoadLibrary("libtwombly.so")
+if platform.system() == "Darwin":
+    ext = "dylib"
+else:
+    ext = "so"
+
+twombly = cdll.LoadLibrary("libtwombly." + ext)
 
 PATH_CMD_STOP = 0
 PATH_CMD_MOVE_TO = 1
@@ -13,8 +20,27 @@ PATH_CMD_CURVE4 = 4
 PATH_CMD_CURVEN = 5
 PATH_CMD_CATROM = 6
 PATH_CMD_UBSPLINE = 7
-PATH_CMD_END_POLY = 0xff
-PATH_CMD_MASK = 0xff
+PATH_CMD_END_POLY = 0x0f
+PATH_CMD_MASK = 0x0f
+
+class PathCommand(object):
+    stop = PATH_CMD_STOP
+    move_to = PATH_CMD_MOVE_TO
+    line_to = PATH_CMD_LINE_TO
+    curve3 = PATH_CMD_CURVE3
+    curve4 = PATH_CMD_CURVE4
+    curven = PATH_CMD_CURVEN
+    catrom = PATH_CMD_CATROM
+    ubspline = PATH_CMD_UBSPLINE
+    end_poly = PATH_CMD_END_POLY
+    mask = PATH_CMD_MASK
+
+    class flags(object):
+        none = 0
+        ccw = 0x10
+        cw = 0x20
+        close = 0x40
+        mask = 0xF0
 
 GRADIENT_CIRCLE = 0
 GRADIENT_RADIAL = 1
@@ -36,6 +62,19 @@ JOIN_MITER_REVERT = 1
 JOIN_ROUND = 2
 JOIN_BEVEL = 3
 JOIN_MITER_ROUND = 4
+
+class DrawingStyle(object):
+    class cap(object):
+        butt = CAP_BUTT
+        square = CAP_SQUARE
+        round = CAP_ROUND
+
+    class join(object):
+        miter = JOIN_MITER
+        miter_revert = JOIN_MITER_REVERT
+        round = JOIN_ROUND
+        bevel = JOIN_BEVEL
+        miter_round = JOIN_MITER_ROUND
 
 class DrawingType(Structure):
     ''' C struct for drawing type'''
@@ -77,9 +116,9 @@ _METHODS = dict(
                               DrawingType, [c_long, c_long, c_long, c_void_p]),
     free=_method_decl(twombly.draw_free, args=[POINTER(DrawingType)]),
     get_antialias=_method_decl(twombly.draw_get_antialias, c_bool),
-    set_antialias=_method_decl(twombly.draw_get_antialias, args=[DrawingType, c_bool]),
+    set_antialias=_method_decl(twombly.draw_set_antialias, args=[DrawingType, c_bool]),
     get_preserve=_method_decl(twombly.draw_get_preserve, c_bool),
-    set_preserve=_method_decl(twombly.draw_get_preserve, args=[DrawingType, c_bool]),
+    set_preserve=_method_decl(twombly.draw_set_preserve, args=[DrawingType, c_bool]),
     set_line_width=_method_decl(twombly.draw_set_line_width,
                                 args=[DrawingType, c_double]),
     get_line_width=_method_decl(twombly.draw_get_line_width, c_double),
@@ -158,8 +197,6 @@ _METHODS = dict(
                          args=[DrawingType, c_double, c_double, c_double, c_double, c_double]),
     text_simple=_method_decl(twombly.draw_text_simple, c_double,
                                  args=[DrawingType, c_double, c_double, c_char_p, c_int, c_double, c_char_p]),
-    text=_method_decl(twombly.draw_text, c_double,
-                          args=[DrawingType, c_double, c_double, c_char_p, c_char_p, c_double, c_double]),
     set_color=_method_decl(twombly.draw_set_color,
                            args=[DrawingType, c_uint8, c_uint8, c_uint8, c_uint8]),
     fill=_method_decl(twombly.draw_fill),
@@ -193,19 +230,15 @@ _METHODS = dict(
                       args=[DrawingType, DrawingType]),
     concat=_method_decl(twombly.draw_concat,
                         args=[DrawingType, DrawingType]),
-
-    # pattern
-    fill_pattern=_method_decl(twombly.draw_fill_pattern,
-                              args=[DrawingType, DrawingType]),
-    stroke_pattern=_method_decl(twombly.draw_fill_pattern,
-                                args=[DrawingType, DrawingType]),
     # alpha mask
     alpha_mask_init=_method_decl(twombly.draw_alpha_mask_init),
     alpha_mask_free=_method_decl(twombly.draw_alpha_mask_free),
     alpha_mask_fill=_method_decl(twombly.draw_alpha_mask_fill,
                                   args=[DrawingType, c_uint8]),
-    alpha_mask=_method_decl(twombly.draw_alpha_mask_get, c_uint8,
+    alpha_mask_get=_method_decl(twombly.draw_alpha_mask_get, c_uint8,
                                  args=[DrawingType, c_int32, c_int32]),
+    alpha_mask_set=_method_decl(twombly.draw_alpha_mask_set,
+                                 args=[DrawingType, c_int32, c_int32, c_uint8]),
     alpha_mask_ptr_offs=_method_decl(twombly.draw_alpha_mask_ptr_offs, POINTER(c_uint8),
                                           args=[DrawingType, c_int32, c_int32]),
     alpha_mask_ptr=_method_decl(twombly.draw_alpha_mask_ptr, POINTER(c_uint8)),
@@ -216,6 +249,12 @@ _METHODS = dict(
     stroke_gradient=_method_decl(twombly.draw_stroke_gradient,
                                  args=[DrawingType, GradientType, c_int, c_int, c_int]),
 )
+
+try:
+    _METHODS['text']= _method_decl(twombly.draw_text, c_double,
+                          args=[DrawingType, c_double, c_double, c_char_p, c_char_p, c_double, c_double])
+except:
+    pass
 
 _transform_matrix_create = _method_decl(twombly.draw_transform_matrix_create, TransformType, args=[])
 _transform_matrix_free = _method_decl(twombly.draw_transform_matrix_free, args=[POINTER(TransformType)])
@@ -278,16 +317,17 @@ class TransformMatrix(object):
             _transform_matrix_transform(self._mtx, x_ptr, y_ptr)
         return (x_ptr[0], y_ptr[0])
 
-    def array(self, arr=None):
+    @property
+    def array(self):
         ''' Get and set transformation matrix data using numpy arrays'''
-        if arr is not None:
-            _transform_matrix_from_double(self._mtx, cast(asarray(arr, dtype='double').ctypes.data,
-                                                          POINTER(c_double)))
-            return
-
         arr = zeros(6, dtype="double")
         _transform_matrix_to_double(self._mtx, cast(arr.ctypes.data, POINTER(c_double)))
         return arr
+
+    @array.setter
+    def array(self, arr):
+        _transform_matrix_from_double(self._mtx, cast(asarray(arr, dtype='double').ctypes.data,
+                                                          POINTER(c_double)))
 
 _gradient_create = _method_decl(twombly.draw_gradient_create, GradientType, args=[])
 _gradient_create16 = _method_decl(twombly.draw_gradient_create16, GradientType, args=[])
@@ -298,8 +338,22 @@ _gradient_get_matrix = _method_decl(twombly.draw_gradient_get_matrix, TransformT
 
 class Gradient(object):
     ''' Gradient Class '''
+    circle = GRADIENT_CIRCLE
+    radial = GRADIENT_RADIAL
+    radial_d = GRADIENT_RADIAL_D
+    radial_focus = GRADIENT_RADIAL_FOCUS
+    x = GRADIENT_X
+    y = GRADIENT_Y
+    diamond = GRADIENT_DIAMOND
+    xy = GRADIENT_XY
+    sqrt_xy = GRADIENT_SQRT_XY
+    conic = GRADIENT_CONIC
+
+
     def __init__(self, *args, **kw):
         self.depth = kw.get('depth', 8)
+        self._gradient= None
+
         if  self.depth == 16:
             self._gradient = _gradient_create16()
         else:
@@ -316,11 +370,12 @@ class Gradient(object):
         elif self.depth == 16:
             _gradient_add_stop16(self._gradient, (c_float * 4)(*c))
 
+    @property
     def matrix(self):
         return TransformMatrix(_gradient_get_matrix(self._gradient))
 
     def __del__(self):
-        if self._gradient is not None:
+        if hasattr(self, "_gradient") and self._gradient is not None:
             _gradient_free(pointer(self._gradient))
             self._gradient = None
 
@@ -363,15 +418,46 @@ class Color(ndarray):
         ''' convert red, green, blue, alpha to uint16s 0-65535 '''
         return as_uint16(self)
 
+class Vertex(list):
+    def __init__(self, iterable, update_fn=None):
+        list.__init__(self, iterable)
+        self.update_fn = update_fn
+
+    @property
+    def x(self):
+        return self[0]
+
+    @property
+    def y(self):
+        return self[1]
+
+    @property
+    def command(self):
+        return self[2]
+
+    @command.setter
+    def command(self, cmd):
+        self[2] = cmd
+        if self.update_fn is not None:
+            self.update_fn(*self)
+
+    @x.setter
+    def x(self, val):
+        self[0] = val
+        if self.update_fn is not None:
+            self.update_fn(*self)
+
+    @y.setter
+    def y(self, val):
+        self[1] = val
+        if self.update_fn is not None:
+            self.update_fn(*self)
+
 class Drawing(object):
     ''' python wrapper for libtwombly Drawing class '''
-    def __init__(self, arr=None, bgr=False, width=None, height=None):
+    def __init__(self, arr, bgr=False, width=None, height=None):
         self._free = _METHODS["free"]
-
-        if arr is None:
-            self._drawing = _METHODS["create_path"]()
-            self._as_parameter_ = self._drawing
-            return
+        self._color = Color(0, 0, 0, 0)
 
         self.array = arr
         bgr_str = ""
@@ -387,9 +473,11 @@ class Drawing(object):
         if arr.dtype == 'uint8':
             self._drawing = _METHODS["create" + bgr_str](width, height,
                                                          arr.shape[2], arr.ravel().ctypes.data)
+            self._is_16 = False
         elif arr.dtype == 'uint16':
             self._drawing = _METHODS["create16" + bgr_str](width, height,
                                                            arr.shape[2], arr.ravel().ctypes.data)
+            self._is_16 = True
         else:
             self._drawing = None
             raise ValueError("bad image type")
@@ -397,32 +485,66 @@ class Drawing(object):
         self._as_parameter_ = self._drawing
 
     def __getattr__(self, key):
-        def wrapper(*args):
-            ''' get method by name'''
-            return _METHODS[key](self._drawing, *args)
-        return wrapper
+        if key in _METHODS:
+            def wrapper(*args):
+                ''' get method by name'''
+                return _METHODS[key](self._drawing, *args)
+            return wrapper
+        raise AttributeError
 
-    def get_vertices(self):
-        return [self.get_vertex(i) for i in range(0, self.total_vertices())]
+    @property
+    def total_vertices(self):
+        return _METHODS["total_vertices"](self)
 
-    def set_vertices(self, arr):
+    @property
+    def vertices(self):
+        class Vertices(object):
+            def __init__(_self):
+                _self._index = 0
+
+            def __setitem__(_self, index, val):
+                self.modify_vertex(index, val[0], val[1], val[2])
+
+            def __getitem__(_self, index):
+                return self.get_vertex(index)
+
+            def __len__(_self):
+                return self.total_vertices
+
+            def __iter__(_self):
+                return _self
+
+            def __next__(_self):
+                if _self.index >= self.total_vertices:
+                    raise StopIteration
+
+                result = self.get_vertex(_self.index)
+                _self.index += 1
+                return result
+
+            def __str__(_self):
+                return 'Vertices{%d}' % self.total_vertices
+
+        return Vertices()
+
+    @vertices.setter
+    def vertices(self, arr):
         for index, vertex in enumerate(arr):
             self.set_vertex(index, vertex[0], vertex[1], vertex[2])
 
-    def set_vertex(self, index, x, y, cmd=None):
-        if cmd is None:
-            cmd = self.get_command(index)
-
-        self.modify_vertex(index, x, y, cmd)
-
     def get_vertex(self, index):
-        if index >= self.total_vertices():
+        if index >= self.total_vertices:
             raise Exception("out of bounds")
         x_ptr = pointer(c_double(0))
         y_ptr = pointer(c_double(0))
         _METHODS["get_vertex"](self, index, x_ptr, y_ptr)
         cmd = _METHODS["get_command"](self, index)
-        return [x_ptr[0], y_ptr[0], cmd]
+        return Vertex([x_ptr[0], y_ptr[0], cmd], update_fn=partial(self.set_vertex, index))
+
+    def set_vertex(self, index, x, y, cmd=None):
+        if cmd is None:
+            cmd = self.get_command(index)
+        self.modify_vertex(index, x, y, cmd)
 
     def clear(self, r, g=None, b=None, a=255):
         if isinstance(r, Color):
@@ -430,11 +552,27 @@ class Drawing(object):
         else:
             _METHODS["clear"](self._drawing, *Color(r, g, b, a).as_uint8())
 
-    def set_color(self, r, g=None, b=None, a=255):
+    @property
+    def color(self):
+        return self._color
+
+    @color.setter
+    def color(self, r, g=None, b=None, a=255):
+        if isinstance(r, str):
+            r = Color(r)
+        elif isinstance(r, (tuple, list)) and len(r) >= 3:
+            g = r[1]
+            b = r[2]
+            if len(r) > 3:
+                a = r[3]
+            r = r[0]
+
         if isinstance(r, Color):
             _METHODS["set_color"](self._drawing, *r.as_uint8())
+            self._color = r.as_uint8()
         else:
             _METHODS["set_color"](self._drawing, *Color(r, g, b, a).as_uint8())
+            self._color = Color(r, g, b, a).as_uint8()
 
     def curve_to(self, a, b, c=None, d=None, e=None, f=None):
         if c is None or d is None:
@@ -455,8 +593,73 @@ class Drawing(object):
             self._free(pointer(self._drawing))
             self._drawing = None
 
+    @property
     def matrix(self):
         return TransformMatrix(_transform_matrix_get(self))
+
+    @property
+    def antialias(self):
+        return self.get_antialias()
+
+    @antialias.setter
+    def antialias(self, aa):
+        self.set_antialias(aa)
+
+    @property
+    def preserve(self):
+        return self.get_preserve()
+
+    @preserve.setter
+    def preserve(self, p):
+        self.set_preserve(p)
+
+    @property
+    def line_width(self):
+        return self.get_line_width()
+
+    @line_width.setter
+    def line_width(self, w):
+        self.set_line_width(w)
+
+    @property
+    def miter_limit(self):
+        return self.get_miter_limit()
+
+    @miter_limit.setter
+    def miter_limit(self, limit):
+        self.set_miter_limit(limit)
+
+    @property
+    def line_join(self):
+        return self.get_line_join()
+
+    @line_join.setter
+    def line_join(self, j):
+        return self.set_line_join(j)
+
+    @property
+    def line_cap(self):
+        return self.get_line_cap()
+
+    @line_cap.setter
+    def line_cap(self, cap):
+        self.set_line_cap(cap)
+
+    @property
+    def path(self):
+        return self.get_active_path()
+
+    @path.setter
+    def path(self, pth):
+        self.set_active_path(pth)
+
+    def alpha(self, x=0, y=0, val=None):
+        self.alpha_mask_init()
+
+        if val is None:
+            return self.alpha_mask_ptr_offs(x, y)[0]
+        else:
+            self.alpha_mask_set(x, y, val)
 
 def draw(arr, *args, **kwargs):
     return Drawing(arr, *args, **kwargs)

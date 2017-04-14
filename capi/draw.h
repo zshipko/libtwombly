@@ -36,14 +36,9 @@ struct drawing {
     int channels;
     int bits_per_channel;
     bool is_bgr;
+    void *user_data;
 };
 typedef struct drawing drawing;
-
-// bimage
-#define draw_frombimage(im) ((im)->depth == u16 ? draw_create16((im)->width, (im)->height, (im)->channels, (im)->u16) : draw_create((im)->width, (im)->height, (im)->channels, (im)->u8))
-
-// leptonica
-#define draw_frompix(im) draw_create(im->w, im->h, im->d/8, (unint8_t*)im->data)
 
 #define TWOMBLY_LOG(s, ...) if(TWOMBLY_SET_LOG) fprintf(stderr, s,  __VA_ARGS__)
 
@@ -54,6 +49,7 @@ drawing draw_create_bgr(int64_t width, int64_t height, int channels, uint8_t *da
 drawing draw_create16(int64_t width, int64_t height, int channels, uint16_t *data);
 drawing draw_create16_bgr(int64_t width, int64_t height, int channels, uint16_t *data);
 drawing draw_create_path();
+drawing draw_empty();
 
 void draw_free(drawing *d);
 
@@ -133,14 +129,13 @@ unsigned int draw_total_vertices(drawing);
 void draw_alpha_mask_init(drawing a);
 void draw_alpha_mask_free(drawing a);
 void draw_alpha_mask_fill(drawing a, uint8_t v);
+void draw_alpha_mask_set(drawing a, int32_t x, int32_t y, uint8_t val);
 uint8_t draw_alpha_mask_get(drawing a, int32_t x, int32_t y);
 uint8_t *draw_alpha_mask_ptr(drawing a);
 uint8_t *draw_alpha_mask_ptr_offs(drawing a, int32_t x, int32_t y);
 
 void draw_join(drawing, drawing);
 void draw_concat(drawing, drawing);
-void draw_fill_pattern (drawing d, drawing e);
-void draw_stroke_pattern (drawing d, drawing e);
 
 typedef struct transform_matrix {
     void *handle;
@@ -172,9 +167,6 @@ void draw_fill_gradient(drawing d, gradient grad, int s, int x, gradient_type gr
 void draw_stroke_gradient(drawing d, gradient grad, int s, int x, gradient_type grad_type);
 gradient draw_gradient_create16();
 void draw_gradient_add_stop16(gradient grad, Pixel color);
-
-void draw_fill_gradient(drawing d, gradient grad, int s, int x, gradient_type grad_type);
-void draw_stroke_gradient(drawing d, gradient grad, int s, int x, gradient_type grad_type);
 void draw_fill_gradient16(drawing d, gradient grad, int s, int x, gradient_type grad_type);
 void draw_stroke_gradient16(drawing d, gradient grad, int s, int x, gradient_type grad_type);
 
@@ -193,6 +185,16 @@ void draw_stroke_gradient16(drawing d, gradient grad, int s, int x, gradient_typ
         break; \
     }\
 } while(0)
+
+// bimage
+#define draw_frombimage(im) \
+    bimageTypeSize(im->type) == 8 ? \
+        draw_create(im->width, im->height, bimageTypeChannels(im->type), im->data) : \
+        bimageTypeSize(im->type) == 16 ? draw_create16(im->width, im->height, bimageTypeChannels(im->type), im->data) : draw_empty()
+
+// leptonica
+#define draw_frompix(im) draw_create(im->w, im->h, im->d/8, (unint8_t*)im->data)
+
 
 #ifdef __cplusplus
 }
