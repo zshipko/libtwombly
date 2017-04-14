@@ -41,10 +41,6 @@ struct drawing {
 typedef struct drawing drawing;
 
 
-// bimage
-#define draw_frombimage(im) \
-    ((im)->depth == u16 ? draw_create16((im)->width, (im)->height, (im)->channels, (im)->data.u16) : (im)->depth == u8 ? draw_create((im)->width, (im)->height, (im)->channels, (im)->data.u8) : draw_empty())
-
 // leptonica
 #define draw_frompix(im) draw_create(im->w, im->h, im->d/8, (unint8_t*)im->data)
 
@@ -193,6 +189,12 @@ void draw_stroke_gradient16(drawing d, gradient grad, int s, int x, gradient_typ
         break; \
     }\
 } while(0)
+
+#define draw_frombimage(im) \
+    bimageTypeSize(im->type) == 8 ? \
+        draw_create(im->width, im->height, bimageTypeChannels(im->type), im->data) : \
+        bimageTypeSize(im->type) == 16 ? draw_create16(im->width, im->height, bimageTypeChannels(im->type), im->data) : draw_empty()
+
 
 #ifdef __cplusplus
 }

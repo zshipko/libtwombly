@@ -1,7 +1,7 @@
 files=*.cpp
 
 basic-run:
-	cc -o basic basic.c -I/usr/local/include -L/usr/local/lib -l twombly -l bimage
+	cc -I/usr/local/include -o basic basic.c  -L/usr/local/lib -l twombly -l bimage `pkg-config --cflags --libs freetype2`
 	./basic
 %-run:
 	rm -f $*
