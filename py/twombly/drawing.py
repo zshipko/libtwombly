@@ -105,15 +105,15 @@ def _method_decl(c_fn, res=None, args=[DrawingType]):
     return tmp
 
 _METHODS = dict(
-    create_path=_method_decl(twombly.draw_create_path, DrawingType, args=[]),
+    empty=_method_decl(twombly.draw_empty, DrawingType, args=[]),
     create=_method_decl(twombly.draw_create,
-                        DrawingType, [c_long, c_long, c_long, c_void_p]),
+                        DrawingType, [c_int, c_int, c_int, c_void_p]),
     create16=_method_decl(twombly.draw_create16,
-                          DrawingType, [c_long, c_long, c_long, c_void_p]),
+                          DrawingType, [c_int, c_int, c_int, c_void_p]),
     create_bgr=_method_decl(twombly.draw_create_bgr,
-                            DrawingType, [c_long, c_long, c_long, c_void_p]),
+                            DrawingType, [c_int, c_int, c_int, c_void_p]),
     create16_bgr=_method_decl(twombly.draw_create16_bgr,
-                              DrawingType, [c_long, c_long, c_long, c_void_p]),
+                              DrawingType, [c_int, c_int, c_int, c_void_p]),
     free=_method_decl(twombly.draw_free, args=[POINTER(DrawingType)]),
     get_antialias=_method_decl(twombly.draw_get_antialias, c_bool),
     set_antialias=_method_decl(twombly.draw_set_antialias, args=[DrawingType, c_bool]),
@@ -272,12 +272,6 @@ _transform_matrix_scale = _method_decl(twombly.draw_transform_matrix_scale, args
 class TransformMatrix(object):
     '''
         transforms points and drawings
-
-        >>> mtx = TransformMatrix()
-        >>> arr = mtx.array()     # get matrix data
-        >>> arr = arr * 2
-        >>> mtx.array(arr)        # sets matrix sata
-        >>> mtx.transform(10, 10) # returns (20.0, 20.0)
     '''
     def __init__(self, m=None):
         if m is None:

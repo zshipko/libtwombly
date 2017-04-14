@@ -179,7 +179,7 @@ public:
     agg::rasterizer_scanline_aa<> *raster;
     std::vector<unsigned> all_paths;
 
-    Drawing() : data(nullptr), pix(buffer), size(0, 0, 0), sl(nullptr), raster(nullptr), alpha_mask(nullptr) {
+    Drawing() : data(nullptr), pix(buffer), sl(nullptr), raster(nullptr), alpha_mask(nullptr), size(0, 0, 0) {
         base = agg::renderer_base<DrawingType>(pix);
         render_aa = agg::renderer_scanline_aa_solid<agg::renderer_base<DrawingType> >(base);
         render_bin = agg::renderer_scanline_bin_solid<agg::renderer_base<DrawingType> >(base);
@@ -218,7 +218,7 @@ public:
     }
 
     // Actually create the image,
-    // this function will overwrite the current context if it already exists
+    // this function will replace the current context if it already exists
     void alloc(){
         _miterlimit = 1;
         base = agg::renderer_base<DrawingType>(pix);
@@ -344,6 +344,10 @@ public:
 
     // Start new path, returns new pathid
     unsigned new_path(){
+        if (!raster){
+            return 0;
+        }
+
         raster->reset();
         pathid = start_new_path();
         all_paths.push_back(pathid);
@@ -400,6 +404,9 @@ public:
 
     // Reset everything
     void reset(){
+        if (!raster){
+            return;
+        }
         _width = 1;
         _miterlimit = 1;
         _preserve = false;
@@ -430,14 +437,23 @@ public:
     }
 
     inline void clip(double x, double y, double x1, double y1){
+        if (!raster){
+            return;
+        }
         raster->clip_box(x, y, x1, y1);
     }
 
     inline void reset_clip(){
+        if (!raster){
+            return;
+        }
         raster->reset_clipping();
     }
 
     inline void filling_rule(filling_rule fr){
+        if (!raster){
+            return;
+        }
         raster->filling_rule((agg::filling_rule_e)fr);
     }
 
@@ -519,6 +535,9 @@ public:
 
     // Draw text without freetype
     double text_simple(double x, double y, const char *txt, int size=50, double width=2.0, const char *font=nullptr, bool flip_y = true){
+        if (!raster){
+            return 0.0;
+        }
         agg::gsv_text text;
         agg::gsv_text_outline<agg::trans_affine> outline(text, mtx);
 
@@ -726,6 +745,9 @@ public:
 
     template<typename ColorType, typename GradientType>
     void fill_gradient(agg::pod_auto_array<ColorType, 256> color_array, int s, int x, agg::trans_affine _mtx=agg::trans_affine()){
+        if (!raster || !sl){
+            return;
+        }
         typedef agg::pod_auto_array<ColorType, 256> color_array_type;
         typedef agg::span_interpolator_linear<> interpolator_type;
         typedef agg::span_allocator<ColorType> span_allocator_type;
@@ -844,6 +866,9 @@ public:
 
     template <typename PathType>
     void paint(PathType &pth){
+        if (!raster || !sl){
+            return;
+        }
         typedef agg::pixfmt_amask_adaptor<DrawingType, agg::amask_no_clip_gray8> alpha_adaptor_type;
         raster->add_path(pth, pathid);
         if (alpha_mask != nullptr){
@@ -875,12 +900,18 @@ public:
     }
 
     inline void auto_close(bool c){
+        if (!raster){
+            return;
+        }
         raster->auto_close(c);
     }
 
     // Check if point is in rasterizer
     // note: perserve must be set to true for this to work
     inline bool is_drawn(double x, double y){
+        if (!raster){
+            return false;
+        }
         return raster->hit_test(x, y);
     }
 

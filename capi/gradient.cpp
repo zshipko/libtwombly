@@ -17,7 +17,7 @@ void draw_gradient_free(gradient *grad){
     }
 }
 
-void draw_gradient_add_stop(gradient grad, Pixel color){
+void draw_gradient_add_stop(gradient grad, float* color){
     ((Gradient<Color>*)grad.handle)->add_stop(Color(color[0], color[1], color[2], color[3]));
 }
 
@@ -37,7 +37,7 @@ gradient draw_gradient_create16(){
     return grad;
 }
 
-void draw_gradient_add_stop16(gradient grad, Pixel color){
+void draw_gradient_add_stop16(gradient grad, float* color){
     ((Gradient<Color16>*)grad.handle)->add_stop(Color16(color[0], color[1], color[2], color[3]));
 }
 

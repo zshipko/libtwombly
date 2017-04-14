@@ -1,6 +1,5 @@
 import unittest
 from twombly import *
-from skimage.io import imsave
 
 class TestDrawing(unittest.TestCase):
     def setUp(self):

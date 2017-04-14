@@ -10,7 +10,7 @@ static agg::path_storage *_get_path(drawing d){
 }
 #endif
 
-drawing draw_create_path(){
+drawing draw_empty(){
     drawing d;
     d.handle = new Drawing<rgba32>();
     d.bits_per_channel = 8;
@@ -18,13 +18,7 @@ drawing draw_create_path(){
     return d;
 }
 
-drawing draw_empty() {
-    drawing d;
-    memset(&d, sizeof(drawing), 0);
-    return d;
-}
-
-drawing draw_create(int64_t width, int64_t height, int channels, uint8_t *data){
+drawing draw_create(int32_t width, int32_t height, int channels, uint8_t *data){
     drawing d;
     d.handle = NULL;
     d.user_data = NULL;
@@ -47,7 +41,7 @@ drawing draw_create(int64_t width, int64_t height, int channels, uint8_t *data){
     return d;
 }
 
-drawing draw_create_bgr(int64_t width, int64_t height, int channels, uint8_t *data){
+drawing draw_create_bgr(int32_t width, int32_t height, int channels, uint8_t *data){
     drawing d;
     d.handle = NULL;
     d.is_bgr = true;
@@ -69,7 +63,7 @@ drawing draw_create_bgr(int64_t width, int64_t height, int channels, uint8_t *da
     return d;
 }
 
-drawing draw_create16(int64_t width, int64_t height, int channels, uint16_t *data){
+drawing draw_create16(int32_t width, int32_t height, int channels, uint16_t *data){
     drawing d;
     d.handle = NULL;
     d.is_bgr = false;
@@ -91,7 +85,7 @@ drawing draw_create16(int64_t width, int64_t height, int channels, uint16_t *dat
     return d;
 }
 
-drawing draw_create16_bgr(int64_t width, int64_t height, int channels, uint16_t *data){
+drawing draw_create16_bgr(int32_t width, int32_t height, int channels, uint16_t *data){
     drawing d;
     d.handle = NULL;
     d.is_bgr = true;
@@ -214,7 +208,6 @@ unsigned int draw_get_active_path(drawing d){
 
 unsigned int draw_new_path(drawing d){
     DRAWING(d, new_path);
-
     return 0;
 }
 
@@ -372,19 +365,18 @@ double draw_text_simple(drawing d, double x, double y, const char *str, int size
     return -1;
 }
 
-#ifndef NO_FREETYPE
 double draw_text(drawing d, double x, double y, const char *str, const char * font, double w, double h){
+#ifndef NO_FREETYPE
     DRAWING(d, text, x, y, str, font, w, h);
-
+#endif
     return -1;
 }
-#endif
 
 void draw_set_color(drawing d, uint8_t r, uint8_t g, uint8_t b, uint8_t a){
     DRAWING(d, set_color, r, g, b, a);
 }
 
-void draw_fill_color(drawing d, Pixel p){
+void draw_fill_color(drawing d, float* p){
     DRAWING(d, fill, Color(p[0], p[1], p[2], p[3]));
 }
 
@@ -392,7 +384,7 @@ void draw_fill(drawing d){
     DRAWING(d, fill);
 }
 
-void draw_stroke_color(drawing d, Pixel p){
+void draw_stroke_color(drawing d, float* p){
     DRAWING(d, stroke, Color(p[0], p[1], p[2], p[3]));
 }
 
@@ -404,7 +396,7 @@ void draw_dash(drawing d, double a, double b){
     DRAWING(d, dash, a, b);
 }
 
-void draw_dash_color(drawing d, Pixel p, double x, double y){
+void draw_dash_color(drawing d, float* p, double x, double y){
     DRAWING(d, dash, Color(p[0], p[1], p[2], p[3]), x, y);
 }
 
@@ -418,43 +410,36 @@ void draw_auto_close(drawing d, bool c){
 
 bool draw_in_path(drawing d, double x, double y){
     DRAWING(d, in_path, x, y);
-
     return false;
 }
 
 bool draw_is_drawn(drawing d, double x, double y){
     DRAWING(d, is_drawn, x, y);
-
     return false;
 }
 
 unsigned int draw_get_vertex(drawing d, unsigned int idx, double *x, double *y){
     DRAWING(d, vertex, idx, x, y);
-
     return 0;
 }
 
 unsigned int draw_next_vertex(drawing d, double *x, double *y){
     DRAWING(d, vertex, x, y);
-
     return 0;
 }
 
 unsigned int draw_get_command(drawing d, unsigned int idx){
     DRAWING(d, command, idx);
-
     return 0;
 }
 
 unsigned int draw_last_vertex(drawing d, double *x, double *y){
     DRAWING(d, last_vertex, x, y);
-
     return 0;
 }
 
 unsigned int draw_prev_vertex(drawing d, double *x, double *y){
     DRAWING(d, prev_vertex, x, y);
-
     return 0;
 }
 
@@ -464,7 +449,6 @@ void draw_modify_vertex(drawing d, unsigned int idx, double x, double y, unsigne
 
 unsigned int draw_total_vertices(drawing d){
     DRAWING(d, total_vertices);
-
     return 0;
 }
 
@@ -496,18 +480,15 @@ void draw_alpha_mask_set(drawing a, int32_t x, int32_t y, uint8_t val){
 
 uint8_t draw_alpha_mask_get(drawing a, int32_t x, int32_t y){
     DRAWING(a, alpha_mask_get, x, y);
-
     return 0;
 }
 
 uint8_t *draw_alpha_mask_ptr(drawing a){
     DRAWING(a, alpha_mask_ptr);
-
     return nullptr;
 }
 
 uint8_t *draw_alpha_mask_ptr_offs(drawing a, int32_t x, int32_t y){
     DRAWING(a, alpha_mask_ptr_offs, x, y);
-
     return nullptr;
 }

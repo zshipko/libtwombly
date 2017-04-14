@@ -42,15 +42,11 @@ typedef struct drawing drawing;
 
 #define TWOMBLY_LOG(s, ...) if(TWOMBLY_SET_LOG) fprintf(stderr, s,  __VA_ARGS__)
 
-typedef float* Pixel;
-
-drawing draw_create(int64_t width, int64_t height, int channels, uint8_t *data);
-drawing draw_create_bgr(int64_t width, int64_t height, int channels, uint8_t *data);
-drawing draw_create16(int64_t width, int64_t height, int channels, uint16_t *data);
-drawing draw_create16_bgr(int64_t width, int64_t height, int channels, uint16_t *data);
-drawing draw_create_path();
+drawing draw_create(int32_t width, int32_t height, int channels, uint8_t *data);
+drawing draw_create_bgr(int32_t width, int32_t height, int channels, uint8_t *data);
+drawing draw_create16(int32_t width, int32_t height, int channels, uint16_t *data);
+drawing draw_create16_bgr(int32_t width, int32_t height, int channels, uint16_t *data);
 drawing draw_empty();
-
 void draw_free(drawing *d);
 
 bool draw_get_preserve(drawing);
@@ -104,16 +100,14 @@ void draw_curve_rel6(drawing, double, double, double, double, double, double);
 void draw_arc_to(drawing, double, double, double, double, double);
 void draw_arc_rel(drawing, double, double, double, double, double);
 double draw_text_simple(drawing, double, double, const char *, int, double, const char *);
-#ifndef NO_FREETYPE
 double draw_text(drawing, double, double, const char *, const char *, double, double);
-#endif
 void draw_set_color(drawing, uint8_t, uint8_t, uint8_t, uint8_t);
 void draw_fill(drawing);
-void draw_fill_color(drawing, Pixel);
+void draw_fill_color(drawing, float*);
 void draw_stroke(drawing);
-void draw_stroke_color(drawing, Pixel);
+void draw_stroke_color(drawing, float*);
 void draw_dash(drawing, double, double);
-void draw_dash_color(drawing, Pixel, double, double);
+void draw_dash_color(drawing, float*, double, double);
 void draw_paint(drawing);
 void draw_auto_close(drawing, bool);
 bool draw_in_path(drawing, double, double);
@@ -160,13 +154,13 @@ void draw_transform_matrix_from_double(transform_matrix mtx, double *d);
 
 gradient draw_gradient_create();
 void draw_gradient_free(gradient *grad);
-void draw_gradient_add_stop(gradient grad, Pixel color);
+void draw_gradient_add_stop(gradient grad, float *color);
 transform_matrix draw_gradient_get_matrix(gradient grad);
 void draw_gradient_set_matrix(gradient grad, transform_matrix mtx);
 void draw_fill_gradient(drawing d, gradient grad, int s, int x, gradient_type grad_type);
 void draw_stroke_gradient(drawing d, gradient grad, int s, int x, gradient_type grad_type);
 gradient draw_gradient_create16();
-void draw_gradient_add_stop16(gradient grad, Pixel color);
+void draw_gradient_add_stop16(gradient grad, float *color);
 void draw_fill_gradient16(drawing d, gradient grad, int s, int x, gradient_type grad_type);
 void draw_stroke_gradient16(drawing d, gradient grad, int s, int x, gradient_type grad_type);
 
