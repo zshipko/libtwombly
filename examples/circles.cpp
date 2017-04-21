@@ -6,7 +6,7 @@ using namespace tw;
 #define SIZE 800
 
 int main(int argc, char *argv[]){
-    bimage *im = bimageCreate(SIZE, SIZE, RGBA64);
+    bimage *im = bimageCreate(SIZE, SIZE, BIMAGE_RGBA64);
     auto d = draw(SIZE, SIZE, (uint16_t*)im->data);
 
     d.antialias(false);

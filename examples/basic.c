@@ -1,8 +1,8 @@
 #include <bimage.h>
-#include <twombly/draw_c.h>
+#include <twombly/draw.h>
 
 int main(int argc, char **argv){
-    bimage* im = bimageCreate(100, 100, RGB24);
+    bimage* im = bimageCreate(100, 100, BIMAGE_RGB24);
     drawing d = draw_frombimage(im);
     draw_clear(d, 255, 0, 0, 255);
     draw_set_color(d, 0, 0, 255, 255);
