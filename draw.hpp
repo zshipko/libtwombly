@@ -186,12 +186,12 @@ public:
     }
 
     Drawing<DrawingType>(int32_t w, int32_t h, int c, uint8_t *d=nullptr, uint8_t *_alpha_mask=nullptr) :
-        data(d ? (void*)d : calloc(w * h * c, sizeof(uint8_t))), buffer((uint8_t*)data, w, h, w * c), pix(buffer), _antialias(true), _preserve(false), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(w, h, c),  alpha_mask(_alpha_mask), owns_data(d == nullptr), owns_alpha(_alpha_mask == nullptr) {
+        data(d != nullptr ? (void*)d : calloc(w * h * c, sizeof(uint8_t))), buffer((uint8_t*)data, w, h, w * c), pix(buffer), _antialias(true), _preserve(false), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(w, h, c),  alpha_mask(_alpha_mask), owns_data(d == nullptr), owns_alpha(_alpha_mask == nullptr) {
         alloc();
     }
 
     Drawing<DrawingType>(int32_t w, int32_t h, int c, uint16_t *d=nullptr, uint8_t *_alpha_mask=nullptr) :
-        data(d ? (void*)d : calloc(w * h * c, sizeof(uint16_t))), buffer((uint8_t*)data, w, h, w * c * 2), pix(buffer), _antialias(true), _preserve(false), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(w, h, c),  alpha_mask(_alpha_mask), owns_data(d == nullptr), owns_alpha(_alpha_mask == nullptr) {
+        data(d != nullptr ? (void*)d : calloc(w * h * c, sizeof(uint16_t))), buffer((uint8_t*)data, w, h, w * c * 2), pix(buffer), _antialias(true), _preserve(false), _width(1), pathid(0), raster(nullptr), sl(nullptr), size(w, h, c),  alpha_mask(_alpha_mask), owns_data(d == nullptr), owns_alpha(_alpha_mask == nullptr) {
         alloc();
     }
 

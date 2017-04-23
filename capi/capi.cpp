@@ -13,8 +13,8 @@ static agg::path_storage *_get_path(drawing d){
 drawing draw_empty(){
     drawing d;
     d.handle = new Drawing<rgba32>();
-    d.bits_per_channel = 8;
-    d.channels = 4;
+    d.bits_per_channel = 0;
+    d.channels = 0;
     return d;
 }
 
@@ -108,7 +108,7 @@ drawing draw_create16_bgr(int32_t width, int32_t height, int channels, uint16_t 
 }
 
 void draw_free(drawing *d){
-    if (!d->handle){
+    if (!d || !d->handle){
         return;
     }
 
