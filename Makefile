@@ -28,7 +28,7 @@ agg/src/agg_vpgen_clip_polyline.cpp \
 agg/src/agg_vpgen_segmentator.cpp
 tw_src=draw.cpp capi/capi.cpp capi/gradient.cpp capi/transform.cpp
 agg_hdrs=agg/include/*.h agg/include/util/*.h
-tw_hdrs=image.hpp draw.hpp twombly.hpp capi/twombly.h config.h
+tw_hdrs=twombly.hpp capi/twombly.h config.h
 
 CONFIG_FT=
 
