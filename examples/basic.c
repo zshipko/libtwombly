@@ -1,5 +1,5 @@
 #include <bimage.h>
-#include <twombly/draw.h>
+#include <twombly/twombly.h>
 
 int main(int argc, char **argv){
     bimage* im = bimageCreate(100, 100, BIMAGE_RGB24);
