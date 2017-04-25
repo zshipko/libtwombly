@@ -457,7 +457,13 @@ public:
 
     // Get previous position
     inline void last_position(double *x, double* y){
-        return Point(last_x(), last_y());
+        if (x){
+            *x = last_x();
+        }
+
+        if (y){
+            *y = last_y();
+        }
     }
 
     inline void curve_to(double x, double y){
