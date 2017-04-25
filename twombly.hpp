@@ -52,6 +52,7 @@ enum gradient_type {
 
 #ifdef __cplusplus
 #include <vector>
+#include <cstdint>
 
 #include "agg_basics.h"
 #include "agg_rendering_buffer.h"
