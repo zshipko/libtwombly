@@ -21,14 +21,6 @@ typedef enum line_join_style line_join_style;
 typedef enum filling_rule filling_rule;
 typedef enum path_commands path_commands;
 typedef enum gradient_type gradient_type;
-
-typedef struct Point {
-    double x, y;
-} Point;
-
-typedef struct Rectangle {
-    double x, y, width, height;
-} Rectangle;
 #endif
 
 struct drawing {
