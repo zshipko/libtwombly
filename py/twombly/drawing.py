@@ -88,7 +88,8 @@ class DrawingType(Structure):
 class TransformType(Structure):
     ''' C struct for transformation matrix '''
     _fields_ = [
-        ("handle", c_void_p)
+        ("handle", c_void_p),
+        ("free_handle", c_int)
     ]
 
 class GradientType(Structure):
@@ -97,7 +98,7 @@ class GradientType(Structure):
         ("handle", c_void_p)
     ]
 
-def _method_decl(c_fn, res=None, args=[DrawingType]):
+def _method_decl(c_fn, res=None, args=[POINTER(DrawingType)]):
     ''' declare a ctypes function '''
     tmp = c_fn
     tmp.argtypes = args
@@ -105,168 +106,168 @@ def _method_decl(c_fn, res=None, args=[DrawingType]):
     return tmp
 
 _METHODS = dict(
-    empty=_method_decl(twombly.draw_empty, DrawingType, args=[]),
+    empty=_method_decl(twombly.draw_empty, POINTER(DrawingType), args=[]),
     create=_method_decl(twombly.draw_create,
-                        DrawingType, [c_int, c_int, c_int, c_void_p]),
+                        POINTER(DrawingType), [c_int, c_int, c_int, c_void_p]),
     create16=_method_decl(twombly.draw_create16,
-                          DrawingType, [c_int, c_int, c_int, c_void_p]),
+                          POINTER(DrawingType), [c_int, c_int, c_int, c_void_p]),
     create_bgr=_method_decl(twombly.draw_create_bgr,
-                            DrawingType, [c_int, c_int, c_int, c_void_p]),
+                            POINTER(DrawingType), [c_int, c_int, c_int, c_void_p]),
     create16_bgr=_method_decl(twombly.draw_create16_bgr,
-                              DrawingType, [c_int, c_int, c_int, c_void_p]),
-    free=_method_decl(twombly.draw_free, args=[POINTER(DrawingType)]),
+                              POINTER(DrawingType), [c_int, c_int, c_int, c_void_p]),
+    free=_method_decl(twombly.draw_free, args=[POINTER(POINTER(DrawingType))]),
     get_antialias=_method_decl(twombly.draw_get_antialias, c_bool),
-    set_antialias=_method_decl(twombly.draw_set_antialias, args=[DrawingType, c_bool]),
+    set_antialias=_method_decl(twombly.draw_set_antialias, args=[POINTER(DrawingType), c_bool]),
     get_preserve=_method_decl(twombly.draw_get_preserve, c_bool),
-    set_preserve=_method_decl(twombly.draw_set_preserve, args=[DrawingType, c_bool]),
+    set_preserve=_method_decl(twombly.draw_set_preserve, args=[POINTER(DrawingType), c_bool]),
     set_line_width=_method_decl(twombly.draw_set_line_width,
-                                args=[DrawingType, c_double]),
+                                args=[POINTER(DrawingType), c_double]),
     get_line_width=_method_decl(twombly.draw_get_line_width, c_double),
     set_miter_limit=_method_decl(twombly.draw_set_miter_limit,
-                                 args=[DrawingType, c_double]),
+                                 args=[POINTER(DrawingType), c_double]),
     get_miter_limit=_method_decl(twombly.draw_get_miter_limit, c_double),
     set_line_join=_method_decl(twombly.draw_set_line_join,
-                               args=[DrawingType, c_int]),
+                               args=[POINTER(DrawingType), c_int]),
     get_line_join=_method_decl(twombly.draw_get_line_join, c_int),
     set_line_cap=_method_decl(twombly.draw_set_line_cap,
-                              args=[DrawingType, c_int]),
+                              args=[POINTER(DrawingType), c_int]),
     get_line_cap=_method_decl(twombly.draw_get_line_cap, c_int),
     set_active_path=_method_decl(twombly.draw_set_active_path,
-                                 args=[DrawingType, c_uint]),
+                                 args=[POINTER(DrawingType), c_uint]),
     get_active_path=_method_decl(twombly.draw_get_active_path, c_uint),
     new_path=_method_decl(twombly.draw_new_path, c_uint),
-    rotate=_method_decl(twombly.draw_rotate, args=[DrawingType, c_double]),
+    rotate=_method_decl(twombly.draw_rotate, args=[POINTER(DrawingType), c_double]),
     translate=_method_decl(twombly.draw_translate,
-                           args=[DrawingType, c_double, c_double]),
+                           args=[POINTER(DrawingType), c_double, c_double]),
     scale=_method_decl(twombly.draw_scale,
-                       args=[DrawingType, c_double]),
+                       args=[POINTER(DrawingType), c_double]),
     scale2=_method_decl(twombly.draw_scale2,
-                        args=[DrawingType, c_double, c_double]),
+                        args=[POINTER(DrawingType), c_double, c_double]),
     skew=_method_decl(twombly.draw_skew,
-                      args=[DrawingType, c_double, c_double]),
+                      args=[POINTER(DrawingType), c_double, c_double]),
     clear_transforms=_method_decl(twombly.draw_clear_transforms),
     close_polygon=_method_decl(twombly.draw_close_polygon),
     end_polygon=_method_decl(twombly.draw_end_polygon),
     invert_polygon=_method_decl(twombly.draw_invert_polygon),
     reset=_method_decl(twombly.draw_reset),
     clear=_method_decl(twombly.draw_clear,
-                       args=[DrawingType, c_uint8, c_uint8, c_uint8, c_uint8]),
+                       args=[POINTER(DrawingType), c_uint8, c_uint8, c_uint8, c_uint8]),
     remove_all=_method_decl(twombly.draw_remove_all),
     ellipse=_method_decl(twombly.draw_ellipse,
-                         args=[DrawingType, c_double, c_double, c_double, c_double]),
+                         args=[POINTER(DrawingType), c_double, c_double, c_double, c_double]),
     rect=_method_decl(twombly.draw_rect,
-                      args=[DrawingType, c_double, c_double, c_double, c_double]),
+                      args=[POINTER(DrawingType), c_double, c_double, c_double, c_double]),
     clip=_method_decl(twombly.draw_clip,
-                      args=[DrawingType, c_double, c_double, c_double, c_double]),
+                      args=[POINTER(DrawingType), c_double, c_double, c_double, c_double]),
     reset_clip=_method_decl(twombly.draw_reset_clip),
     last_x=_method_decl(twombly.draw_last_x, c_double),
     last_y=_method_decl(twombly.draw_last_y, c_double),
     rel_to_abs=_method_decl(twombly.draw_rel_to_abs,
-                            args=[DrawingType, POINTER(c_double), POINTER(c_double)]),
+                            args=[POINTER(DrawingType), POINTER(c_double), POINTER(c_double)]),
     move_to=_method_decl(twombly.draw_move_to,
-                         args=[DrawingType, c_double, c_double]),
+                         args=[POINTER(DrawingType), c_double, c_double]),
     move_rel=_method_decl(twombly.draw_move_rel,
-                          args=[DrawingType, c_double, c_double]),
+                          args=[POINTER(DrawingType), c_double, c_double]),
     line_to=_method_decl(twombly.draw_line_to,
-                         args=[DrawingType, c_double, c_double]),
+                         args=[POINTER(DrawingType), c_double, c_double]),
     vline_to=_method_decl(twombly.draw_vline_to,
-                         args=[DrawingType, c_double]),
+                         args=[POINTER(DrawingType), c_double]),
     hline_to=_method_decl(twombly.draw_hline_to,
-                         args=[DrawingType, c_double]),
+                         args=[POINTER(DrawingType), c_double]),
     vline_rel=_method_decl(twombly.draw_vline_rel,
-                         args=[DrawingType, c_double]),
+                         args=[POINTER(DrawingType), c_double]),
     hline_rel=_method_decl(twombly.draw_hline_rel,
-                         args=[DrawingType, c_double]),
+                         args=[POINTER(DrawingType), c_double]),
     line_rel=_method_decl(twombly.draw_line_rel,
-                          args=[DrawingType, c_double, c_double]),
+                          args=[POINTER(DrawingType), c_double, c_double]),
     curve_to2=_method_decl(twombly.draw_curve_to2,
-                           args=[DrawingType, c_double, c_double]),
+                           args=[POINTER(DrawingType), c_double, c_double]),
     curve_rel2=_method_decl(twombly.draw_curve_rel2,
-                            args=[DrawingType, c_double, c_double]),
+                            args=[POINTER(DrawingType), c_double, c_double]),
     curve_to4=_method_decl(twombly.draw_curve_to4,
-                           args=[DrawingType, c_double, c_double, c_double, c_double]),
+                           args=[POINTER(DrawingType), c_double, c_double, c_double, c_double]),
     curve_rel4=_method_decl(twombly.draw_curve_rel4,
-                            args=[DrawingType, c_double, c_double, c_double, c_double]),
+                            args=[POINTER(DrawingType), c_double, c_double, c_double, c_double]),
     curve_to6=_method_decl(twombly.draw_curve_to6,
-                           args=[DrawingType, c_double, c_double, c_double, c_double, c_double, c_double]),
+                           args=[POINTER(DrawingType), c_double, c_double, c_double, c_double, c_double, c_double]),
     curve_rel6=_method_decl(twombly.draw_curve_rel6,
-                            args=[DrawingType, c_double, c_double, c_double, c_double, c_double, c_double]),
+                            args=[POINTER(DrawingType), c_double, c_double, c_double, c_double, c_double, c_double]),
     arc_to=_method_decl(twombly.draw_arc_to,
-                        args=[DrawingType, c_double, c_double, c_double, c_double, c_double]),
+                        args=[POINTER(DrawingType), c_double, c_double, c_double, c_double, c_double]),
     arc_rel=_method_decl(twombly.draw_arc_rel,
-                         args=[DrawingType, c_double, c_double, c_double, c_double, c_double]),
+                         args=[POINTER(DrawingType), c_double, c_double, c_double, c_double, c_double]),
     text_simple=_method_decl(twombly.draw_text_simple, c_double,
-                                 args=[DrawingType, c_double, c_double, c_char_p, c_int, c_double, c_char_p]),
+                                 args=[POINTER(DrawingType), c_double, c_double, c_char_p, c_int, c_double, c_char_p]),
     set_color=_method_decl(twombly.draw_set_color,
-                           args=[DrawingType, c_uint8, c_uint8, c_uint8, c_uint8]),
+                           args=[POINTER(DrawingType), c_uint8, c_uint8, c_uint8, c_uint8]),
     fill=_method_decl(twombly.draw_fill),
     stroke=_method_decl(twombly.draw_stroke),
-    stroke_color=_method_decl(twombly.draw_stroke_color, args=[DrawingType, POINTER(c_float)]),
-    fill_color=_method_decl(twombly.draw_fill_color, args=[DrawingType, POINTER(c_float)]),
-    dash_color=_method_decl(twombly.draw_stroke_color, args=[DrawingType, POINTER(c_float), c_double, c_double]),
+    stroke_color=_method_decl(twombly.draw_stroke_color, args=[POINTER(DrawingType), POINTER(c_float)]),
+    fill_color=_method_decl(twombly.draw_fill_color, args=[POINTER(DrawingType), POINTER(c_float)]),
+    dash_color=_method_decl(twombly.draw_stroke_color, args=[POINTER(DrawingType), POINTER(c_float), c_double, c_double]),
     dash=_method_decl(
-        twombly.draw_dash, args=[DrawingType, c_double, c_double]),
+        twombly.draw_dash, args=[POINTER(DrawingType), c_double, c_double]),
     paint=_method_decl(twombly.draw_paint),
     auto_close=_method_decl(twombly.draw_auto_close,
-                            args=[DrawingType, c_bool]),
+                            args=[POINTER(DrawingType), c_bool]),
     in_path=_method_decl(twombly.draw_in_path, c_bool,
-                         args=[DrawingType, c_double, c_double]),
+                         args=[POINTER(DrawingType), c_double, c_double]),
     is_drawn=_method_decl(twombly.draw_in_path, c_bool,
-                         args=[DrawingType, c_double, c_double]),
+                         args=[POINTER(DrawingType), c_double, c_double]),
     get_vertex=_method_decl(twombly.draw_get_vertex, c_uint,
-                            args=[DrawingType, c_uint, POINTER(c_double), POINTER(c_double)]),
+                            args=[POINTER(DrawingType), c_uint, POINTER(c_double), POINTER(c_double)]),
     next_vertex=_method_decl(twombly.draw_next_vertex, c_uint,
-                             args=[DrawingType, POINTER(c_double), POINTER(c_double)]),
+                             args=[POINTER(DrawingType), POINTER(c_double), POINTER(c_double)]),
     get_command=_method_decl(twombly.draw_get_command, c_uint,
-                             args=[DrawingType, c_uint]),
+                             args=[POINTER(DrawingType), c_uint]),
     last_vertex=_method_decl(twombly.draw_last_vertex, c_uint,
-                             args=[DrawingType, POINTER(c_double), POINTER(c_double)]),
+                             args=[POINTER(DrawingType), POINTER(c_double), POINTER(c_double)]),
     prev_vertex=_method_decl(twombly.draw_prev_vertex, c_uint,
-                             args=[DrawingType, POINTER(c_double), POINTER(c_double)]),
+                             args=[POINTER(DrawingType), POINTER(c_double), POINTER(c_double)]),
     modify_vertex=_method_decl(twombly.draw_modify_vertex,
-                               args=[DrawingType, c_uint, c_double, c_double, c_uint]),
+                               args=[POINTER(DrawingType), c_uint, c_double, c_double, c_uint]),
     total_vertices=_method_decl(twombly.draw_total_vertices, c_uint),
     join=_method_decl(twombly.draw_join,
-                      args=[DrawingType, DrawingType]),
+                      args=[POINTER(DrawingType), POINTER(DrawingType)]),
     concat=_method_decl(twombly.draw_concat,
-                        args=[DrawingType, DrawingType]),
+                        args=[POINTER(DrawingType), POINTER(DrawingType)]),
     # alpha mask
     alpha_mask_init=_method_decl(twombly.draw_alpha_mask_init),
     alpha_mask_free=_method_decl(twombly.draw_alpha_mask_free),
     alpha_mask_fill=_method_decl(twombly.draw_alpha_mask_fill,
-                                  args=[DrawingType, c_uint8]),
+                                  args=[POINTER(DrawingType), c_uint8]),
     alpha_mask_get=_method_decl(twombly.draw_alpha_mask_get, c_uint8,
-                                 args=[DrawingType, c_int32, c_int32]),
+                                 args=[POINTER(DrawingType), c_int32, c_int32]),
     alpha_mask_set=_method_decl(twombly.draw_alpha_mask_set,
-                                 args=[DrawingType, c_int32, c_int32, c_uint8]),
+                                 args=[POINTER(DrawingType), c_int32, c_int32, c_uint8]),
     alpha_mask_ptr_offs=_method_decl(twombly.draw_alpha_mask_ptr_offs, POINTER(c_uint8),
-                                          args=[DrawingType, c_int32, c_int32]),
+                                          args=[POINTER(DrawingType), c_int32, c_int32]),
     alpha_mask_ptr=_method_decl(twombly.draw_alpha_mask_ptr, POINTER(c_uint8)),
 
     # gradient
     fill_gradient=_method_decl(twombly.draw_fill_gradient,
-                               args=[DrawingType, GradientType, c_int, c_int, c_int]),
+                               args=[POINTER(DrawingType), POINTER(GradientType), c_int, c_int, c_int]),
     stroke_gradient=_method_decl(twombly.draw_stroke_gradient,
-                                 args=[DrawingType, GradientType, c_int, c_int, c_int]),
+                                 args=[POINTER(DrawingType), POINTER(GradientType), c_int, c_int, c_int]),
 )
 
 try:
     _METHODS['text']= _method_decl(twombly.draw_text, c_double,
-                          args=[DrawingType, c_double, c_double, c_char_p, c_char_p, c_double, c_double])
+                          args=[POINTER(DrawingType), c_double, c_double, c_char_p, c_char_p, c_double, c_double])
 except:
     pass
 
-_transform_matrix_create = _method_decl(twombly.draw_transform_matrix_create, TransformType, args=[])
-_transform_matrix_free = _method_decl(twombly.draw_transform_matrix_free, args=[POINTER(TransformType)])
-_transform_matrix_get = _method_decl(twombly.draw_get_transform_matrix, TransformType, args=[DrawingType])
-_transform_matrix_to_double = _method_decl(twombly.draw_transform_matrix_to_double, args=[TransformType, POINTER(c_double)])
-_transform_matrix_from_double = _method_decl(twombly.draw_transform_matrix_from_double, args=[TransformType, POINTER(c_double)])
-_transform_matrix_inverse_transform = _method_decl(twombly.draw_transform_matrix_inverse_transform, args=[TransformType, POINTER(c_double), POINTER(c_double)])
-_transform_matrix_transform = _method_decl(twombly.draw_transform_matrix_transform, args=[TransformType, POINTER(c_double), POINTER(c_double)])
-_transform_matrix_translate = _method_decl(twombly.draw_transform_matrix_translate, args=[TransformType, c_double, c_double])
-_transform_matrix_rotate = _method_decl(twombly.draw_transform_matrix_rotate, args=[TransformType, c_double])
-_transform_matrix_reset =  _method_decl(twombly.draw_transform_matrix_reset, args=[TransformType])
-_transform_matrix_scale = _method_decl(twombly.draw_transform_matrix_scale, args=[TransformType, c_double, c_double])
+_transform_matrix_create = _method_decl(twombly.draw_transform_matrix_create, POINTER(TransformType), args=[])
+_transform_matrix_free = _method_decl(twombly.draw_transform_matrix_free, args=[POINTER(POINTER(TransformType))])
+_transform_matrix_get = _method_decl(twombly.draw_get_transform_matrix, POINTER(TransformType), args=[POINTER(DrawingType)])
+_transform_matrix_to_double = _method_decl(twombly.draw_transform_matrix_to_double, args=[POINTER(TransformType), POINTER(c_double)])
+_transform_matrix_from_double = _method_decl(twombly.draw_transform_matrix_from_double, args=[POINTER(TransformType), POINTER(c_double)])
+_transform_matrix_inverse_transform = _method_decl(twombly.draw_transform_matrix_inverse_transform, args=[POINTER(TransformType), POINTER(c_double), POINTER(c_double)])
+_transform_matrix_transform = _method_decl(twombly.draw_transform_matrix_transform, args=[POINTER(TransformType), POINTER(c_double), POINTER(c_double)])
+_transform_matrix_translate = _method_decl(twombly.draw_transform_matrix_translate, args=[POINTER(TransformType), c_double, c_double])
+_transform_matrix_rotate = _method_decl(twombly.draw_transform_matrix_rotate, args=[POINTER(TransformType), c_double])
+_transform_matrix_reset =  _method_decl(twombly.draw_transform_matrix_reset, args=[POINTER(TransformType)])
+_transform_matrix_scale = _method_decl(twombly.draw_transform_matrix_scale, args=[POINTER(TransformType), c_double, c_double])
 
 
 class TransformMatrix(object):
@@ -323,12 +324,12 @@ class TransformMatrix(object):
         _transform_matrix_from_double(self._mtx, cast(asarray(arr, dtype='double').ctypes.data,
                                                           POINTER(c_double)))
 
-_gradient_create = _method_decl(twombly.draw_gradient_create, GradientType, args=[])
-_gradient_create16 = _method_decl(twombly.draw_gradient_create16, GradientType, args=[])
-_gradient_free = _method_decl(twombly.draw_gradient_free, args=[POINTER(GradientType)])
-_gradient_add_stop = _method_decl(twombly.draw_gradient_add_stop, args=[GradientType, POINTER(c_float)])
-_gradient_add_stop16 = _method_decl(twombly.draw_gradient_add_stop16, args=[GradientType, POINTER(c_float)])
-_gradient_get_matrix = _method_decl(twombly.draw_gradient_get_matrix, TransformType, args=[GradientType])
+_gradient_create = _method_decl(twombly.draw_gradient_create, POINTER(GradientType), args=[])
+_gradient_create16 = _method_decl(twombly.draw_gradient_create16, POINTER(GradientType), args=[])
+_gradient_free = _method_decl(twombly.draw_gradient_free, args=[POINTER(POINTER(GradientType))])
+_gradient_add_stop = _method_decl(twombly.draw_gradient_add_stop, args=[POINTER(GradientType), POINTER(c_float)])
+_gradient_add_stop16 = _method_decl(twombly.draw_gradient_add_stop16, args=[POINTER(GradientType), POINTER(c_float)])
+_gradient_get_matrix = _method_decl(twombly.draw_gradient_get_matrix, POINTER(TransformType), args=[POINTER(GradientType)])
 
 class Gradient(object):
     ''' Gradient Class '''
@@ -584,7 +585,7 @@ class Drawing(object):
 
     def __del__(self):
         if self._drawing is not None:
-            self._free(pointer(self._drawing))
+            self._free(self._drawing)
             self._drawing = None
 
     @property
