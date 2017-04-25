@@ -1,9 +1,9 @@
 <map id="agg::trans_affine" name="agg::trans_affine">
-<area shape="rect" id="node2" href="$classagg_1_1trans__affine__line__segment.html" title="agg::trans_affine_line\l_segment" alt="" coords="205,5,354,44"/>
-<area shape="rect" id="node3" href="$classagg_1_1trans__affine__reflection__unit.html" title="agg::trans_affine_reflection_unit" alt="" coords="174,68,385,93"/>
-<area shape="rect" id="node5" href="$classagg_1_1trans__affine__rotation.html" title="agg::trans_affine_rotation" alt="" coords="193,117,366,143"/>
-<area shape="rect" id="node6" href="$classagg_1_1trans__affine__scaling.html" title="agg::trans_affine_scaling" alt="" coords="195,167,364,192"/>
-<area shape="rect" id="node7" href="$classagg_1_1trans__affine__skewing.html" title="agg::trans_affine_skewing" alt="" coords="191,216,368,241"/>
-<area shape="rect" id="node8" href="$classagg_1_1trans__affine__translation.html" title="agg::trans_affine_translation" alt="" coords="185,265,374,291"/>
-<area shape="rect" id="node4" href="$classagg_1_1trans__affine__reflection.html" title="agg::trans_affine_reflection" alt="" coords="433,68,615,93"/>
+<area shape="rect" id="node2" href="$classagg_1_1trans__affine__line__segment.html" title="agg::trans_affine_line\l_segment" alt="" coords="204,5,351,46"/>
+<area shape="rect" id="node3" href="$classagg_1_1trans__affine__reflection__unit.html" title="agg::trans_affine_reflection_unit" alt="" coords="174,71,381,97"/>
+<area shape="rect" id="node5" href="$classagg_1_1trans__affine__rotation.html" title="agg::trans_affine_rotation" alt="" coords="193,121,362,148"/>
+<area shape="rect" id="node6" href="$classagg_1_1trans__affine__scaling.html" title="agg::trans_affine_scaling" alt="" coords="194,172,361,199"/>
+<area shape="rect" id="node7" href="$classagg_1_1trans__affine__skewing.html" title="agg::trans_affine_skewing" alt="" coords="190,223,365,249"/>
+<area shape="rect" id="node8" href="$classagg_1_1trans__affine__translation.html" title="agg::trans_affine_translation" alt="" coords="184,273,371,300"/>
+<area shape="rect" id="node4" href="$classagg_1_1trans__affine__reflection.html" title="agg::trans_affine_reflection" alt="" coords="429,71,608,97"/>
 </map>

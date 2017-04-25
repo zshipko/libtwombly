@@ -1,7 +1,8 @@
 <map id="agg/include/agg_arc.h" name="agg/include/agg_arc.h">
-<area shape="rect" id="node2" href="$agg__rounded__rect_8h.html" title="agg/include/agg_rounded\l_rect.h" alt="" coords="25,79,197,117"/>
-<area shape="rect" id="node6" href="$agg__arc_8cpp.html" title="agg/src/agg_arc.cpp" alt="" coords="221,85,363,111"/>
-<area shape="rect" id="node3" href="$draw_8hpp.html" title="draw.hpp" alt="" coords="5,172,81,197"/>
-<area shape="rect" id="node5" href="$agg__rounded__rect_8cpp.html" title="agg/src/agg_rounded\l_rect.cpp" alt="" coords="105,165,253,204"/>
-<area shape="rect" id="node4" href="$draw_8cpp.html" title="draw.cpp" alt="" coords="6,252,80,277"/>
+<area shape="rect" id="node2" href="$agg__rounded__rect_8h.html" title="agg/include/agg_rounded\l_rect.h" alt="" coords="90,81,256,122"/>
+<area shape="rect" id="node7" href="$agg__arc_8cpp.html" title="agg/src/agg_arc.cpp" alt="" coords="281,88,420,115"/>
+<area shape="rect" id="node3" href="$twombly_8hpp.html" title="twombly.hpp" alt="" coords="53,179,149,205"/>
+<area shape="rect" id="node6" href="$agg__rounded__rect_8cpp.html" title="agg/src/agg_rounded\l_rect.cpp" alt="" coords="174,171,316,213"/>
+<area shape="rect" id="node4" href="$draw_8cpp.html" title="draw.cpp" alt="" coords="5,261,79,288"/>
+<area shape="rect" id="node5" href="$twombly_8h.html" title="capi/twombly.h" alt="" coords="105,261,215,288"/>
 </map>

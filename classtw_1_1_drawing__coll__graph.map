@@ -1,10 +1,10 @@
 <map id="tw::Drawing&lt; DrawingType &gt;" name="tw::Drawing&lt; DrawingType &gt;">
-<area shape="rect" id="node2" href="$classagg_1_1path__base.html" title="agg::path_storage" alt="" coords="31,5,160,31"/>
-<area shape="rect" id="node3" href="$classagg_1_1rasterizer__scanline__aa.html" title="agg::rasterizer_scanline\l_aa\&lt; Clip \&gt;" alt="" coords="14,55,177,93"/>
-<area shape="rect" id="node4" href="$structtw_1_1_drawing_1_1size.html" title="tw::Drawing\&lt; DrawingType\l \&gt;::size" alt="" coords="5,117,186,156"/>
-<area shape="rect" id="node5" href="$classagg_1_1renderer__base.html" title="agg::renderer_base\l\&lt; DrawingType \&gt;" alt="" coords="27,180,164,219"/>
-<area shape="rect" id="node6" href="$structagg_1_1trans__affine.html" title="agg::trans_affine" alt="" coords="35,243,156,268"/>
-<area shape="rect" id="node7" href="$classagg_1_1renderer__scanline__bin__solid.html" title="agg::renderer_scanline\l_bin_solid\&lt; agg::renderer\l_base\&lt; DrawingType \&gt; \&gt;" alt="" coords="9,292,182,344"/>
-<area shape="rect" id="node8" href="$classagg_1_1scanline32__p8.html" title="agg::scanline32_p8" alt="" coords="27,368,164,393"/>
-<area shape="rect" id="node9" href="$classagg_1_1renderer__scanline__aa__solid.html" title="agg::renderer_scanline\l_aa_solid\&lt; agg::renderer\l_base\&lt; DrawingType \&gt; \&gt;" alt="" coords="10,417,180,469"/>
+<area shape="rect" id="node2" href="$classagg_1_1path__base.html" title="agg::path_storage" alt="" coords="33,5,159,32"/>
+<area shape="rect" id="node3" href="$classagg_1_1rasterizer__scanline__aa.html" title="agg::rasterizer_scanline\l_aa\&lt; Clip \&gt;" alt="" coords="16,57,176,98"/>
+<area shape="rect" id="node4" href="$structtw_1_1_drawing_1_1size.html" title="tw::Drawing\&lt; DrawingType\l \&gt;::size" alt="" coords="5,122,187,163"/>
+<area shape="rect" id="node5" href="$classagg_1_1renderer__base.html" title="agg::renderer_base\l\&lt; DrawingType \&gt;" alt="" coords="29,187,163,229"/>
+<area shape="rect" id="node6" href="$structagg_1_1trans__affine.html" title="agg::trans_affine" alt="" coords="37,253,155,280"/>
+<area shape="rect" id="node7" href="$classagg_1_1renderer__scanline__bin__solid.html" title="agg::renderer_scanline\l_bin_solid\&lt; agg::renderer\l_base\&lt; DrawingType \&gt; \&gt;" alt="" coords="11,304,181,360"/>
+<area shape="rect" id="node8" href="$classagg_1_1scanline32__p8.html" title="agg::scanline32_p8" alt="" coords="29,384,163,411"/>
+<area shape="rect" id="node9" href="$classagg_1_1renderer__scanline__aa__solid.html" title="agg::renderer_scanline\l_aa_solid\&lt; agg::renderer\l_base\&lt; DrawingType \&gt; \&gt;" alt="" coords="11,435,181,491"/>
 </map>

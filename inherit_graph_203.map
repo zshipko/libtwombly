@@ -1,9 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classagg_1_1image__filter__sinc.html" title="agg::image_filter_sinc" alt="" coords="5,129,156,155"/>
-<area shape="rect" id="node2" href="$classagg_1_1image__filter__sinc100.html" title="agg::image_filter_sinc100" alt="" coords="204,5,378,31"/>
-<area shape="rect" id="node3" href="$classagg_1_1image__filter__sinc144.html" title="agg::image_filter_sinc144" alt="" coords="204,55,378,80"/>
-<area shape="rect" id="node4" href="$classagg_1_1image__filter__sinc196.html" title="agg::image_filter_sinc196" alt="" coords="204,104,378,129"/>
-<area shape="rect" id="node5" href="$classagg_1_1image__filter__sinc256.html" title="agg::image_filter_sinc256" alt="" coords="204,153,378,179"/>
-<area shape="rect" id="node6" href="$classagg_1_1image__filter__sinc36.html" title="agg::image_filter_sinc36" alt="" coords="208,203,374,228"/>
-<area shape="rect" id="node7" href="$classagg_1_1image__filter__sinc64.html" title="agg::image_filter_sinc64" alt="" coords="208,252,374,277"/>
+<area shape="rect" id="node1" href="$classagg_1_1image__filter__sinc.html" title="agg::image_filter_sinc" alt="" coords="5,132,155,159"/>
+<area shape="rect" id="node2" href="$classagg_1_1image__filter__sinc100.html" title="agg::image_filter_sinc100" alt="" coords="203,5,373,32"/>
+<area shape="rect" id="node3" href="$classagg_1_1image__filter__sinc144.html" title="agg::image_filter_sinc144" alt="" coords="203,56,373,83"/>
+<area shape="rect" id="node4" href="$classagg_1_1image__filter__sinc196.html" title="agg::image_filter_sinc196" alt="" coords="203,107,373,133"/>
+<area shape="rect" id="node5" href="$classagg_1_1image__filter__sinc256.html" title="agg::image_filter_sinc256" alt="" coords="203,157,373,184"/>
+<area shape="rect" id="node6" href="$classagg_1_1image__filter__sinc36.html" title="agg::image_filter_sinc36" alt="" coords="207,208,369,235"/>
+<area shape="rect" id="node7" href="$classagg_1_1image__filter__sinc64.html" title="agg::image_filter_sinc64" alt="" coords="207,259,369,285"/>
 </map>

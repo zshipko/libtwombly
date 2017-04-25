@@ -1,6 +1,7 @@
 var searchData=
 [
   ['distortion_5ftype',['distortion_type',['../classagg_1_1span__interpolator__adaptor.html#aac1ea27d1a8a93374437786798904dcc',1,'agg::span_interpolator_adaptor']]],
+  ['drawing',['drawing',['../twombly_8h.html#a5b1fd1ec49b2a9e5a7e46b266202f1a7',1,'twombly.h']]],
   ['drawingbgr24',['DrawingBGR24',['../namespacetw.html#a611e127fd5df4962db1abb30548b5d50',1,'tw']]],
   ['drawingbgr48',['DrawingBGR48',['../namespacetw.html#ae46b8699122ffc5ad98da0780a7037b1',1,'tw']]],
   ['drawingbgra32',['DrawingBGRA32',['../namespacetw.html#a094ea1ccea14f6c159fca99bb98cf11a',1,'tw']]],

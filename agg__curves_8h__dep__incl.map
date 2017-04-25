@@ -1,7 +1,8 @@
 <map id="agg/include/agg_curves.h" name="agg/include/agg_curves.h">
-<area shape="rect" id="node2" href="$draw_8hpp.html" title="draw.hpp" alt="" coords="5,172,81,197"/>
-<area shape="rect" id="node4" href="$agg__conv__curve_8h.html" title="agg/include/agg_conv\l_curve.h" alt="" coords="81,79,232,117"/>
-<area shape="rect" id="node6" href="$agg__curves_8cpp.html" title="agg/src/agg_curves.cpp" alt="" coords="256,85,419,111"/>
-<area shape="rect" id="node3" href="$draw_8cpp.html" title="draw.cpp" alt="" coords="6,252,80,277"/>
-<area shape="rect" id="node5" href="$agg__conv__smooth__poly1_8h.html" title="agg/include/agg_conv\l_smooth_poly1.h" alt="" coords="105,165,256,204"/>
+<area shape="rect" id="node2" href="$twombly_8hpp.html" title="twombly.hpp" alt="" coords="53,179,149,205"/>
+<area shape="rect" id="node5" href="$agg__conv__curve_8h.html" title="agg/include/agg_conv\l_curve.h" alt="" coords="139,81,287,122"/>
+<area shape="rect" id="node7" href="$agg__curves_8cpp.html" title="agg/src/agg_curves.cpp" alt="" coords="311,88,472,115"/>
+<area shape="rect" id="node3" href="$draw_8cpp.html" title="draw.cpp" alt="" coords="5,261,79,288"/>
+<area shape="rect" id="node4" href="$twombly_8h.html" title="capi/twombly.h" alt="" coords="105,261,215,288"/>
+<area shape="rect" id="node6" href="$agg__conv__smooth__poly1_8h.html" title="agg/include/agg_conv\l_smooth_poly1.h" alt="" coords="174,171,321,213"/>
 </map>

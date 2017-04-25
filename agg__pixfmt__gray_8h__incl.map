@@ -1,8 +1,8 @@
 <map id="agg/include/agg_pixfmt_gray.h" name="agg/include/agg_pixfmt_gray.h">
-<area shape="rect" id="node3" href="$agg__basics_8h.html" title="agg_basics.h" alt="" coords="259,239,358,264"/>
-<area shape="rect" id="node6" href="$agg__color__gray_8h.html" title="agg_color_gray.h" alt="" coords="296,92,420,117"/>
-<area shape="rect" id="node8" href="$agg__rendering__buffer_8h.html" title="agg_rendering_buffer.h" alt="" coords="62,92,221,117"/>
-<area shape="rect" id="node5" href="$agg__config_8h.html" title="agg_config.h" alt="" coords="257,312,355,337"/>
-<area shape="rect" id="node7" href="$agg__color__rgba_8h.html" title="agg_color_rgba.h" alt="" coords="347,165,472,191"/>
-<area shape="rect" id="node9" href="$agg__array_8h.html" title="agg_array.h" alt="" coords="96,165,188,191"/>
+<area shape="rect" id="node3" href="$agg__basics_8h.html" title="agg_basics.h" alt="" coords="253,245,352,272"/>
+<area shape="rect" id="node6" href="$agg__color__gray_8h.html" title="agg_color_gray.h" alt="" coords="293,96,413,123"/>
+<area shape="rect" id="node8" href="$agg__rendering__buffer_8h.html" title="agg_rendering_buffer.h" alt="" coords="63,96,216,123"/>
+<area shape="rect" id="node5" href="$agg__config_8h.html" title="agg_config.h" alt="" coords="252,320,348,347"/>
+<area shape="rect" id="node7" href="$agg__color__rgba_8h.html" title="agg_color_rgba.h" alt="" coords="343,171,464,197"/>
+<area shape="rect" id="node9" href="$agg__array_8h.html" title="agg_array.h" alt="" coords="95,171,185,197"/>
 </map>

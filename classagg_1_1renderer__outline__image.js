@@ -15,16 +15,16 @@ var classagg_1_1renderer__outline__image =
     [ "line3", "classagg_1_1renderer__outline__image.html#ae63836bba1d208e5647177c43eb20d13", null ],
     [ "line3_no_clip", "classagg_1_1renderer__outline__image.html#a75952728180b465ffe0727eafd08f243", null ],
     [ "pattern", "classagg_1_1renderer__outline__image.html#a725d3d870ee1233e724ed27967c5f0a4", null ],
-    [ "pattern", "classagg_1_1renderer__outline__image.html#a6646d293069d09273a05bc5ca17164bc", null ],
-    [ "pattern_width", "classagg_1_1renderer__outline__image.html#ab5bd4e0efa7cb16a0619e606f862b586", null ],
+    [ "pattern", "classagg_1_1renderer__outline__image.html#a170f307ea293ae1c77f75e349f8565c9", null ],
+    [ "pattern_width", "classagg_1_1renderer__outline__image.html#ab7f3b8b987651098648a327c4ad99188", null ],
     [ "pie", "classagg_1_1renderer__outline__image.html#a75933dd8a18606ae7c9d3c1196504c43", null ],
-    [ "pixel", "classagg_1_1renderer__outline__image.html#a81ef7a752f2e7ee38354243cb1508f10", null ],
+    [ "pixel", "classagg_1_1renderer__outline__image.html#a5a44c721f26eceee2cf57c1b66e3c78e", null ],
     [ "reset_clipping", "classagg_1_1renderer__outline__image.html#a5a99205b367a9e479750ceb29b044a8e", null ],
     [ "scale_x", "classagg_1_1renderer__outline__image.html#ac532fb310e79dc9ac918196df0a0f2d0", null ],
-    [ "scale_x", "classagg_1_1renderer__outline__image.html#a0b3823cbab05eb8a84f27859a307baa8", null ],
+    [ "scale_x", "classagg_1_1renderer__outline__image.html#abcf51a813bf1799307e7f2ffe0c78008", null ],
     [ "semidot", "classagg_1_1renderer__outline__image.html#a9d2f223092c8d46a7f623dae0bd6eb0b", null ],
     [ "start_x", "classagg_1_1renderer__outline__image.html#a68d5f3131b8ce8adc453a1f422c61dda", null ],
-    [ "start_x", "classagg_1_1renderer__outline__image.html#a43c7733efccde2be31eb63ceceaa4907", null ],
-    [ "subpixel_width", "classagg_1_1renderer__outline__image.html#a2a05ed6e173d5d7750006616e5d6e41b", null ],
-    [ "width", "classagg_1_1renderer__outline__image.html#a3013cbe9610abb5297917962a4b7d62f", null ]
+    [ "start_x", "classagg_1_1renderer__outline__image.html#a1161568625cbd2c2ef77ff20453e76e8", null ],
+    [ "subpixel_width", "classagg_1_1renderer__outline__image.html#abcdc1baf3b7411ead3d23c1fcd91d434", null ],
+    [ "width", "classagg_1_1renderer__outline__image.html#a570a613e040d00696ab8e65c633566d8", null ]
 ];

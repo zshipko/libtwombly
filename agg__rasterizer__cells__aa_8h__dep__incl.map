@@ -1,6 +1,7 @@
 <map id="agg/include/agg_rasterizer_cells_aa.h" name="agg/include/agg_rasterizer_cells_aa.h">
-<area shape="rect" id="node2" href="$agg__rasterizer__compound__aa_8h.html" title="agg/include/agg_rasterizer\l_compound_aa.h" alt="" coords="5,92,184,131"/>
-<area shape="rect" id="node3" href="$agg__rasterizer__scanline__aa_8h.html" title="agg/include/agg_rasterizer\l_scanline_aa.h" alt="" coords="208,92,386,131"/>
-<area shape="rect" id="node4" href="$draw_8hpp.html" title="draw.hpp" alt="" coords="260,179,335,204"/>
-<area shape="rect" id="node5" href="$draw_8cpp.html" title="draw.cpp" alt="" coords="260,252,335,277"/>
+<area shape="rect" id="node2" href="$agg__rasterizer__compound__aa_8h.html" title="agg/include/agg_rasterizer\l_compound_aa.h" alt="" coords="5,97,179,138"/>
+<area shape="rect" id="node3" href="$agg__rasterizer__scanline__aa_8h.html" title="agg/include/agg_rasterizer\l_scanline_aa.h" alt="" coords="203,97,377,138"/>
+<area shape="rect" id="node4" href="$twombly_8hpp.html" title="twombly.hpp" alt="" coords="243,187,339,213"/>
+<area shape="rect" id="node5" href="$draw_8cpp.html" title="draw.cpp" alt="" coords="195,261,268,288"/>
+<area shape="rect" id="node6" href="$twombly_8h.html" title="capi/twombly.h" alt="" coords="294,261,404,288"/>
 </map>

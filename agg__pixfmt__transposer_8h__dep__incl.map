@@ -1,5 +1,6 @@
 <map id="agg/include/agg_pixfmt_transposer.h" name="agg/include/agg_pixfmt_transposer.h">
-<area shape="rect" id="node2" href="$agg__blur_8h.html" title="agg/include/agg_blur.h" alt="" coords="7,92,162,117"/>
-<area shape="rect" id="node3" href="$draw_8hpp.html" title="draw.hpp" alt="" coords="47,165,122,191"/>
-<area shape="rect" id="node4" href="$draw_8cpp.html" title="draw.cpp" alt="" coords="47,239,122,264"/>
+<area shape="rect" id="node2" href="$agg__blur_8h.html" title="agg/include/agg_blur.h" alt="" coords="25,96,177,123"/>
+<area shape="rect" id="node3" href="$twombly_8hpp.html" title="twombly.hpp" alt="" coords="53,171,149,197"/>
+<area shape="rect" id="node4" href="$draw_8cpp.html" title="draw.cpp" alt="" coords="5,245,79,272"/>
+<area shape="rect" id="node5" href="$twombly_8h.html" title="capi/twombly.h" alt="" coords="105,245,215,272"/>
 </map>

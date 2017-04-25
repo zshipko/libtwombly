@@ -1,9 +1,10 @@
 <map id="agg/include/agg_conv_transform.h" name="agg/include/agg_conv_transform.h">
-<area shape="rect" id="node2" href="$draw_8hpp.html" title="draw.hpp" alt="" coords="22,265,97,291"/>
-<area shape="rect" id="node4" href="$agg__bezier__arc_8h.html" title="agg/include/agg_bezier\l_arc.h" alt="" coords="36,92,195,131"/>
-<area shape="rect" id="node7" href="$agg__gsv__text_8h.html" title="agg/include/agg_gsv\l_text.h" alt="" coords="314,92,458,131"/>
-<area shape="rect" id="node3" href="$draw_8cpp.html" title="draw.cpp" alt="" coords="22,339,97,364"/>
-<area shape="rect" id="node5" href="$agg__path__storage_8h.html" title="agg/include/agg_path\l_storage.h" alt="" coords="41,179,190,217"/>
-<area shape="rect" id="node6" href="$agg__bezier__arc_8cpp.html" title="agg/src/agg_bezier\l_arc.cpp" alt="" coords="214,179,348,217"/>
-<area shape="rect" id="node8" href="$agg__gsv__text_8cpp.html" title="agg/src/agg_gsv_text.cpp" alt="" coords="424,185,597,211"/>
+<area shape="rect" id="node2" href="$twombly_8hpp.html" title="twombly.hpp" alt="" coords="53,277,149,304"/>
+<area shape="rect" id="node5" href="$agg__bezier__arc_8h.html" title="agg/include/agg_bezier\l_arc.h" alt="" coords="80,97,233,138"/>
+<area shape="rect" id="node8" href="$agg__gsv__text_8h.html" title="agg/include/agg_gsv\l_text.h" alt="" coords="353,97,493,138"/>
+<area shape="rect" id="node3" href="$draw_8cpp.html" title="draw.cpp" alt="" coords="5,352,79,379"/>
+<area shape="rect" id="node4" href="$twombly_8h.html" title="capi/twombly.h" alt="" coords="105,352,215,379"/>
+<area shape="rect" id="node6" href="$agg__path__storage_8h.html" title="agg/include/agg_path\l_storage.h" alt="" coords="85,187,229,229"/>
+<area shape="rect" id="node7" href="$agg__bezier__arc_8cpp.html" title="agg/src/agg_bezier\l_arc.cpp" alt="" coords="254,187,385,229"/>
+<area shape="rect" id="node9" href="$agg__gsv__text_8cpp.html" title="agg/src/agg_gsv_text.cpp" alt="" coords="462,195,633,221"/>
 </map>

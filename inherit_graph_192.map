@@ -1,9 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classagg_1_1image__filter__blackman.html" title="agg::image_filter_blackman" alt="" coords="5,129,190,155"/>
-<area shape="rect" id="node2" href="$classagg_1_1image__filter__blackman100.html" title="agg::image_filter_blackman100" alt="" coords="238,5,444,31"/>
-<area shape="rect" id="node3" href="$classagg_1_1image__filter__blackman144.html" title="agg::image_filter_blackman144" alt="" coords="238,55,444,80"/>
-<area shape="rect" id="node4" href="$classagg_1_1image__filter__blackman196.html" title="agg::image_filter_blackman196" alt="" coords="238,104,444,129"/>
-<area shape="rect" id="node5" href="$classagg_1_1image__filter__blackman256.html" title="agg::image_filter_blackman256" alt="" coords="238,153,444,179"/>
-<area shape="rect" id="node6" href="$classagg_1_1image__filter__blackman36.html" title="agg::image_filter_blackman36" alt="" coords="241,203,441,228"/>
-<area shape="rect" id="node7" href="$classagg_1_1image__filter__blackman64.html" title="agg::image_filter_blackman64" alt="" coords="241,252,441,277"/>
+<area shape="rect" id="node1" href="$classagg_1_1image__filter__blackman.html" title="agg::image_filter_blackman" alt="" coords="5,132,187,159"/>
+<area shape="rect" id="node2" href="$classagg_1_1image__filter__blackman100.html" title="agg::image_filter_blackman100" alt="" coords="235,5,437,32"/>
+<area shape="rect" id="node3" href="$classagg_1_1image__filter__blackman144.html" title="agg::image_filter_blackman144" alt="" coords="235,56,437,83"/>
+<area shape="rect" id="node4" href="$classagg_1_1image__filter__blackman196.html" title="agg::image_filter_blackman196" alt="" coords="235,107,437,133"/>
+<area shape="rect" id="node5" href="$classagg_1_1image__filter__blackman256.html" title="agg::image_filter_blackman256" alt="" coords="235,157,437,184"/>
+<area shape="rect" id="node6" href="$classagg_1_1image__filter__blackman36.html" title="agg::image_filter_blackman36" alt="" coords="239,208,433,235"/>
+<area shape="rect" id="node7" href="$classagg_1_1image__filter__blackman64.html" title="agg::image_filter_blackman64" alt="" coords="239,259,433,285"/>
 </map>

@@ -1,7 +1,7 @@
 <map id="agg/include/agg_renderer_scanline.h" name="agg/include/agg_renderer_scanline.h">
-<area shape="rect" id="node2" href="$agg__basics_8h.html" title="agg_basics.h" alt="" coords="38,312,138,337"/>
-<area shape="rect" id="node5" href="$agg__renderer__base_8h.html" title="agg_renderer_base.h" alt="" coords="75,92,224,117"/>
-<area shape="rect" id="node4" href="$agg__config_8h.html" title="agg_config.h" alt="" coords="92,385,189,411"/>
-<area shape="rect" id="node6" href="$agg__rendering__buffer_8h.html" title="agg_rendering_buffer.h" alt="" coords="126,165,285,191"/>
-<area shape="rect" id="node7" href="$agg__array_8h.html" title="agg_array.h" alt="" coords="157,239,249,264"/>
+<area shape="rect" id="node2" href="$agg__basics_8h.html" title="agg_basics.h" alt="" coords="39,320,137,347"/>
+<area shape="rect" id="node5" href="$agg__renderer__base_8h.html" title="agg_renderer_base.h" alt="" coords="75,96,217,123"/>
+<area shape="rect" id="node4" href="$agg__config_8h.html" title="agg_config.h" alt="" coords="92,395,188,421"/>
+<area shape="rect" id="node6" href="$agg__rendering__buffer_8h.html" title="agg_rendering_buffer.h" alt="" coords="125,171,279,197"/>
+<area shape="rect" id="node7" href="$agg__array_8h.html" title="agg_array.h" alt="" coords="155,245,245,272"/>
 </map>

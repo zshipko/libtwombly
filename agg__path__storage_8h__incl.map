@@ -1,9 +1,9 @@
 <map id="agg/include/agg_path_storage.h" name="agg/include/agg_path_storage.h">
-<area shape="rect" id="node4" href="$agg__math_8h.html" title="agg_math.h" alt="" coords="42,239,134,264"/>
-<area shape="rect" id="node7" href="$agg__array_8h.html" title="agg_array.h" alt="" coords="368,92,459,117"/>
-<area shape="rect" id="node9" href="$agg__bezier__arc_8h.html" title="agg_bezier_arc.h" alt="" coords="140,92,265,117"/>
-<area shape="rect" id="node5" href="$agg__basics_8h.html" title="agg_basics.h" alt="" coords="175,312,275,337"/>
-<area shape="rect" id="node6" href="$agg__config_8h.html" title="agg_config.h" alt="" coords="176,385,274,411"/>
-<area shape="rect" id="node10" href="$agg__conv__transform_8h.html" title="agg_conv_transform.h" alt="" coords="126,165,280,191"/>
-<area shape="rect" id="node11" href="$agg__trans__affine_8h.html" title="agg_trans_affine.h" alt="" coords="158,239,290,264"/>
+<area shape="rect" id="node4" href="$agg__math_8h.html" title="agg_math.h" alt="" coords="43,245,133,272"/>
+<area shape="rect" id="node7" href="$agg__array_8h.html" title="agg_array.h" alt="" coords="367,96,457,123"/>
+<area shape="rect" id="node9" href="$agg__bezier__arc_8h.html" title="agg_bezier_arc.h" alt="" coords="141,96,261,123"/>
+<area shape="rect" id="node5" href="$agg__basics_8h.html" title="agg_basics.h" alt="" coords="176,320,275,347"/>
+<area shape="rect" id="node6" href="$agg__config_8h.html" title="agg_config.h" alt="" coords="177,395,273,421"/>
+<area shape="rect" id="node10" href="$agg__conv__transform_8h.html" title="agg_conv_transform.h" alt="" coords="126,171,276,197"/>
+<area shape="rect" id="node11" href="$agg__trans__affine_8h.html" title="agg_trans_affine.h" alt="" coords="158,245,287,272"/>
 </map>

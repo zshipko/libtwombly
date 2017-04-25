@@ -39,14 +39,14 @@ var classagg_1_1pixfmt__alpha__blend__rgba =
     [ "copy_vline", "classagg_1_1pixfmt__alpha__blend__rgba.html#aed3a7933b90208d36fe6b1fa71adc421", null ],
     [ "demultiply", "classagg_1_1pixfmt__alpha__blend__rgba.html#abcd20d4fa55ea6848eb576bcfdf3fbcc", null ],
     [ "for_each_pixel", "classagg_1_1pixfmt__alpha__blend__rgba.html#a6acf2a807edf8944e2da3d94aef00191", null ],
-    [ "height", "classagg_1_1pixfmt__alpha__blend__rgba.html#abe2f04f1a3b27076677e0b5e28846457", null ],
+    [ "height", "classagg_1_1pixfmt__alpha__blend__rgba.html#a96126b8df035c6c46f0a80efc02b509e", null ],
     [ "pix_ptr", "classagg_1_1pixfmt__alpha__blend__rgba.html#a87ef2eaaef5d59589a0c44b404acb0a3", null ],
-    [ "pix_ptr", "classagg_1_1pixfmt__alpha__blend__rgba.html#a32b6090c2807d864310e4838d6621098", null ],
-    [ "pixel", "classagg_1_1pixfmt__alpha__blend__rgba.html#a59e8c88dbd8ede449f1ebadb3a887890", null ],
+    [ "pix_ptr", "classagg_1_1pixfmt__alpha__blend__rgba.html#a4434d839cab14fcc38ddf48d5f4803a7", null ],
+    [ "pixel", "classagg_1_1pixfmt__alpha__blend__rgba.html#a0fb9956518b9d59cb313da52a59d850c", null ],
     [ "premultiply", "classagg_1_1pixfmt__alpha__blend__rgba.html#ab7bae6640527f40fac9cce49a64840a4", null ],
-    [ "row", "classagg_1_1pixfmt__alpha__blend__rgba.html#a17f06a1f0ac96b6671ae557db4b469f8", null ],
+    [ "row", "classagg_1_1pixfmt__alpha__blend__rgba.html#aa6f8e36fa7a34d2efceb04061811972c", null ],
     [ "row_ptr", "classagg_1_1pixfmt__alpha__blend__rgba.html#ac207ebcf50116aee3d57dacf6f46bd4b", null ],
-    [ "row_ptr", "classagg_1_1pixfmt__alpha__blend__rgba.html#a9ff8ae16b48ef8f56216ccb248c4e196", null ],
-    [ "stride", "classagg_1_1pixfmt__alpha__blend__rgba.html#abdb88542ccda3de30e38113ffb0b0a99", null ],
-    [ "width", "classagg_1_1pixfmt__alpha__blend__rgba.html#acceabb3041b4870077ed0f86099f2f5d", null ]
+    [ "row_ptr", "classagg_1_1pixfmt__alpha__blend__rgba.html#a50e3706d1c13e7fb7ab2e3ef8db10bdf", null ],
+    [ "stride", "classagg_1_1pixfmt__alpha__blend__rgba.html#aa5579ccb8ad89f455554427e56f06e62", null ],
+    [ "width", "classagg_1_1pixfmt__alpha__blend__rgba.html#ac487476eb831b836242e549af93f1aea", null ]
 ];

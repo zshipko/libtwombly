@@ -1,12 +1,8 @@
 var searchData=
 [
-  ['s_5fdiagonal_5fquadrant',['s_diagonal_quadrant',['../structagg_1_1line__parameters.html#a4248811af7c85c1d6e0c1c38b62ca4fa',1,'agg::line_parameters']]],
-  ['s_5forthogonal_5fquadrant',['s_orthogonal_quadrant',['../structagg_1_1line__parameters.html#ae377dbffb692c37934d1f27abc6be794',1,'agg::line_parameters']]],
-  ['shx',['shx',['../structagg_1_1trans__affine.html#ad0a400c189f24b2913ecfb294e6cdddb',1,'agg::trans_affine::shx()'],['../structagg_1_1trans__perspective.html#aab35cd133d497244d56ebea90b7f3f19',1,'agg::trans_perspective::shx()']]],
-  ['shy',['shy',['../structagg_1_1trans__affine.html#ae39cadaac0d8bb907ace84868e2d6f79',1,'agg::trans_affine::shy()'],['../structagg_1_1trans__perspective.html#a7bc16c8b1467ecc37db45a86f55f2944',1,'agg::trans_perspective::shy()']]],
-  ['size',['size',['../classtw_1_1_drawing.html#a044a729734c7498fda51bbf999a27450',1,'tw::Drawing']]],
-  ['sl',['sl',['../classtw_1_1_drawing.html#a64dcc24c821c04757b9a271492c065b3',1,'tw::Drawing']]],
-  ['start_5fspan',['start_span',['../structagg_1_1scanline__storage__aa_1_1scanline__data.html#a09b2e17b47f3421fa4e8b35e5caa6454',1,'agg::scanline_storage_aa::scanline_data::start_span()'],['../structagg_1_1scanline__storage__bin_1_1scanline__data.html#a1c3bb8469b11f13c324b8e640b8ff9bd',1,'agg::scanline_storage_bin::scanline_data::start_span()']]],
-  ['sx',['sx',['../structagg_1_1line__parameters.html#ab97ff50f3264cd278a7853ef643e9082',1,'agg::line_parameters::sx()'],['../structagg_1_1trans__affine.html#a382e2e4cad2fcaa2663956f622e806e1',1,'agg::trans_affine::sx()'],['../structagg_1_1trans__perspective.html#aeb400cdabcdc7156a1951bfcc2c57fb9',1,'agg::trans_perspective::sx()']]],
-  ['sy',['sy',['../structagg_1_1line__parameters.html#a357ea40877d3b5ef661cdfb6a86c7353',1,'agg::line_parameters::sy()'],['../structagg_1_1trans__affine.html#a4c19ec6059a034ea7492954790056267',1,'agg::trans_affine::sy()'],['../structagg_1_1trans__perspective.html#ae3dfb6feca62fc8ac5d8b69c09f28b9f',1,'agg::trans_perspective::sy()']]]
+  ['r',['r',['../structagg_1_1stack__blur__calc__rgba.html#aa840df6687a47e29bb4a398640cef9ca',1,'agg::stack_blur_calc_rgba::r()'],['../structagg_1_1stack__blur__calc__rgb.html#ac71788825b8765fb3f3e95ef990319ba',1,'agg::stack_blur_calc_rgb::r()'],['../structagg_1_1recursive__blur__calc__rgba.html#a1462ebd9c99994abc47eba9e89294fa2',1,'agg::recursive_blur_calc_rgba::r()'],['../structagg_1_1recursive__blur__calc__rgb.html#a95f126e91108bf3aa20a13d156b79bd6',1,'agg::recursive_blur_calc_rgb::r()'],['../structagg_1_1rgba.html#a9a64684415b622e0ee08306d6df3d387',1,'agg::rgba::r()'],['../structagg_1_1rgba8.html#a9689b28ce585b51a0af641a19a3ce060',1,'agg::rgba8::r()'],['../structagg_1_1rgba16.html#a8d7c5eeabc93c91139a860b83516fecf',1,'agg::rgba16::r()']]],
+  ['raster',['raster',['../classtw_1_1_drawing.html#a1ed6f32f3932017f8dcac527a0449a9b',1,'tw::Drawing']]],
+  ['render_5faa',['render_aa',['../classtw_1_1_drawing.html#a9ee94e5b93cbe7578f7ff61debf1cabb',1,'tw::Drawing']]],
+  ['render_5fbin',['render_bin',['../classtw_1_1_drawing.html#a8c306336cfbc6dfb503d9ba22739a49d',1,'tw::Drawing']]],
+  ['right',['right',['../structagg_1_1cell__style__aa.html#a0e0994ac15729b387d9b9f4d12401a48',1,'agg::cell_style_aa']]]
 ];

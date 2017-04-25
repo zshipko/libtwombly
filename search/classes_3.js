@@ -9,5 +9,5 @@ var searchData=
   ['distance_5finterpolator2',['distance_interpolator2',['../classagg_1_1distance__interpolator2.html',1,'agg']]],
   ['distance_5finterpolator3',['distance_interpolator3',['../classagg_1_1distance__interpolator3.html',1,'agg']]],
   ['distance_5finterpolator4',['distance_interpolator4',['../classagg_1_1distance__interpolator4.html',1,'agg']]],
-  ['drawing',['Drawing',['../classtw_1_1_drawing.html',1,'tw']]]
+  ['drawing',['drawing',['../structdrawing.html',1,'drawing'],['../classtw_1_1_drawing.html',1,'tw::Drawing&lt; DrawingType &gt;']]]
 ];

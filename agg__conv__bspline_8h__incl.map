@@ -1,8 +1,8 @@
 <map id="agg/include/agg_conv_bspline.h" name="agg/include/agg_conv_bspline.h">
-<area shape="rect" id="node2" href="$agg__basics_8h.html" title="agg_basics.h" alt="" coords="90,312,190,337"/>
-<area shape="rect" id="node5" href="$agg__vcgen__bspline_8h.html" title="agg_vcgen_bspline.h" alt="" coords="198,92,346,117"/>
-<area shape="rect" id="node10" href="$agg__conv__adaptor__vcgen_8h.html" title="agg_conv_adaptor_vcgen.h" alt="" coords="23,165,209,191"/>
-<area shape="rect" id="node4" href="$agg__config_8h.html" title="agg_config.h" alt="" coords="143,385,241,411"/>
-<area shape="rect" id="node6" href="$agg__array_8h.html" title="agg_array.h" alt="" coords="284,239,375,264"/>
-<area shape="rect" id="node9" href="$agg__bspline_8h.html" title="agg_bspline.h" alt="" coords="334,165,439,191"/>
+<area shape="rect" id="node2" href="$agg__basics_8h.html" title="agg_basics.h" alt="" coords="87,320,185,347"/>
+<area shape="rect" id="node5" href="$agg__vcgen__bspline_8h.html" title="agg_vcgen_bspline.h" alt="" coords="195,96,339,123"/>
+<area shape="rect" id="node10" href="$agg__conv__adaptor__vcgen_8h.html" title="agg_conv_adaptor_vcgen.h" alt="" coords="23,171,204,197"/>
+<area shape="rect" id="node4" href="$agg__config_8h.html" title="agg_config.h" alt="" coords="140,395,236,421"/>
+<area shape="rect" id="node6" href="$agg__array_8h.html" title="agg_array.h" alt="" coords="279,245,369,272"/>
+<area shape="rect" id="node9" href="$agg__bspline_8h.html" title="agg_bspline.h" alt="" coords="330,171,432,197"/>
 </map>

@@ -1,23 +1,4 @@
 var searchData=
 [
-  ['g',['g',['../structagg_1_1stack__blur__calc__rgba.html#a63f5f67775545e2bc4d5ac796caa4020',1,'agg::stack_blur_calc_rgba::g()'],['../structagg_1_1stack__blur__calc__rgb.html#a68d32f22528e42d4ca6282075a8d8235',1,'agg::stack_blur_calc_rgb::g()'],['../structagg_1_1recursive__blur__calc__rgba.html#abed2b3e864e87d06c0be5fd565fbf212',1,'agg::recursive_blur_calc_rgba::g()'],['../structagg_1_1recursive__blur__calc__rgb.html#aa158c4b97b16234ef3fc7915179bef6d',1,'agg::recursive_blur_calc_rgb::g()'],['../structagg_1_1rgba.html#af86c92851435226ddd22ff918045d91b',1,'agg::rgba::g()'],['../structagg_1_1rgba8.html#a8c936c38296676df1f383c5d883e4c66',1,'agg::rgba8::g()'],['../structagg_1_1rgba16.html#aa0a1b4814d6705567294a86368d3a79c',1,'agg::rgba16::g()']]],
-  ['g_5fcomp_5fop_5ffunc',['g_comp_op_func',['../structagg_1_1comp__op__table__rgba.html#a7b4bb5e267208946be321764d763a349',1,'agg::comp_op_table_rgba']]],
-  ['g_5felder_5fbit_5ftable',['g_elder_bit_table',['../namespaceagg.html#a8a6b8e2ae9498c71e491c92439dc1cdf',1,'agg']]],
-  ['g_5fsqrt_5ftable',['g_sqrt_table',['../namespaceagg.html#abe2ad53704c82c0fe3637c58ea2a8452',1,'agg']]],
-  ['g_5fstack_5fblur8_5fmul',['g_stack_blur8_mul',['../structagg_1_1stack__blur__tables.html#a56d16f268df0f8348e5468368fd96344',1,'agg::stack_blur_tables']]],
-  ['g_5fstack_5fblur8_5fshr',['g_stack_blur8_shr',['../structagg_1_1stack__blur__tables.html#acd96488ca35ff3dcfa82322f0e47882b',1,'agg::stack_blur_tables']]],
-  ['glyph_5findex',['glyph_index',['../structagg_1_1glyph__cache.html#a6b54c9281c125f587cc9b406f18a5d5f',1,'agg::glyph_cache']]],
-  ['gse4x6',['gse4x6',['../namespaceagg.html#a9d642e27bfe02d5ad718cc7f5c39454f',1,'agg']]],
-  ['gse4x8',['gse4x8',['../namespaceagg.html#ae17f60f99178efddc91d2ebf69387c88',1,'agg']]],
-  ['gse5x7',['gse5x7',['../namespaceagg.html#a442b0c92ba5cb3278b0b8df3150a55dc',1,'agg']]],
-  ['gse5x9',['gse5x9',['../namespaceagg.html#ad2d6864cf84eb41f8a815c2e0b07bf98',1,'agg']]],
-  ['gse6x12',['gse6x12',['../namespaceagg.html#a652f6617d65411b071c1422f162dbb4d',1,'agg']]],
-  ['gse6x9',['gse6x9',['../namespaceagg.html#a15cd9683098c644f8ce54c9bfa705220',1,'agg']]],
-  ['gse7x11',['gse7x11',['../namespaceagg.html#a9cbd6df43dce870a7ce5068df831f852',1,'agg']]],
-  ['gse7x11_5fbold',['gse7x11_bold',['../namespaceagg.html#a955290906438ef2c301a676468e16abb',1,'agg']]],
-  ['gse7x15',['gse7x15',['../namespaceagg.html#a7357a05216faaaef3f320e7317e6c574',1,'agg']]],
-  ['gse7x15_5fbold',['gse7x15_bold',['../namespaceagg.html#a275274a412104c0eb0fd87f6288d62a0',1,'agg']]],
-  ['gse8x16',['gse8x16',['../namespaceagg.html#ad27fdfd4d49d6749c713c3234e23a80c',1,'agg']]],
-  ['gse8x16_5fbold',['gse8x16_bold',['../namespaceagg.html#a491f84e58d87af601035b5f41e3bccdc',1,'agg']]],
-  ['gsv_5fdefault_5ffont',['gsv_default_font',['../namespaceagg.html#af5735d12eca2170ad10379922a1bc223',1,'agg']]]
+  ['free_5fhandle',['free_handle',['../structtransform__matrix.html#a269408e3b041a35cb27085f142eada38',1,'transform_matrix']]]
 ];

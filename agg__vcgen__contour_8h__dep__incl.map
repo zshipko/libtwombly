@@ -1,6 +1,7 @@
 <map id="agg/include/agg_vcgen_contour.h" name="agg/include/agg_vcgen_contour.h">
-<area shape="rect" id="node2" href="$agg__conv__contour_8h.html" title="agg/include/agg_conv\l_contour.h" alt="" coords="5,92,156,131"/>
-<area shape="rect" id="node5" href="$agg__vcgen__contour_8cpp.html" title="agg/src/agg_vcgen_contour.cpp" alt="" coords="181,99,391,124"/>
-<area shape="rect" id="node3" href="$draw_8hpp.html" title="draw.hpp" alt="" coords="43,179,119,204"/>
-<area shape="rect" id="node4" href="$draw_8cpp.html" title="draw.cpp" alt="" coords="44,252,118,277"/>
+<area shape="rect" id="node2" href="$agg__conv__contour_8h.html" title="agg/include/agg_conv\l_contour.h" alt="" coords="27,97,175,138"/>
+<area shape="rect" id="node6" href="$agg__vcgen__contour_8cpp.html" title="agg/src/agg_vcgen_contour.cpp" alt="" coords="199,104,405,131"/>
+<area shape="rect" id="node3" href="$twombly_8hpp.html" title="twombly.hpp" alt="" coords="53,187,149,213"/>
+<area shape="rect" id="node4" href="$draw_8cpp.html" title="draw.cpp" alt="" coords="5,261,79,288"/>
+<area shape="rect" id="node5" href="$twombly_8h.html" title="capi/twombly.h" alt="" coords="105,261,215,288"/>
 </map>

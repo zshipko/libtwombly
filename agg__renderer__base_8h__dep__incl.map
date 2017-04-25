@@ -1,10 +1,11 @@
 <map id="agg/include/agg_renderer_base.h" name="agg/include/agg_renderer_base.h">
-<area shape="rect" id="node2" href="$draw_8hpp.html" title="draw.hpp" alt="" coords="350,185,426,211"/>
-<area shape="rect" id="node4" href="$agg__renderer__primitives_8h.html" title="agg/include/agg_renderer\l_primitives.h" alt="" coords="5,92,179,131"/>
-<area shape="rect" id="node6" href="$agg__renderer__mclip_8h.html" title="agg/include/agg_renderer\l_mclip.h" alt="" coords="253,92,427,131"/>
-<area shape="rect" id="node7" href="$agg__renderer__outline__aa_8h.html" title="agg/include/agg_renderer\l_outline_aa.h" alt="" coords="648,92,821,131"/>
-<area shape="rect" id="node9" href="$agg__renderer__scanline_8h.html" title="agg/include/agg_renderer\l_scanline.h" alt="" coords="451,92,624,131"/>
-<area shape="rect" id="node3" href="$draw_8cpp.html" title="draw.cpp" alt="" coords="351,265,425,291"/>
-<area shape="rect" id="node5" href="$agg__renderer__markers_8h.html" title="agg/include/agg_renderer\l_markers.h" alt="" coords="5,179,179,217"/>
-<area shape="rect" id="node8" href="$agg__line__profile__aa_8cpp.html" title="agg/src/agg_line_profile\l_aa.cpp" alt="" coords="653,179,816,217"/>
+<area shape="rect" id="node2" href="$twombly_8hpp.html" title="twombly.hpp" alt="" coords="335,195,431,221"/>
+<area shape="rect" id="node5" href="$agg__renderer__primitives_8h.html" title="agg/include/agg_renderer\l_primitives.h" alt="" coords="5,97,171,138"/>
+<area shape="rect" id="node7" href="$agg__renderer__mclip_8h.html" title="agg/include/agg_renderer\l_mclip.h" alt="" coords="247,97,413,138"/>
+<area shape="rect" id="node8" href="$agg__renderer__outline__aa_8h.html" title="agg/include/agg_renderer\l_outline_aa.h" alt="" coords="629,97,795,138"/>
+<area shape="rect" id="node10" href="$agg__renderer__scanline_8h.html" title="agg/include/agg_renderer\l_scanline.h" alt="" coords="438,97,604,138"/>
+<area shape="rect" id="node3" href="$draw_8cpp.html" title="draw.cpp" alt="" coords="287,277,360,304"/>
+<area shape="rect" id="node4" href="$twombly_8h.html" title="capi/twombly.h" alt="" coords="386,277,496,304"/>
+<area shape="rect" id="node6" href="$agg__renderer__markers_8h.html" title="agg/include/agg_renderer\l_markers.h" alt="" coords="5,187,171,229"/>
+<area shape="rect" id="node9" href="$agg__line__profile__aa_8cpp.html" title="agg/src/agg_line_profile\l_aa.cpp" alt="" coords="633,187,791,229"/>
 </map>

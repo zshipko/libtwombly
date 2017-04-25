@@ -7,5 +7,6 @@ var searchData=
   ['unsigned_5fgreater',['unsigned_greater',['../namespaceagg.html#a8b65130cc62e1feefac4b47854efed53',1,'agg']]],
   ['unsigned_5fless',['unsigned_less',['../namespaceagg.html#a2b90dd63cbc772a403f43ee3b4d665e9',1,'agg']]],
   ['upscale',['upscale',['../structagg_1_1ras__conv__int.html#a0f8eebfaf8cc6a0a4e70985d1f64b19d',1,'agg::ras_conv_int::upscale()'],['../structagg_1_1ras__conv__int__sat.html#a3f2af62804e10565409f1d938b69e41e',1,'agg::ras_conv_int_sat::upscale()'],['../structagg_1_1ras__conv__int__3x.html#afdcefe7ef88dd3409d9bc9bc42dbbac5',1,'agg::ras_conv_int_3x::upscale()'],['../structagg_1_1ras__conv__dbl.html#ac8002f3e39ad102c49a0b5dfb239db48',1,'agg::ras_conv_dbl::upscale()'],['../structagg_1_1ras__conv__dbl__3x.html#adfc095820ec746e3d873d678cc04e1dd',1,'agg::ras_conv_dbl_3x::upscale()']]],
-  ['uround',['uround',['../namespaceagg.html#a021851d49c7e5425193651ce8c5d93cc',1,'agg']]]
+  ['uround',['uround',['../namespaceagg.html#a021851d49c7e5425193651ce8c5d93cc',1,'agg']]],
+  ['user_5fdata',['user_data',['../structdrawing.html#a29a687e5e7c06d6f9ef7b59bc12fbd06',1,'drawing']]]
 ];

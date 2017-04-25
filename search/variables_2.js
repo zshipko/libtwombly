@@ -1,6 +1,7 @@
 var searchData=
 [
   ['c',['c',['../structtw_1_1_drawing_1_1size.html#a4463b113cfa8b7af0dd3778f7152f908',1,'tw::Drawing::size::c()'],['../structagg_1_1pixel64__type.html#ace28846c4954e5535b7122b0dc802f10',1,'agg::pixel64_type::c()']]],
+  ['channels',['channels',['../structdrawing.html#a8152c1c490bda38ac560473641a9df89',1,'drawing']]],
   ['cmd',['cmd',['../structagg_1_1vertex__base.html#a15329d3a1c953978ff0c961434b2f205',1,'agg::vertex_base::cmd()'],['../structagg_1_1vertex__dist__cmd.html#a91694ef0c01838ffab3eca8301eb9de3',1,'agg::vertex_dist_cmd::cmd()']]],
   ['color',['color',['../structagg_1_1span__gouraud_1_1coord__type.html#a32ac6945ef065e54f79e56c14153d877',1,'agg::span_gouraud::coord_type']]],
   ['colors',['colors',['../classtw_1_1_gradient.html#ac3bf5dbf045ce5c40e0dbc02444578f2',1,'tw::Gradient']]],

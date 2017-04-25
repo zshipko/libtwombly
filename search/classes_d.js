@@ -19,7 +19,6 @@ var searchData=
   ['rect_5fbase_3c_20coord_5ftype_20_3e',['rect_base&lt; coord_type &gt;',['../structagg_1_1rect__base.html',1,'agg']]],
   ['rect_5fbase_3c_20double_20_3e',['rect_base&lt; double &gt;',['../structagg_1_1rect__base.html',1,'agg']]],
   ['rect_5fbase_3c_20int_20_3e',['rect_base&lt; int &gt;',['../structagg_1_1rect__base.html',1,'agg']]],
-  ['rectangle',['Rectangle',['../structtw_1_1_rectangle.html',1,'tw']]],
   ['recursive_5fblur',['recursive_blur',['../classagg_1_1recursive__blur.html',1,'agg']]],
   ['recursive_5fblur_5fcalc_5fgray',['recursive_blur_calc_gray',['../structagg_1_1recursive__blur__calc__gray.html',1,'agg']]],
   ['recursive_5fblur_5fcalc_5frgb',['recursive_blur_calc_rgb',['../structagg_1_1recursive__blur__calc__rgb.html',1,'agg']]],

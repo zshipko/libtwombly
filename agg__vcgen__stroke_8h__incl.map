@@ -1,8 +1,8 @@
 <map id="agg/include/agg_vcgen_stroke.h" name="agg/include/agg_vcgen_stroke.h">
-<area shape="rect" id="node2" href="$agg__math__stroke_8h.html" title="agg_math_stroke.h" alt="" coords="26,92,162,117"/>
-<area shape="rect" id="node3" href="$agg__math_8h.html" title="agg_math.h" alt="" coords="5,239,97,264"/>
-<area shape="rect" id="node7" href="$agg__vertex__sequence_8h.html" title="agg_vertex_sequence.h" alt="" coords="72,165,236,191"/>
-<area shape="rect" id="node5" href="$agg__basics_8h.html" title="agg_basics.h" alt="" coords="87,312,186,337"/>
-<area shape="rect" id="node6" href="$agg__config_8h.html" title="agg_config.h" alt="" coords="105,385,203,411"/>
-<area shape="rect" id="node8" href="$agg__array_8h.html" title="agg_array.h" alt="" coords="192,239,284,264"/>
+<area shape="rect" id="node2" href="$agg__math__stroke_8h.html" title="agg_math_stroke.h" alt="" coords="28,96,161,123"/>
+<area shape="rect" id="node3" href="$agg__math_8h.html" title="agg_math.h" alt="" coords="5,245,96,272"/>
+<area shape="rect" id="node7" href="$agg__vertex__sequence_8h.html" title="agg_vertex_sequence.h" alt="" coords="73,171,232,197"/>
+<area shape="rect" id="node5" href="$agg__basics_8h.html" title="agg_basics.h" alt="" coords="87,320,185,347"/>
+<area shape="rect" id="node6" href="$agg__config_8h.html" title="agg_config.h" alt="" coords="105,395,201,421"/>
+<area shape="rect" id="node8" href="$agg__array_8h.html" title="agg_array.h" alt="" coords="192,245,283,272"/>
 </map>

@@ -1,9 +1,10 @@
 <map id="agg/include/agg_image_filters.h" name="agg/include/agg_image_filters.h">
-<area shape="rect" id="node2" href="$agg__span__image__filter_8h.html" title="agg/include/agg_span\l_image_filter.h" alt="" coords="115,92,266,131"/>
-<area shape="rect" id="node8" href="$agg__image__filters_8cpp.html" title="agg/src/agg_image_filters.cpp" alt="" coords="291,99,490,124"/>
-<area shape="rect" id="node3" href="$draw_8hpp.html" title="draw.hpp" alt="" coords="241,265,316,291"/>
-<area shape="rect" id="node5" href="$agg__span__image__filter__gray_8h.html" title="agg/include/agg_span\l_image_filter_gray.h" alt="" coords="27,179,178,217"/>
-<area shape="rect" id="node6" href="$agg__span__image__filter__rgb_8h.html" title="agg/include/agg_span\l_image_filter_rgb.h" alt="" coords="203,179,354,217"/>
-<area shape="rect" id="node7" href="$agg__span__image__filter__rgba_8h.html" title="agg/include/agg_span\l_image_filter_rgba.h" alt="" coords="379,179,530,217"/>
-<area shape="rect" id="node4" href="$draw_8cpp.html" title="draw.cpp" alt="" coords="241,339,316,364"/>
+<area shape="rect" id="node2" href="$agg__span__image__filter_8h.html" title="agg/include/agg_span\l_image_filter.h" alt="" coords="113,97,260,138"/>
+<area shape="rect" id="node9" href="$agg__image__filters_8cpp.html" title="agg/src/agg_image_filters.cpp" alt="" coords="285,104,480,131"/>
+<area shape="rect" id="node3" href="$twombly_8hpp.html" title="twombly.hpp" alt="" coords="225,277,321,304"/>
+<area shape="rect" id="node6" href="$agg__span__image__filter__gray_8h.html" title="agg/include/agg_span\l_image_filter_gray.h" alt="" coords="27,187,175,229"/>
+<area shape="rect" id="node7" href="$agg__span__image__filter__rgb_8h.html" title="agg/include/agg_span\l_image_filter_rgb.h" alt="" coords="199,187,347,229"/>
+<area shape="rect" id="node8" href="$agg__span__image__filter__rgba_8h.html" title="agg/include/agg_span\l_image_filter_rgba.h" alt="" coords="371,187,519,229"/>
+<area shape="rect" id="node4" href="$draw_8cpp.html" title="draw.cpp" alt="" coords="177,352,251,379"/>
+<area shape="rect" id="node5" href="$twombly_8h.html" title="capi/twombly.h" alt="" coords="277,352,387,379"/>
 </map>

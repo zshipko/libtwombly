@@ -13,5 +13,6 @@ var searchData=
   ['trans_5fperspective',['trans_perspective',['../structagg_1_1trans__perspective.html',1,'agg']]],
   ['trans_5fsingle_5fpath',['trans_single_path',['../classagg_1_1trans__single__path.html',1,'agg']]],
   ['trans_5fviewport',['trans_viewport',['../classagg_1_1trans__viewport.html',1,'agg']]],
-  ['trans_5fwarp_5fmagnifier',['trans_warp_magnifier',['../classagg_1_1trans__warp__magnifier.html',1,'agg']]]
+  ['trans_5fwarp_5fmagnifier',['trans_warp_magnifier',['../classagg_1_1trans__warp__magnifier.html',1,'agg']]],
+  ['transform_5fmatrix',['transform_matrix',['../structtransform__matrix.html',1,'']]]
 ];

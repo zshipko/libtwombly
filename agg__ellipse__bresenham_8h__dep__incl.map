@@ -1,6 +1,6 @@
 <map id="agg/include/agg_ellipse_bresenham.h" name="agg/include/agg_ellipse_bresenham.h">
-<area shape="rect" id="node2" href="$agg__renderer__primitives_8h.html" title="agg/include/agg_renderer\l_primitives.h" alt="" coords="5,92,179,131"/>
-<area shape="rect" id="node4" href="$agg__renderer__outline__aa_8h.html" title="agg/include/agg_renderer\l_outline_aa.h" alt="" coords="203,92,376,131"/>
-<area shape="rect" id="node3" href="$agg__renderer__markers_8h.html" title="agg/include/agg_renderer\l_markers.h" alt="" coords="5,179,179,217"/>
-<area shape="rect" id="node5" href="$agg__line__profile__aa_8cpp.html" title="agg/src/agg_line_profile\l_aa.cpp" alt="" coords="208,179,371,217"/>
+<area shape="rect" id="node2" href="$agg__renderer__primitives_8h.html" title="agg/include/agg_renderer\l_primitives.h" alt="" coords="5,97,171,138"/>
+<area shape="rect" id="node4" href="$agg__renderer__outline__aa_8h.html" title="agg/include/agg_renderer\l_outline_aa.h" alt="" coords="195,97,361,138"/>
+<area shape="rect" id="node3" href="$agg__renderer__markers_8h.html" title="agg/include/agg_renderer\l_markers.h" alt="" coords="5,187,171,229"/>
+<area shape="rect" id="node5" href="$agg__line__profile__aa_8cpp.html" title="agg/src/agg_line_profile\l_aa.cpp" alt="" coords="199,187,357,229"/>
 </map>

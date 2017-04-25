@@ -1,8 +1,9 @@
 <map id="agg/include/agg_vcgen_stroke.h" name="agg/include/agg_vcgen_stroke.h">
-<area shape="rect" id="node2" href="$agg__conv__stroke_8h.html" title="agg/include/agg_conv\l_stroke.h" alt="" coords="22,92,173,131"/>
-<area shape="rect" id="node7" href="$agg__vcgen__stroke_8cpp.html" title="agg/src/agg_vcgen_stroke.cpp" alt="" coords="198,99,401,124"/>
-<area shape="rect" id="node3" href="$draw_8hpp.html" title="draw.hpp" alt="" coords="5,265,81,291"/>
-<area shape="rect" id="node5" href="$agg__gsv__text_8h.html" title="agg/include/agg_gsv\l_text.h" alt="" coords="81,179,224,217"/>
-<area shape="rect" id="node4" href="$draw_8cpp.html" title="draw.cpp" alt="" coords="6,339,80,364"/>
-<area shape="rect" id="node6" href="$agg__gsv__text_8cpp.html" title="agg/src/agg_gsv_text.cpp" alt="" coords="104,265,278,291"/>
+<area shape="rect" id="node2" href="$agg__conv__stroke_8h.html" title="agg/include/agg_conv\l_stroke.h" alt="" coords="81,97,228,138"/>
+<area shape="rect" id="node8" href="$agg__vcgen__stroke_8cpp.html" title="agg/src/agg_vcgen_stroke.cpp" alt="" coords="252,104,451,131"/>
+<area shape="rect" id="node3" href="$twombly_8hpp.html" title="twombly.hpp" alt="" coords="53,277,149,304"/>
+<area shape="rect" id="node6" href="$agg__gsv__text_8h.html" title="agg/include/agg_gsv\l_text.h" alt="" coords="139,187,279,229"/>
+<area shape="rect" id="node4" href="$draw_8cpp.html" title="draw.cpp" alt="" coords="5,352,79,379"/>
+<area shape="rect" id="node5" href="$twombly_8h.html" title="capi/twombly.h" alt="" coords="105,352,215,379"/>
+<area shape="rect" id="node7" href="$agg__gsv__text_8cpp.html" title="agg/src/agg_gsv_text.cpp" alt="" coords="174,277,345,304"/>
 </map>

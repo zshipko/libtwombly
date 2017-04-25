@@ -1,8 +1,8 @@
 <map id="agg/include/agg_gradient_lut.h" name="agg/include/agg_gradient_lut.h">
-<area shape="rect" id="node2" href="$agg__array_8h.html" title="agg_array.h" alt="" coords="81,92,173,117"/>
-<area shape="rect" id="node8" href="$agg__dda__line_8h.html" title="agg_dda_line.h" alt="" coords="198,92,310,117"/>
-<area shape="rect" id="node10" href="$agg__color__rgba_8h.html" title="agg_color_rgba.h" alt="" coords="430,165,555,191"/>
-<area shape="rect" id="node11" href="$agg__color__gray_8h.html" title="agg_color_gray.h" alt="" coords="334,92,457,117"/>
-<area shape="rect" id="node5" href="$agg__basics_8h.html" title="agg_basics.h" alt="" coords="340,239,440,264"/>
-<area shape="rect" id="node7" href="$agg__config_8h.html" title="agg_config.h" alt="" coords="340,312,437,337"/>
+<area shape="rect" id="node2" href="$agg__array_8h.html" title="agg_array.h" alt="" coords="83,96,173,123"/>
+<area shape="rect" id="node8" href="$agg__dda__line_8h.html" title="agg_dda_line.h" alt="" coords="197,96,307,123"/>
+<area shape="rect" id="node10" href="$agg__color__rgba_8h.html" title="agg_color_rgba.h" alt="" coords="429,171,549,197"/>
+<area shape="rect" id="node11" href="$agg__color__gray_8h.html" title="agg_color_gray.h" alt="" coords="331,96,452,123"/>
+<area shape="rect" id="node5" href="$agg__basics_8h.html" title="agg_basics.h" alt="" coords="339,245,437,272"/>
+<area shape="rect" id="node7" href="$agg__config_8h.html" title="agg_config.h" alt="" coords="337,320,433,347"/>
 </map>

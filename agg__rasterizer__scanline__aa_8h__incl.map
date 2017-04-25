@@ -1,10 +1,10 @@
 <map id="agg/include/agg_rasterizer_scanline_aa.h" name="agg/include/agg_rasterizer_scanline_aa.h">
-<area shape="rect" id="node2" href="$agg__rasterizer__cells__aa_8h.html" title="agg_rasterizer_cells_aa.h" alt="" coords="38,92,212,117"/>
-<area shape="rect" id="node10" href="$agg__rasterizer__sl__clip_8h.html" title="agg_rasterizer_sl_clip.h" alt="" coords="467,92,629,117"/>
-<area shape="rect" id="node12" href="$agg__gamma__functions_8h.html" title="agg_gamma_functions.h" alt="" coords="311,165,478,191"/>
-<area shape="rect" id="node5" href="$agg__math_8h.html" title="agg_math.h" alt="" coords="195,165,287,191"/>
-<area shape="rect" id="node8" href="$agg__array_8h.html" title="agg_array.h" alt="" coords="80,165,171,191"/>
-<area shape="rect" id="node6" href="$agg__basics_8h.html" title="agg_basics.h" alt="" coords="259,239,359,264"/>
-<area shape="rect" id="node7" href="$agg__config_8h.html" title="agg_config.h" alt="" coords="278,312,376,337"/>
-<area shape="rect" id="node11" href="$agg__clip__liang__barsky_8h.html" title="agg_clip_liang_barsky.h" alt="" coords="502,165,666,191"/>
+<area shape="rect" id="node2" href="$agg__rasterizer__cells__aa_8h.html" title="agg_rasterizer_cells_aa.h" alt="" coords="43,96,214,123"/>
+<area shape="rect" id="node10" href="$agg__rasterizer__sl__clip_8h.html" title="agg_rasterizer_sl_clip.h" alt="" coords="468,96,626,123"/>
+<area shape="rect" id="node12" href="$agg__gamma__functions_8h.html" title="agg_gamma_functions.h" alt="" coords="313,171,476,197"/>
+<area shape="rect" id="node5" href="$agg__math_8h.html" title="agg_math.h" alt="" coords="198,171,288,197"/>
+<area shape="rect" id="node8" href="$agg__array_8h.html" title="agg_array.h" alt="" coords="83,171,174,197"/>
+<area shape="rect" id="node6" href="$agg__basics_8h.html" title="agg_basics.h" alt="" coords="263,245,362,272"/>
+<area shape="rect" id="node7" href="$agg__config_8h.html" title="agg_config.h" alt="" coords="282,320,378,347"/>
+<area shape="rect" id="node11" href="$agg__clip__liang__barsky_8h.html" title="agg_clip_liang_barsky.h" alt="" coords="501,171,662,197"/>
 </map>

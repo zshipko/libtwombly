@@ -36,13 +36,13 @@ var classagg_1_1pixfmt__alpha__blend__rgb =
     [ "copy_pixel", "classagg_1_1pixfmt__alpha__blend__rgb.html#a3282982c43152e3fa19c81a83adb8ff7", null ],
     [ "copy_vline", "classagg_1_1pixfmt__alpha__blend__rgb.html#a87431df6f19a8b02f31fc8228e99809b", null ],
     [ "for_each_pixel", "classagg_1_1pixfmt__alpha__blend__rgb.html#a5f4eb5ff2fea0668fc881f3a2b671e13", null ],
-    [ "height", "classagg_1_1pixfmt__alpha__blend__rgb.html#adc6a4e919805390e1f6e3fb81f7d233d", null ],
+    [ "height", "classagg_1_1pixfmt__alpha__blend__rgb.html#a01b6c9edfa81a96d05790a74c1cfcc6f", null ],
     [ "pix_ptr", "classagg_1_1pixfmt__alpha__blend__rgb.html#ab56c0127a5d1150c242c22ca875264e9", null ],
-    [ "pix_ptr", "classagg_1_1pixfmt__alpha__blend__rgb.html#a2d11e805be73a7519a2d029a594f1a21", null ],
-    [ "pixel", "classagg_1_1pixfmt__alpha__blend__rgb.html#a96c5b2329eca4e83b38da0c370a6ccc9", null ],
-    [ "row", "classagg_1_1pixfmt__alpha__blend__rgb.html#a7c7e9f9ef02cdc5a3015fe1d6fc3c9f5", null ],
+    [ "pix_ptr", "classagg_1_1pixfmt__alpha__blend__rgb.html#aab654d4702092c9efc2290eff33c4300", null ],
+    [ "pixel", "classagg_1_1pixfmt__alpha__blend__rgb.html#a203ca70746d7ca052a9765d572cf7aff", null ],
+    [ "row", "classagg_1_1pixfmt__alpha__blend__rgb.html#a646e1b190ff323a6f443336ca44a6aa9", null ],
     [ "row_ptr", "classagg_1_1pixfmt__alpha__blend__rgb.html#a628c00637c39f1343477edcc4a83b00c", null ],
-    [ "row_ptr", "classagg_1_1pixfmt__alpha__blend__rgb.html#a596542662b33ea00698e3e5c015f501e", null ],
-    [ "stride", "classagg_1_1pixfmt__alpha__blend__rgb.html#a7f27d115a1d898647c0dea7ea54d4381", null ],
-    [ "width", "classagg_1_1pixfmt__alpha__blend__rgb.html#a26d56e6f8fb6cca7a8aa56373dd04c74", null ]
+    [ "row_ptr", "classagg_1_1pixfmt__alpha__blend__rgb.html#a3fcf63e9f9ff9bfc7e59cb7e1708a3e6", null ],
+    [ "stride", "classagg_1_1pixfmt__alpha__blend__rgb.html#ac277db207912079c67f66f8939f31dfc", null ],
+    [ "width", "classagg_1_1pixfmt__alpha__blend__rgb.html#a721ca0cb95d4c0536f8ca67dfe9244ce", null ]
 ];
