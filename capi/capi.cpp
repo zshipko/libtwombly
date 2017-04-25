@@ -150,6 +150,13 @@ void draw_free(drawing *d){
     free(d);
 }
 
+void draw_destroy(drawing **d){
+    if (d && *d){
+        draw_free(*d);
+        *d = NULL;
+    }
+}
+
 bool draw_get_preserve(drawing* d){
     DRAWING(d, preserve);
 
