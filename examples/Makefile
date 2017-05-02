@@ -1,9 +1,11 @@
+UNAME:=$(shell uname)
+
 files=*.cpp
 
 all: basic-run gradient-run rect_arc-run circles-run
 
 basic-run:
-	$(CC) -I/usr/local/include -o basic basic.c  -L/usr/local/lib -l twombly -l bimage `pkg-config --cflags --libs freetype2`
+	$(CC) -I/usr/local/include -o basic basic.c -lbimage `pkg-config --cflags --libs freetype2` -lm -lstdc++ ../libtwombly.a
 	./basic
 
 %-run:

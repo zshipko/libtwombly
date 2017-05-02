@@ -15,7 +15,7 @@ using namespace tw;
 
 const lest::test drawing_test[] = {
     CASE ( "BIMAGE_RGB24 drawing" ) {
-        bimage *im = bimageCreate(100, 100, BIMAGE_RGB24);
+        bimage *im = bimageCreate(100, 100, BIMAGE_U8 | 3);
         auto d = Drawing<rgb24>(100, 100, 3, (uint8_t*)im->data);
         d.clear(255, 0, 0);
 
@@ -29,7 +29,7 @@ const lest::test drawing_test[] = {
     },
 
     CASE ( "BIMAGE_RGBA32 drawing" ) {
-        bimage *im = bimageCreate(100, 100, BIMAGE_RGBA32);
+        bimage *im = bimageCreate(100, 100, BIMAGE_U8 | 4);
         auto d = Drawing<rgba32>(100, 100, 4, (uint8_t*)im->data);
         d.clear(255, 0, 0);
 
@@ -44,7 +44,7 @@ const lest::test drawing_test[] = {
     },
 
     CASE ( "BIMAGE_RGB48 drawing" ) {
-        bimage *im = bimageCreate(100, 100, BIMAGE_RGB48);
+        bimage *im = bimageCreate(100, 100, BIMAGE_U16 | 3);
         auto d = Drawing<rgb48>(100, 100, 3, (uint16_t*)im->data);
         d.clear(255, 0, 0);
 
@@ -58,7 +58,7 @@ const lest::test drawing_test[] = {
     },
 
     CASE ( "BIMAGE_RGBA64 drawing" ) {
-        bimage *im = bimageCreate(100, 100, BIMAGE_RGBA64);
+        bimage *im = bimageCreate(100, 100, BIMAGE_U16 | 4);
         auto d = Drawing<rgba64>(100, 100, 4, (uint16_t*)im->data);
         d.clear(255, 0, 0);
 
@@ -73,7 +73,7 @@ const lest::test drawing_test[] = {
     },
 
     CASE ( "Path" ) {
-        bimage *im = bimageCreate(500, 500, BIMAGE_RGB24);
+        bimage *im = bimageCreate(500, 500, BIMAGE_U8 | 3);
         auto d = Drawing<rgb24>(500, 500, 3, (uint8_t*)im->data);
         d.preserve(true);
         d.new_path();
@@ -113,7 +113,7 @@ const lest::test drawing_test[] = {
     },
 
     CASE ( "Gradient" ) {
-        bimage *im2 = bimageCreate(500, 500, BIMAGE_RGB48);
+        bimage *im2 = bimageCreate(500, 500, BIMAGE_U16 | 3);
         memset(im2->data, 65535, im2->width * im2->height * 16 * 3);
         auto d = Drawing<rgb48>(500, 500, 3, (uint16_t*)im2->data);
 
@@ -139,7 +139,7 @@ const lest::test drawing_test[] = {
     },
 
     CASE( "cairo-arc-infinite-loop"){
-        bimage *im = bimageCreate(8, 8, BIMAGE_RGB24);
+        bimage *im = bimageCreate(8, 8, BIMAGE_U8 | 3);
         auto d = Drawing<rgb24>(8, 8, 3, (uint8_t*)im->data);
         d.clear(255, 255, 255);
 

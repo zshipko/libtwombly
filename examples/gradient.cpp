@@ -6,7 +6,7 @@ using namespace tw;
 #define SIZE 800
 
 int main(int argc, char *argv[]){
-    bimage *im = bimageCreate(SIZE, SIZE, BIMAGE_RGBA32);
+    bimage *im = bimageCreate(SIZE, SIZE, BIMAGE_U8 | 4);
     auto d = draw(SIZE, SIZE, (uint8_t*)im->data);
 
     Gradient<Color> g;

@@ -4,8 +4,7 @@
 using namespace tw;
 
 int main(int argc, char *argv[]){
-
-    bimage *im = bimageCreate(400, 400, BIMAGE_RGBA32);
+    bimage *im = bimageCreate(400, 400, BIMAGE_U8 | 4);
     auto ctx = draw(400, 400, (uint8_t*)im->data);
 
     ctx.rect(10, 20, 210, 120);

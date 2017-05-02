@@ -2,7 +2,7 @@
 #include <twombly/twombly.h>
 
 int main(int argc, char **argv){
-    bimage* im = bimageCreate(100, 100, BIMAGE_RGB24);
+    bimage* im = bimageCreate(100, 100, BIMAGE_U8 | 3);
     drawing *d = draw_frombimage(im);
     draw_clear(d, 255, 0, 0, 255);
     draw_set_color(d, 0, 0, 255, 255);
