@@ -22,9 +22,9 @@ const lest::test drawing_test[] = {
         bimagePixel px;
         bimageGetPixel(im, 10, 10, &px);
 
-        EXPECT(px.data[RED] == 255);
-        EXPECT(px.data[GREEN] == 0);
-        EXPECT(px.data[BLUE] == 0);
+        EXPECT(px.data.f[RED] == 255);
+        EXPECT(px.data.f[GREEN] == 0);
+        EXPECT(px.data.f[BLUE] == 0);
         bimageDestroy(&im);
     },
 
@@ -36,10 +36,10 @@ const lest::test drawing_test[] = {
         bimagePixel px;
         bimageGetPixel(im, 10, 10, &px);
 
-        EXPECT(px.data[RED] == 255);
-        EXPECT(px.data[GREEN] == 0);
-        EXPECT(px.data[BLUE] == 0);
-        EXPECT(px.data[ALPHA] == 255);
+        EXPECT(px.data.f[RED] == 255);
+        EXPECT(px.data.f[GREEN] == 0);
+        EXPECT(px.data.f[BLUE] == 0);
+        EXPECT(px.data.f[ALPHA] == 255);
         bimageDestroy(&im);
     },
 
@@ -51,9 +51,9 @@ const lest::test drawing_test[] = {
         bimagePixel px;
         bimageGetPixel(im, 10, 10, &px);
 
-        EXPECT(px.data[RED] == 65535);
-        EXPECT(px.data[GREEN] == 0);
-        EXPECT(px.data[BLUE] == 0);
+        EXPECT(px.data.f[RED] == 65535);
+        EXPECT(px.data.f[GREEN] == 0);
+        EXPECT(px.data.f[BLUE] == 0);
         bimageDestroy(&im);
     },
 
@@ -65,10 +65,10 @@ const lest::test drawing_test[] = {
         bimagePixel px;
         bimageGetPixel(im, 10, 10, &px);
 
-        EXPECT(px.data[RED] == 65535);
-        EXPECT(px.data[GREEN] == 0);
-        EXPECT(px.data[BLUE] == 0);
-        EXPECT(px.data[ALPHA] == 65535);
+        EXPECT(px.data.f[RED] == 65535);
+        EXPECT(px.data.f[GREEN] == 0);
+        EXPECT(px.data.f[BLUE] == 0);
+        EXPECT(px.data.f[ALPHA] == 65535);
         bimageDestroy(&im);
     },
 
@@ -134,7 +134,7 @@ const lest::test drawing_test[] = {
 
         bimagePixel px;
         bimageGetPixel(im2, 250, 250, &px);
-        EXPECT(px.data[0] > 0);
+        EXPECT(px.data.f[0] > 0);
         bimageRelease(im2);
     },
 
@@ -153,7 +153,7 @@ const lest::test drawing_test[] = {
         bimagePixel px;
         bimageGetPixel(im, 0, 0, &px);
 
-        EXPECT((px.data[0] == 255 && px.data[0] > px.data[1] && px.data[0] > px.data[2]));
+        EXPECT((px.data.f[0] == 255 && px.data.f[0] > px.data.f[1] && px.data.f[0] > px.data.f[2]));
 
         bimageRelease(im);
     }
