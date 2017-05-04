@@ -5,7 +5,8 @@ files=*.cpp
 all: basic-run gradient-run rect_arc-run circles-run
 
 basic-run:
-	$(CC) -I/usr/local/include -o basic basic.c -lbimage `pkg-config --cflags --libs freetype2` -lm -lstdc++ ../libtwombly.a
+	$(CC) -c -o basic.o basic.c -I/usr/local/include
+	$(CXX) -o basic basic.o -L/usr/local/lib  -lbimage `pkg-config --cflags --libs freetype2` ../libtwombly.a -lm
 	./basic
 
 %-run:

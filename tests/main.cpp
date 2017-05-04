@@ -19,7 +19,7 @@ const lest::test drawing_test[] = {
         auto d = Drawing<rgb24>(100, 100, 3, (uint8_t*)im->data);
         d.clear(255, 0, 0);
 
-        bpixel px;
+        bimagePixel px;
         bimageGetPixel(im, 10, 10, &px);
 
         EXPECT(px.data[RED] == 255);
@@ -33,7 +33,7 @@ const lest::test drawing_test[] = {
         auto d = Drawing<rgba32>(100, 100, 4, (uint8_t*)im->data);
         d.clear(255, 0, 0);
 
-        bpixel px;
+        bimagePixel px;
         bimageGetPixel(im, 10, 10, &px);
 
         EXPECT(px.data[RED] == 255);
@@ -48,7 +48,7 @@ const lest::test drawing_test[] = {
         auto d = Drawing<rgb48>(100, 100, 3, (uint16_t*)im->data);
         d.clear(255, 0, 0);
 
-        bpixel px;
+        bimagePixel px;
         bimageGetPixel(im, 10, 10, &px);
 
         EXPECT(px.data[RED] == 65535);
@@ -62,7 +62,7 @@ const lest::test drawing_test[] = {
         auto d = Drawing<rgba64>(100, 100, 4, (uint16_t*)im->data);
         d.clear(255, 0, 0);
 
-        bpixel px;
+        bimagePixel px;
         bimageGetPixel(im, 10, 10, &px);
 
         EXPECT(px.data[RED] == 65535);
@@ -132,7 +132,7 @@ const lest::test drawing_test[] = {
 
         d.fill_gradient(g, 0, 300, gradient_type_y);
 
-        bpixel px;
+        bimagePixel px;
         bimageGetPixel(im2, 250, 250, &px);
         EXPECT(px.data[0] > 0);
         bimageRelease(im2);
@@ -147,10 +147,10 @@ const lest::test drawing_test[] = {
         d.arc_to(0, 0, 1, 1024.0 / std::numeric_limits<double>::epsilon() * M_PI, 0);
         d.arc_to(0, 0, 1, 0, 1024.0 / std::numeric_limits<double>::epsilon() * M_PI);
 
-        d.set_color(255, 0, 0);
+        d.set_color(255, 0, 0, 255);
         d.stroke();
 
-        bpixel px;
+        bimagePixel px;
         bimageGetPixel(im, 0, 0, &px);
 
         EXPECT((px.data[0] == 255 && px.data[0] > px.data[1] && px.data[0] > px.data[2]));
