@@ -6,7 +6,7 @@ all: basic-run gradient-run rect_arc-run circles-run
 
 basic-run:
 	$(CC) -c -o basic.o basic.c -I/usr/local/include
-	$(CXX) -o basic basic.o -L/usr/local/lib  -lbimage `pkg-config --cflags --libs freetype2` ../libtwombly.a -lm
+	$(CXX) -o basic basic.o -L/usr/local/lib  -lbimage `pkg-config --cflags --libs freetype2` -L .. -ltwombly -lm
 	./basic
 
 %-run:
